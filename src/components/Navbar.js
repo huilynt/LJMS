@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   AppBar,
   IconButton,
@@ -18,7 +19,8 @@ const Navbar = () => {
   console.log(theme);
   const isMatch = useMediaQuery(theme.breakpoints.down("md"));
   console.log(isMatch);
-  const routes = ["./pages/LearningJourney", "./pages/Courses", "./pages/Skills", "./pages/Roles"];
+//   const routes = ["./pages/LearningJourney", "./pages/Courses", "./pages/Skills", "./pages/Roles"];
+  const routes = ["/LearningJourney", "/Courses", "/Skills", "/Roles"];
 
   return (
     <React.Fragment>
@@ -28,7 +30,7 @@ const Navbar = () => {
                 <IconButton size="large" edge="start" color="inherit" aria-label="profile">
                     <SchoolIcon/>
                 </IconButton>
-                <Typography variant="h5" sx={{fontWeight:'bold' }}>
+                <Typography variant="h5" sx={{ fontWeight:'bold' }}>
                     LJPS
                 </Typography>
             </>
@@ -40,10 +42,15 @@ const Navbar = () => {
                 value={value}
                 onChange={(e, value) => setValue(value)}
             >
-                <Tab label="Learning Journey" value={routes[0]}/>
-                <Tab label="Courses" value={routes[1]}/>
-                <Tab label="Skills" value={routes[2]}/>
-                <Tab label="Roles" value={routes[3]}/>
+
+                <Tab label="Learning Journey" value={routes[0]} component={Link} to={routes[0]}/>
+
+                <Tab label="Courses" value={routes[1]} component={Link} to={routes[1]}/>
+
+                <Tab label="Skills" value={routes[2]} component={Link} to={routes[2]}/>
+
+                <Tab label="Roles" value={routes[3]} component={Link} to={routes[3]}/>
+
             </Tabs>
             <IconButton size="large" edge="start" color="inherit" aria-label="profile">
                 <AccountCircleIcon/>
