@@ -24,7 +24,7 @@ const Navbar = () => {
 
   return (
     <React.Fragment>
-    <AppBar sx={{ background: "#9CCAFF" }}>
+    <AppBar sx={{ background: "#9CCAFF" }} position="inherit">
         <Toolbar>
             <>
                 <IconButton size="large" edge="start" color="inherit" aria-label="profile">

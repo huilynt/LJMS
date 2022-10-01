@@ -1,7 +1,8 @@
 import React from "react";
 
-  
-export default function LearningJourney() {
+function LearningJourney() {
     return <h1>LearningJourney</h1>;
 
 }
+
+export default LearningJourney;
