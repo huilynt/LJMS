@@ -118,7 +118,6 @@ class Registration(db.Model):
 
 @app.route("/")
 def hello_world():
-
     return "Hello, World!"
 
 
@@ -127,3 +126,16 @@ def test():
     courselist = Course.query.all()
 
     return "Testing! Course table row count: " + str(len(courselist))
+
+# @app.route("/member")
+# def member():
+#     return {"members": ["M1","M2","M3"]}
+
+# @app.route("/roles")
+# def role():
+#     rolelist= Role.query.all()
+#     return rolelist    
+
+    # Running app
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
