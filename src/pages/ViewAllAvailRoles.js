@@ -1,5 +1,5 @@
 import React from "react";
-import {Grid, Link, Button} from '@mui/material';
+import {Grid, Link, Container, Box} from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses }  from '@mui/material/TableCell';
@@ -8,17 +8,32 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: '#4dabf5',
-      color: theme.palette.common.white,
+        backgroundColor: "#9CCAFF",
+        color: theme.palette.common.white
+
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
+        fontSize: 14,
     },
-  }));
+    borderLeft: 0,
+    borderRight:'0.5px solid grey',
+
+    '&:last-child': {
+        borderRight: 0,
+    },
+
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:last-child td, &:last-child th': {
+        borderBottom: 0,
+    },
+}));
 
 const tableData = ([
     {
@@ -47,46 +62,44 @@ const tableData = ([
 
 export default function ViewAllAvailRoles() {
     return (
-        <div>
         
-        <Grid sx={{m:2, borderBottom: 1}}>
-            <Grid item>
-                <h1>Job Roles</h1>
-            </Grid>
-        </Grid>
+        <Container sx={{mt:5}}>
+        <Box sx={{ typography: { xs: 'h6', md:'h4'},borderBottom: 1}}>View Roles</Box>
         
     
-        <TableContainer sx={{mt:4}} component={Paper}>            
-            <Table>
+        <TableContainer sx={{mt:2}} component={Paper}>            
+            <Table sx={{minWidth: 200}}>
                 <TableHead stickyHeader>
                     <TableRow>
-                        <StyledTableCell>ID</StyledTableCell>
-                        <StyledTableCell>Role Name</StyledTableCell>
-                        <StyledTableCell>Description</StyledTableCell>
+                        <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>ID</StyledTableCell>
+                        <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Role Name</StyledTableCell>
+                        <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
                         <StyledTableCell>Skills Required</StyledTableCell>
                         <StyledTableCell>Choose Role</StyledTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {tableData.map((row) => (
-                            <TableRow key={row.id}>
-                                <TableCell>{row.id}</TableCell>
-                                <TableCell>{row.role_name}</TableCell>
-                                <TableCell>{row.desc}</TableCell>
-                                <TableCell>{row.skills_required}</TableCell>
-                                <TableCell>
+                            <StyledTableRow key={row.id}>
+                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{row.id}</StyledTableCell>
+                                <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>{row.role_name}</StyledTableCell>
+                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{row.desc}</StyledTableCell>
+                                <StyledTableCell>{row.skills_required}</StyledTableCell>
+                                <StyledTableCell>
                                 <Link to='/ViewAllAvailRoles' underline="none">
-                                <Button variant="contained" color="success">Select</Button>
+                                <ArrowForwardIosIcon></ArrowForwardIosIcon>
                                 </Link>
-                                </TableCell>
-                            </TableRow>
+                                </StyledTableCell>
+                            </StyledTableRow>
                         ))
                         
                     }
                 </TableBody>
             </Table>
         </TableContainer>
-        </div>
+
+        </Container>
+        
             
     )
 
