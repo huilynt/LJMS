@@ -56,7 +56,7 @@ export default function Skills() {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Code No</StyledTableCell>
-                            <StyledTableCell>Name</StyledTableCell>
+                            <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Name</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
                             <StyledTableCell align='center'>Select Course</StyledTableCell>
                         </TableRow>
@@ -65,7 +65,7 @@ export default function Skills() {
                         {rows.map((row) => (
                             <StyledTableRow key={row.name}>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{row.code}</StyledTableCell>
-                                <StyledTableCell>{row.name}</StyledTableCell>
+                                <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{row.name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{row.desc}</StyledTableCell>
                                 <StyledTableCell align='center'><ArrowForwardIosIcon></ArrowForwardIosIcon></StyledTableCell>
                             </StyledTableRow>
