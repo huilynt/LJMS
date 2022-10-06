@@ -7,6 +7,7 @@ import LearningJourney from "./pages/LearningJourney";
 import Courses from "./pages/Courses";
 import Roles from "./pages/Roles";
 import Skills from "./pages/Skills";
+import RoleSkill from "./pages/RoleSkill";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route exact path="/Courses" element={<Courses/>} />
         <Route exact path="/Roles" element={<Roles/>} />
         <Route exact path="/Skills" element={<Skills/>} />
+        <Route exact path="/:jobRole/skills" element={<RoleSkill/>} />
       </Routes>
     </Router>
   );
