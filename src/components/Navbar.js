@@ -52,9 +52,12 @@ const Navbar = () => {
                 <Tab label="Roles" value={routes[3]} component={Link} to={routes[3]}/>
 
             </Tabs>
-            <IconButton size="large" edge="start" color="inherit" aria-label="profile">
-                <AccountCircleIcon/>
+            <IconButton size="large" edge="start" color="inherit" aria-label="profile" >
+                <AccountCircleIcon/> 
             </IconButton>
+            <Typography variant="body2" sx={{ fontWeight:'bold' }}>
+                    HR
+            </Typography>
             </>
         </Toolbar>
     </AppBar>
