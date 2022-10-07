@@ -11,8 +11,7 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import List from '@mui/material/List';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import CircleIcon from '@mui/icons-material/Circle';
+
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -39,63 +38,41 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-// const tableData = ([
-//     {
-//     id:1,
-//     role_name: 'Senior Manager',
-//     desc: 'blah blah blah',
-//     skills_required:['Critical thinking', ' Effective Communication']
-//     },
-
-//     {
-//     id:2,
-//     role_name: 'Senior Manager',
-//     desc: 'blah blah blah',
-//     skills_required:['Critical thinking', ' Effective Communication']
-//     },
-
-//     {
-//     id:3,
-//     role_name: 'Senior Manager',
-//     desc: 'blah blah blah',
-//     skills_required:['Critical thinking', ' Effective Communication']
-//     }
-// ]);
-
-
 
 export default function ViewAllAvailRoles() {
 
 
     const [jobroleData, setJobRoleData] = useState([])
-  
+
     useEffect(()=>{
-      axios.get('http://127.0.0.1:5000/jobrole').then(response => {
-        console.log("SUCCESS", response)
-        setJobRoleData(response.data.data)
-        
-        console.log(response.data.data)
-      }).catch(error => {
-        console.log(error)
-      })
+        axios.get('http://127.0.0.1:5000/jobrole').then(response => {
+            console.log("SUCCESS", response)
+            // setJobRoleData(response.data.data)
+
+            let jobrole_list = response.data.data
+            for (let i=0; i<jobrole_list.length; i++){
+                let id = jobrole_list[i]['JobRole_ID']
+
+                axios.get('http://127.0.0.1:5000/' + id + '/skills').then(response => {
+                    console.log("SUCCESS", response)
+                    var skill_list = response.data.data
+                    jobrole_list[i]["skills"] = skill_list;
+                    console.log(jobrole_list[i])
+                    setJobRoleData(prevState => [...prevState, jobrole_list[i]])
+                    
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
+        }).catch(error => {
+            console.log(error)
+        })
+
     },[])
 
-    // const [jobRoleSkillsData, setJobRoleSkillsData] = useState([])
-    // useEffect(()=>{
-    //     axios.get(`http://127.0.0.1:5000/${JobRole_ID}/skills`).then(response => {
-    //       console.log("SUCCESS", response)
-    //       setJobRoleData(response.data.data)
-          
-    //       console.log(response.data.data)
-    //     }).catch(error => {
-    //       console.log(error)
-    //     })
-    //   },[])
-
-
+    console.log(jobroleData)
 
     return (
-        
         <Container sx={{mt:5}}>
         <Box sx={{ typography: { xs: 'h6', md:'h4'},borderBottom: 1}}>View Roles</Box>
         
@@ -112,19 +89,18 @@ export default function ViewAllAvailRoles() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {jobroleData.map((row) => (
-                            <StyledTableRow key={row.JobRole_ID}>
+                    {jobroleData.map((row,index) => (
+                            <StyledTableRow key={index}>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{row.JobRole_ID}</StyledTableCell>
                                 <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>{row.JobRole_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{row.JobRole_Desc}</StyledTableCell>
                                 <StyledTableCell>
-                                <List>
-                                    <ListItem>
-                                        Communication
-                                    </ListItem>
                                     
-                                </List>
-                                
+                                    <List>
+                                            {row.skills.map(skill => (
+                                                <ListItem key={index}>{skill.Skill_Name}</ListItem>
+                                            ))}
+                                    </List>
                                 
                                 </StyledTableCell>
                                 <StyledTableCell>
@@ -146,4 +122,3 @@ export default function ViewAllAvailRoles() {
     )
 
 }
-
