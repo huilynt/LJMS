@@ -12,6 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Box from '@mui/material/Box';
+import IconButton from '@material-ui/core/IconButton';
 
 
 
@@ -78,7 +79,7 @@ function RoleSkill() {
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_ID}</StyledTableCell>
                                 <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{skill.Skill_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_Desc}</StyledTableCell>
-                                <StyledTableCell align='center'><ArrowForwardIosIcon></ArrowForwardIosIcon></StyledTableCell>
+                                <StyledTableCell align='center'><IconButton><ArrowForwardIosIcon></ArrowForwardIosIcon></IconButton></StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
