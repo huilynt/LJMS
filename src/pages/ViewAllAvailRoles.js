@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import {Grid, Link, Container, Box} from '@mui/material';
+import {Link, Container, Box, ListItem} from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses }  from '@mui/material/TableCell';
@@ -10,6 +10,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import List from '@mui/material/List';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import CircleIcon from '@mui/icons-material/Circle';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -36,28 +39,28 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-const tableData = ([
-    {
-    id:1,
-    role_name: 'Senior Manager',
-    desc: 'blah blah blah',
-    skills_required:['Critical thinking', ' Effective Communication']
-    },
+// const tableData = ([
+//     {
+//     id:1,
+//     role_name: 'Senior Manager',
+//     desc: 'blah blah blah',
+//     skills_required:['Critical thinking', ' Effective Communication']
+//     },
 
-    {
-    id:2,
-    role_name: 'Senior Manager',
-    desc: 'blah blah blah',
-    skills_required:['Critical thinking', ' Effective Communication']
-    },
+//     {
+//     id:2,
+//     role_name: 'Senior Manager',
+//     desc: 'blah blah blah',
+//     skills_required:['Critical thinking', ' Effective Communication']
+//     },
 
-    {
-    id:3,
-    role_name: 'Senior Manager',
-    desc: 'blah blah blah',
-    skills_required:['Critical thinking', ' Effective Communication']
-    }
-]);
+//     {
+//     id:3,
+//     role_name: 'Senior Manager',
+//     desc: 'blah blah blah',
+//     skills_required:['Critical thinking', ' Effective Communication']
+//     }
+// ]);
 
 
 
@@ -76,6 +79,18 @@ export default function ViewAllAvailRoles() {
         console.log(error)
       })
     },[])
+
+    // const [jobRoleSkillsData, setJobRoleSkillsData] = useState([])
+    // useEffect(()=>{
+    //     axios.get(`http://127.0.0.1:5000/${JobRole_ID}/skills`).then(response => {
+    //       console.log("SUCCESS", response)
+    //       setJobRoleData(response.data.data)
+          
+    //       console.log(response.data.data)
+    //     }).catch(error => {
+    //       console.log(error)
+    //     })
+    //   },[])
 
 
 
@@ -98,11 +113,20 @@ export default function ViewAllAvailRoles() {
                 </TableHead>
                 <TableBody>
                     {jobroleData.map((row) => (
-                            <StyledTableRow key={row.id}>
+                            <StyledTableRow key={row.JobRole_ID}>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{row.JobRole_ID}</StyledTableCell>
                                 <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>{row.JobRole_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{row.JobRole_Desc}</StyledTableCell>
-                                <StyledTableCell>{row.skills_required}</StyledTableCell>
+                                <StyledTableCell>
+                                <List>
+                                    <ListItem>
+                                        Communication
+                                    </ListItem>
+                                    
+                                </List>
+                                
+                                
+                                </StyledTableCell>
                                 <StyledTableCell>
                                 <Link to='/ViewAllAvailRoles' underline="none">
                                 <ArrowForwardIosIcon></ArrowForwardIosIcon>
