@@ -37,22 +37,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function Courses() {
-    const [course, setCourse] = useState("")
+    const [courses, setCourse] = useState([])
   
     useEffect(()=>{
       axios.get('http://127.0.0.1:5000/course').then(response => {
         console.log("SUCCESS", response)
         setCourse(response.data.data)
+        console.log(typeof response.data.data)
+        console.log(response.data.data)
       }).catch(error => {
         console.log(error)
       })
   
-    }, []);
+    }, [])
 
     return (
         <Container sx={{mt:5}}>
-            <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>{course}</Box>
-
             <TableContainer component={Paper} sx={{marginTop:2}}>
                 <Table sx={{minWidth: 200}}>
                     <TableHead>
@@ -64,8 +64,8 @@ function Courses() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {course.map((course) => (
-                            <StyledTableRow key={course.Skill_ID}>
+                        {courses.map((course) => (
+                            <StyledTableRow key={course.Course_ID}>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{course.Course_ID}</StyledTableCell>
                                 <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{course.Course_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{course.Course_Desc}</StyledTableCell>
@@ -76,7 +76,7 @@ function Courses() {
                 </Table>
             </TableContainer>
         </Container>
-      );
+    )
     }
 
 export default Courses;
