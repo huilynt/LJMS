@@ -120,12 +120,19 @@ Jobrole_skill = db.Table('jobrole_skill',
                         db.Column('Skill_ID', db.String, db.ForeignKey('skill.Skill_ID'))
 )
 
+Skill_course = db.Table('skill_course',
+                        db.Column('Skill_ID', db.String, db.ForeignKey('skill.Skill_ID')),
+                        db.Column('Course_ID', db.String, db.ForeignKey('course.Course_ID'))
+)
+
 class Skill(db.Model):
     __tablename__ = "skill"
 
     Skill_ID = db.Column(db.String, primary_key=True)
     Skill_Name = db.Column(db.String, nullable=False)
     Skill_Desc = db.Column(db.String)
+
+    courses = db.relationship(Course, secondary=Skill_course, backref="skill", lazy=True)
 
     def __init__(self, Skill_ID, Skill_Name, Skill_Desc=""):
         self.Skill_ID = Skill_ID
@@ -247,7 +254,6 @@ def view_skills():
     return jsonify(
         {
             "code": 200, 
-            "data": [skill.json() for skill in skills]
         }
     )
 
@@ -264,12 +270,41 @@ def view_skills_for_a_role(jobroleId):
     return jsonify(
         {
             "code": 200,
-            "role": jobrole.JobRole_Name,
             "data": [skill.json() for skill in skill_list]
         }
     )
 
-    
+# retrieve all courses related to a skill
+@app.route("/<string:skillId>/courses")
+def view_courses_for_a_skill(skillId):
+    skill = Skill.query.filter_by(Skill_ID= skillId).first()
+
+    course_list = []
+    for course in skill.courses:
+        if course.Course_Status == 'Active':
+            course_list.append(course)
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": {
+                "courses": [course.json() for course in course_list],
+                "skill": skill.json()
+            }
+        }
+    )
+
+# retrieve a jobrole
+@app.route("/jobrole/<string:jobroleId>")
+def view_single_jobrole(jobroleId):
+    jobrole = JobRole.query.filter_by(JobRole_ID= jobroleId).first()
+
+    return jsonify(
+        {
+            "code":200,
+            "data": jobrole.json()
+        }
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)
