@@ -1,6 +1,7 @@
 import {React,useEffect, useState} from "react";
 import axios from 'axios';
-import Container from '@mui/material/Container';
+import { useNavigate } from "react-router-dom";
+import {Link, Container} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,7 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import Box from '@mui/material/Box';
+//import Box from '@mui/material/Box';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -36,15 +37,22 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
+
+
 function Courses() {
-    const [courses, setCourse] = useState([])
-  
+    const [courses, setCourse] = useState([]);
+    const navigate = useNavigate();
+
+    const courseDetails = (event,  message) => {
+        console.log('link clicked')
+        console.log(message)
+        navigate('/Courses/' + message)
+    }
+
     useEffect(()=>{
       axios.get('http://127.0.0.1:5000/course').then(response => {
         console.log("SUCCESS", response)
         setCourse(response.data.data)
-        console.log(typeof response.data.data)
-        console.log(response.data.data)
       }).catch(error => {
         console.log(error)
       })
@@ -60,7 +68,7 @@ function Courses() {
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Code No</StyledTableCell>
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Name</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
-                            <StyledTableCell align='center'>Select Skill</StyledTableCell>
+                            <StyledTableCell align='center'>More Course Information</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -69,7 +77,11 @@ function Courses() {
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{course.Course_ID}</StyledTableCell>
                                 <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{course.Course_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{course.Course_Desc}</StyledTableCell>
-                                <StyledTableCell align='center'><ArrowForwardIosIcon></ArrowForwardIosIcon></StyledTableCell>
+                                <StyledTableCell align="center">
+                                    <Link onClick={event => courseDetails(event, course.Course_ID)} underline="none">
+                                        <ArrowForwardIosIcon></ArrowForwardIosIcon>
+                                    </Link>
+                                </StyledTableCell>      
                             </StyledTableRow>
                         ))}
                     </TableBody>

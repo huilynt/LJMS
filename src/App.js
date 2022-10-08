@@ -5,6 +5,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import LearningJourney from "./pages/LearningJourney";
 import Courses from "./pages/Courses";
+import CourseDesc from "./pages/CourseDesc";
 import Roles from "./pages/Roles";
 import Skills from "./pages/Skills";
 
@@ -17,6 +18,7 @@ function App() {
         <Route exact path="/Courses" element={<Courses/>} />
         <Route exact path="/Roles" element={<Roles/>} />
         <Route exact path="/Skills" element={<Skills/>} />
+        <Route exact path="Courses/:courseId" element={<CourseDesc/>}/>
       </Routes>
     </Router>
   );
