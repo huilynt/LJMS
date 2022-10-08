@@ -147,7 +147,6 @@ class Skill(db.Model):
         }
 
 
-
 class JobRole(db.Model):
     __tablename__ = "jobrole"
 
@@ -252,8 +251,6 @@ def view_jobrole():
 def view_skills():
     skills = Skill.query.all()
 
-    print(skills)
-
     return jsonify(
         {
             "code": 200, 
@@ -265,7 +262,7 @@ def view_skills():
 @app.route("/<string:jobroleId>/skills")
 def view_skills_for_a_role(jobroleId):
     jobrole = JobRole.query.filter_by(JobRole_ID= jobroleId).first()
-    print(jobrole.json())
+
     skill_list = []
     for skill in jobrole.skills:
         skill_list.append(skill)

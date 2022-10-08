@@ -8,6 +8,7 @@ import Courses from "./pages/Courses";
 import SkillCourses from "./pages/SkillCourses";
 import Roles from "./pages/Roles";
 import Skills from "./pages/Skills";
+import RoleSkill from "./pages/RoleSkill";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route exact path="/Roles" element={<Roles/>} />
         <Route exact path="/Skills" element={<Skills/>} />
         <Route exact path="/:roleID/:skillID/courses" element={<SkillCourses/>} />
+        <Route exact path="/:jobRole/skills" element={<RoleSkill/>} />
       </Routes>
     </Router>
   );
