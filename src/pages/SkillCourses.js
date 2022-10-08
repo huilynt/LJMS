@@ -48,10 +48,10 @@ function SkillCourses() {
   const [skill, setSkill] = useState("");
   const [role, setRole] = useState("");
 
-  let { jobRole, skillID } = useParams();
+  let { roleID, skillID } = useParams();
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:5000/jobrole/" + jobRole)
+      .get("http://127.0.0.1:5000/jobrole/" + roleID)
       .then((response) => {
         setRole(response.data.data.JobRole_Name);
       })

@@ -20,7 +20,7 @@ const Navbar = () => {
   const isMatch = useMediaQuery(theme.breakpoints.down("md"));
   console.log(isMatch);
 //   const routes = ["./pages/LearningJourney", "./pages/Courses", "./pages/Skills", "./pages/Roles"];
-  const routes = ["/LearningJourney", "/SkillCourses", "/Skills", "/Roles"];
+  const routes = ["/LearningJourney", "/Courses", "/Skills", "/Roles"];
 
   return (
     <React.Fragment>
