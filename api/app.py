@@ -254,6 +254,7 @@ def view_skills():
     return jsonify(
         {
             "code": 200, 
+            "data": [skill.json() for skill in skills]
         }
     )
 
