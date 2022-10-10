@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-
 import Navbar from "./components/Navbar";
 import LearningJourney from "./pages/LearningJourney";
 import Courses from "./pages/Courses";
