@@ -120,14 +120,11 @@ Jobrole_skill = db.Table('jobrole_skill',
                         db.Column('Skill_ID', db.String, db.ForeignKey('skill.Skill_ID'))
 )
 
-<<<<<<< HEAD
 Skill_course = db.Table('skill_course',
                         db.Column('Skill_ID', db.String, db.ForeignKey('skill.Skill_ID')),
                         db.Column('Course_ID', db.String, db.ForeignKey('course.Course_ID'))
 )
 
-=======
->>>>>>> 214e4449cfaf36463734e02ac48813a04d755ab9
 class Skill(db.Model):
     __tablename__ = "skill"
 
@@ -135,11 +132,8 @@ class Skill(db.Model):
     Skill_Name = db.Column(db.String, nullable=False)
     Skill_Desc = db.Column(db.String)
 
-<<<<<<< HEAD
     courses = db.relationship(Course, secondary=Skill_course, backref="skill", lazy=True)
 
-=======
->>>>>>> 214e4449cfaf36463734e02ac48813a04d755ab9
     def __init__(self, Skill_ID, Skill_Name, Skill_Desc=""):
         self.Skill_ID = Skill_ID
         self.Skill_Name = Skill_Name
