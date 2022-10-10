@@ -211,7 +211,12 @@ def view_role():
 @app.route("/course")
 def view_course():
     courselist = Course.query.all()
-    return "Testing! Course table row count: " + str(len(courselist))
+    return jsonify(
+        {
+            "code": 200, 
+            "data": [course.json() for course in courselist]
+        }
+    )
 
 @app.route("/staff")
 def view_staff():
@@ -271,6 +276,17 @@ def view_skills_for_a_role(jobroleId):
         {
             "code": 200,
             "data": [skill.json() for skill in skill_list]
+        }
+    )
+
+# retrieve one course information
+@app.route("/course/<string:CourseId>")
+def view_course_information(CourseId):
+    course_info = Course.query.filter_by(Course_ID = CourseId).first()
+    return jsonify(
+        {
+            "code":200,
+            "data": course_info.json()
         }
     )
 
