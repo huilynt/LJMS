@@ -283,6 +283,12 @@ def view_skills_for_a_role(jobroleId):
 @app.route("/course/<string:CourseId>")
 def view_course_information(CourseId):
     course_info = Course.query.filter_by(Course_ID = CourseId).first()
+    return jsonify(
+        {
+            "code":200,
+            "data": course_info.json()
+        }
+    )
 
 # retrieve all courses related to a skill
 @app.route("/<string:skillId>/courses")
