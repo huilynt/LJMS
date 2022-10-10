@@ -1,7 +1,7 @@
 import {React,useEffect, useState} from "react";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
-import {Link, Container} from '@mui/material';
+import { useParams } from 'react-router-dom';
+import Container from '@mui/material/Container';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,7 +11,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-//import Box from '@mui/material/Box';
+import Box from '@mui/material/Box';
+import IconButton from '@material-ui/core/IconButton';
+
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -38,29 +41,28 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
+function RoleSkill() {
+    const [skills, setSkills] = useState([]);
+    const [role, setRole] = useState("")
+    let { jobRole } = useParams();
 
-function Courses() {
-    const [courses, setCourse] = useState([]);
-    const navigate = useNavigate();
-
-    const courseDetails = (event,  message) => {
-        console.log('link clicked')
-        console.log(message)
-        navigate('/Courses/' + message)
-    }
-
-    useEffect(()=>{
-      axios.get('http://127.0.0.1:5000/course').then(response => {
-        console.log("SUCCESS", response)
-        setCourse(response.data.data)
-      }).catch(error => {
-        console.log(error)
-      })
-  
+    useEffect(() => {
+        axios.get('http://127.0.0.1:5000/' + jobRole + '/skills')
+        .then ((response) => {
+            console.log(response)
+            setSkills(response.data.data)
+            setRole(response.data.role)
+        })
+        .catch(error => {
+            console.log(error.message)
+        })
     }, [])
 
     return (
         <Container sx={{mt:5}}>
+            <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>{role}</Box>
+            <Box sx={{ typography: { xs: 'body2', md:'h6'}}}>Skills Needed</Box>
+
             <TableContainer component={Paper} sx={{marginTop:2}}>
                 <Table sx={{minWidth: 200}}>
                     <TableHead>
@@ -68,20 +70,16 @@ function Courses() {
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Code No</StyledTableCell>
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Name</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
-                            <StyledTableCell align='center'>More Course Information</StyledTableCell>
+                            <StyledTableCell align='center'>Select Skill</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {courses.map((course) => (
-                            <StyledTableRow key={course.Course_ID}>
-                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{course.Course_ID}</StyledTableCell>
-                                <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{course.Course_Name}</StyledTableCell>
-                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{course.Course_Desc}</StyledTableCell>
-                                <StyledTableCell align="center">
-                                    <Link onClick={event => courseDetails(event, course.Course_ID)} underline="none">
-                                        <ArrowForwardIosIcon></ArrowForwardIosIcon>
-                                    </Link>
-                                </StyledTableCell>      
+                        {skills.map((skill) => (
+                            <StyledTableRow key={skill.Skill_ID}>
+                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_ID}</StyledTableCell>
+                                <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{skill.Skill_Name}</StyledTableCell>
+                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_Desc}</StyledTableCell>
+                                <StyledTableCell align='center'><IconButton><ArrowForwardIosIcon></ArrowForwardIosIcon></IconButton></StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
@@ -89,6 +87,6 @@ function Courses() {
             </TableContainer>
         </Container>
     )
-    }
+}
 
-export default Courses;
+export default RoleSkill;

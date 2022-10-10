@@ -5,25 +5,14 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import LearningJourney from "./pages/LearningJourney";
 import Courses from "./pages/Courses";
+import CourseDesc from "./pages/CourseDesc";
+import SkillCourses from "./pages/SkillCourses";
 import Roles from "./pages/Roles";
 import Skills from "./pages/Skills";
 import ViewAllAvailRoles from './pages/ViewAllAvailRoles';
+import RoleSkill from "./pages/RoleSkill";
 
 function App() {
-
-  // const [data, setData] = useState({})
-  // useEffect(()=> {
-  //   fetch("/test").then(
-  //     res => res.json()
-  //   ).then(
-  //       data => {
-  //           setData(data)
-  //           console.log(data)
-  //       }
-  //   )
-  // })
-
-
 
   return (
     <Router>
@@ -34,6 +23,9 @@ function App() {
         <Route exact path="/Roles" element={<Roles/>} />
         <Route exact path="/Skills" element={<Skills/>} />
         <Route exact path="/ViewAllAvailRoles" element={<ViewAllAvailRoles/>} />
+        <Route exact path="/Courses/:courseId" element={<CourseDesc/>}/>
+        <Route exact path="/:roleID/:skillID/courses" element={<SkillCourses/>} />
+        <Route exact path="/:jobRole/skills" element={<RoleSkill/>} />
       </Routes>
     </Router>
   );
