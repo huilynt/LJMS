@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
@@ -273,12 +273,44 @@ def view_skills_for_a_role(jobroleId):
     for skill in jobrole.skills:
         skill_list.append(skill)
 
+    return (
+        {
+            "code": 200,
+            "data": [skill.json() for skill in skill_list], 
+            "role": jobrole.JobRole_Name
+        }
+    )
+
+# check if the user completed the skill
+@app.route("/skills/complete/<string:jobroleId>", methods=["POST"])
+def check_skills_completed(jobroleId):
+    userId = request.get_json()["userId"]
+    skills_of_role = view_skills_for_a_role(jobroleId)["data"]
+
+    for i in range(len(skills_of_role)):
+        course_found = False
+        skill_id = skills_of_role[i]['Skill_ID']
+
+        skill = Skill.query.filter_by(Skill_ID=skill_id).first()
+        for course in skill.courses:
+            registration = Registration.query.filter_by(Staff_ID = userId, Course_ID = course.Course_ID).first()
+            if registration is not None:
+                status = registration.Completion_Status
+                if status == "Completed\r":
+                    course_found = True
+        skills_of_role[i]['Completion_Status'] = course_found
+
+    jobrole = JobRole.query.filter_by(JobRole_ID= jobroleId).first()
+        
     return jsonify(
         {
             "code": 200,
-            "data": [skill.json() for skill in skill_list]
+            "data": skills_of_role,
+            "role": jobrole.JobRole_Name
         }
     )
+    
+
 
 # retrieve one course information
 @app.route("/course/<string:CourseId>")

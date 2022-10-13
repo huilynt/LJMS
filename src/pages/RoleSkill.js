@@ -13,7 +13,7 @@ import Paper from '@mui/material/Paper';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Box from '@mui/material/Box';
 import IconButton from '@material-ui/core/IconButton';
-
+import Chip from '@mui/material/Chip';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -25,6 +25,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
     },
+
     borderLeft: 0,
     borderRight:'0.5px solid grey',
 
@@ -47,14 +48,16 @@ function RoleSkill() {
     let { jobRole } = useParams();
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:5000/' + jobRole + '/skills')
+        sessionStorage.setItem("userId", "130001");
+
+        axios.post('http://127.0.0.1:5000/skills/complete/' + jobRole, {"userId":sessionStorage.userId})
         .then ((response) => {
             console.log(response)
-            setSkills(response.data.data)
             setRole(response.data.role)
+            setSkills(response.data.data)
         })
         .catch(error => {
-            console.log(error.message)
+                console.log(error.message)
         })
     }, [])
 
@@ -70,6 +73,7 @@ function RoleSkill() {
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Code No</StyledTableCell>
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Name</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
+                            <StyledTableCell align='center' sx={{borderRight: { xs:0, md:'0.5px solid grey'}}}>Status</StyledTableCell>
                             <StyledTableCell align='center'>Select Skill</StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -79,6 +83,9 @@ function RoleSkill() {
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_ID}</StyledTableCell>
                                 <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{skill.Skill_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_Desc}</StyledTableCell>
+                                <StyledTableCell align='center' sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>
+                                    {skill.Completion_Status == true ? <Chip label="Completed" color="success" size="small" /> : <Chip label="Incomplete" size="small" />}
+                                </StyledTableCell>
                                 <StyledTableCell align='center'><IconButton><ArrowForwardIosIcon></ArrowForwardIosIcon></IconButton></StyledTableCell>
                             </StyledTableRow>
                         ))}
