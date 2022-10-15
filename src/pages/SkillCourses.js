@@ -111,9 +111,9 @@ function SkillCourses() {
         <Table sx={{ minWidth: 200 }}>
           <TableHead>
             <StyledTableRow>
-              <StyledTableCell>ID</StyledTableCell>
+              <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>ID</StyledTableCell>
               <StyledTableCell>{skill} Courses</StyledTableCell>
-              <StyledTableCell>Description</StyledTableCell>
+              <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
               <StyledTableCell>Add/Remove Course</StyledTableCell>
             </StyledTableRow>
           </TableHead>
@@ -121,11 +121,11 @@ function SkillCourses() {
           <TableBody>
             {courses.map((course) => (
               <StyledTableRow>
-                <StyledTableCell component="th" scope="row">
+                <StyledTableCell component="th" scope="row" sx={{ display: { xs: 'none', md: 'table-cell' } }}>
                   {course.Course_ID}
                 </StyledTableCell>
                 <StyledTableCell>{course.Course_Name}</StyledTableCell>
-                <StyledTableCell>{course.Course_Desc}</StyledTableCell>
+                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{course.Course_Desc}</StyledTableCell>
                 <StyledTableCell>
                   <Button
                     sx={{ backgroundColor: "lightgreen", color: "black" }}>
