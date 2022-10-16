@@ -57,7 +57,7 @@ function EditSkills(){
     };
 
     function cancelChanges(){
-        navigate("/Skills")
+        navigate("/hr/Skills")
     }
 
     return (
@@ -110,7 +110,7 @@ function EditSkills(){
                         <Button variant="outlined" color="error" onClick={cancelChanges}>Cancel</Button>
                         <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
                     </Stack>
-                    {editConfirm === true ? <EditConfirm/> : <></>}
+                    {editConfirm === true ? <EditConfirm name="Skills"/> : <></>}
             </Box>
         {/* </form> */}
         

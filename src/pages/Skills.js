@@ -69,7 +69,7 @@ function Skills() {
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Code No</StyledTableCell>
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Name</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
-                            {role === "hr" ? <StyledTableCell align='center'>View Skill</StyledTableCell>: <></>}
+                            {role === "hr" ? <StyledTableCell align='center'>Edit Skill</StyledTableCell>: <></>}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -78,16 +78,17 @@ function Skills() {
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_ID}</StyledTableCell>
                                 <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{skill.Skill_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_Desc}</StyledTableCell>
-                                {role === "hr" ? <StyledTableCell align='center'>
-                                    <Stack direction="row">
-                                        <Link href={'skills/edit/' + skill.Skill_ID} underline="none">
-                                            <IconButton><EditIcon></EditIcon></IconButton>
-                                        </Link>
-                                        <Link underline="none" >
-                                            <IconButton><DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon></IconButton>
-                                        </Link>
-                                    </Stack>
-                                </StyledTableCell> : <></>}
+                                {role === "hr" ? 
+                                    <StyledTableCell align='center'>
+                                        <Stack direction="row" justifyContent='center'>
+                                            <Link href={'skills/edit/' + skill.Skill_ID} underline="none">
+                                                <IconButton><EditIcon></EditIcon></IconButton>
+                                            </Link>
+                                            <Link underline="none" >
+                                                <IconButton><DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon></IconButton>
+                                            </Link>
+                                        </Stack>
+                                    </StyledTableCell> : <></>}
                             </StyledTableRow>
                         ))}
                     </TableBody>

@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-function EditConfirm(){
+function EditConfirm(props){
     const [open, setOpen] = React.useState(true);
     let navigate = useNavigate();
+    let location = useLocation();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -16,7 +17,7 @@ function EditConfirm(){
 
     const handleClose = () => {
         setOpen(false);
-        navigate('/Skills');
+        navigate('/hr/' + props.name);
     };
 
 
