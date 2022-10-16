@@ -372,7 +372,7 @@ def find_by_skillId(skillId):
             "message": "Skill not found."
         }
     ), 404
-
+    
 # create a skill
 @app.route("/skill/create/<string:skillId>", methods=['POST'])
 def create_a_skill(skillId):
@@ -411,6 +411,33 @@ def create_a_skill(skillId):
         }
     ), 201
 
+#update a skill
+@app.route("/skill/<string:skillId>", methods=['PUT'])
+def update_a_skill(skillId):
+    skill = Skill.query.filter_by(Skill_ID= skillId).first()
+    if skill:
+        data = request.get_json()
+        if data['Skill_Name']:
+            skill.Skill_Name = data['Skill_Name']
+        if data['Skill_Desc']:
+            skill.Skill_Desc = data['Skill_Desc'] 
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": skill.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "skillId": skillId
+            },
+            "message": "Skill not found."
+        }
+    ), 404
+
 # delete a skill
 @app.route("/skill/<string:skillId>", methods=['DELETE'])
 def delete_a_skill(skillId):
@@ -421,9 +448,6 @@ def delete_a_skill(skillId):
         return jsonify(
             {
                 "code": 200,
-                "data": {
-                    "skillId": skillId
-                }
             }
         )
     return jsonify(
