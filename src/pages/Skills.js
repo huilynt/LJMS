@@ -75,7 +75,7 @@ function Skills() {
                                 <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{skill.Skill_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_Desc}</StyledTableCell>
                                 <StyledTableCell align='center'>
-                                    <Link onClick={event => navigate('/Skills/edit/' + skill.Skill_ID)} underline="none">
+                                    <Link href={'/Skills/edit/' + skill.Skill_ID} underline="none">
                                         <IconButton><ArrowForwardIosIcon></ArrowForwardIosIcon></IconButton>
                                     </Link>
                                 </StyledTableCell>
