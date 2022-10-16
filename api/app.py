@@ -373,6 +373,44 @@ def find_by_skillId(skillId):
         }
     ), 404
 
+# create a skill
+@app.route("/skill/create/<string:skillId>", methods=['POST'])
+def create_a_skill(skillId):
+    if (Skill.query.filter_by(Skill_ID=skillId).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "skillId": skillId
+                },
+                "message": "Skill already exists."
+            }
+        ), 400
+
+    data = request.get_json()
+    skill = Skill(skillId, **data)
+ 
+    try:
+        db.session.add(skill)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "skillId": skillId
+                },
+                "message": "An error occurred creating the skill."
+            }
+        ), 500
+ 
+    return jsonify(
+        {
+            "code": 201,
+            "data": skill.json()
+        }
+    ), 201
+
 # delete a skill
 @app.route("/skill/<string:skillId>", methods=['DELETE'])
 def delete_a_skill(skillId):
@@ -400,3 +438,4 @@ def delete_a_skill(skillId):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
