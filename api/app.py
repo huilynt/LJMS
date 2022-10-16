@@ -355,5 +355,50 @@ def view_single_jobrole(jobroleId):
         }
     )
 
+# find by skill
+@app.route("/skill/<string:skillId>")
+def find_by_skillId(skillId):
+    skill = Skill.query.filter_by(Skill_ID=skillId).first()
+    if skill:
+        return jsonify(
+            {
+                "code": 200,
+                "data": skill.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Skill not found."
+        }
+    ), 404
+
+# update a skill
+@app.route("/skill/<string:skillId>", methods=['PUT'])
+def update_a_skill(skillId):
+    skill = Skill.query.filter_by(Skill_ID= skillId).first()
+    if skill:
+        data = request.get_json()
+        if data['Skill_Name']:
+            skill.Skill_Name = data['Skill_Name']
+        if data['Skill_Desc']:
+            skill.Skill_Desc = data['Skill_Desc'] 
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": skill.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "skillId": skillId
+            },
+            "message": "Skill not found."
+        }
+    ), 404
+
 if __name__ == '__main__':
     app.run(debug=True)
