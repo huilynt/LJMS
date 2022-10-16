@@ -389,7 +389,7 @@ def create_a_skill(skillId):
 
     data = request.get_json()
     skill = Skill(skillId, **data)
- 
+
     try:
         db.session.add(skill)
         db.session.commit()
