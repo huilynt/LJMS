@@ -374,8 +374,13 @@ def find_by_skillId(skillId):
     ), 404
     
 # create a skill
-@app.route("/skill/create/<string:skillId>", methods=['POST'])
-def create_a_skill(skillId):
+@app.route("/skill/create", methods=['POST'])
+def create_a_skill():
+    data = request.get_json()
+    skill = Skill(**data)
+    skillId = skill.Skill_ID
+    skillname = skill.Skill_Name
+    
     if (Skill.query.filter_by(Skill_ID=skillId).first()):
         return jsonify(
             {
@@ -383,12 +388,20 @@ def create_a_skill(skillId):
                 "data": {
                     "skillId": skillId
                 },
-                "message": "Skill already exists."
+                "message": "Skill ID already exists."
             }
         ), 400
 
-    data = request.get_json()
-    skill = Skill(skillId, **data)
+    if (Skill.query.filter_by(Skill_Name=skillname).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "skillname": skillname
+                },
+                "message": "Skill Name already exists."
+            }
+        ), 400
 
     try:
         db.session.add(skill)
