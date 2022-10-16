@@ -1,6 +1,6 @@
 import { React, useEffect, useState} from "react";
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
@@ -8,7 +8,7 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-
+import EditConfirm from '../components/EditConfirm'
 
 function EditSkills(){
     const [skill, setSkill] = useState(
@@ -17,6 +17,8 @@ function EditSkills(){
             Skill_Desc: ""
         }
     );
+    const [editConfirm, setEditConfirm] = useState(false);
+    
     let {skillID} = useParams();
     let navigate = useNavigate();
 
@@ -29,6 +31,7 @@ function EditSkills(){
         .catch(error => {
             console.log(error.message)
         })
+
     },[]);
 
     const handleChange = (event) => {
@@ -50,16 +53,16 @@ function EditSkills(){
             console.log(error)
         })
 
-        navigate('/Skills')
+        setEditConfirm(true);
     };
 
     function cancelChanges(){
-        window.location.reload();
+        navigate("/Skills")
     }
 
     return (
         <Container sx={{mt:5}}>
-            <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>Video Editing</Box>
+            <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>Edit Skill</Box>
         
             {/* <form onSubmit={saveChanges} > */}
                 <Box sx={{my:5, py:5, px:2, border:'1px dashed grey'}} component="form">
@@ -107,9 +110,10 @@ function EditSkills(){
                         <Button variant="outlined" color="error" onClick={cancelChanges}>Cancel</Button>
                         <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
                     </Stack>
+                    {editConfirm === true ? <EditConfirm/> : <></>}
             </Box>
         {/* </form> */}
-
+        
         </Container>
     );
 }
