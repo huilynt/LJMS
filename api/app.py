@@ -355,5 +355,48 @@ def view_single_jobrole(jobroleId):
         }
     )
 
+# find by skill
+@app.route("/skill/<string:skillId>")
+def find_by_skillId(skillId):
+    skill = Skill.query.filter_by(Skill_ID=skillId).first()
+    if skill:
+        return jsonify(
+            {
+                "code": 200,
+                "data": skill.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Skill not found."
+        }
+    ), 404
+
+# delete a skill
+@app.route("/skill/<string:skillId>", methods=['DELETE'])
+def delete_a_skill(skillId):
+    skill = Skill.query.filter_by(Skill_ID=skillId).first()
+    if skill:
+        db.session.delete(skill)
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "skillId": skillId
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "skillId": skillId
+            },
+            "message": "Skill not found."
+        }
+    ), 404
+
 if __name__ == '__main__':
     app.run(debug=True)
