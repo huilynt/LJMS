@@ -355,5 +355,63 @@ def view_single_jobrole(jobroleId):
         }
     )
 
+# find by skill
+@app.route("/skill/<string:skillId>")
+def find_by_skillId(skillId):
+    skill = Skill.query.filter_by(Skill_ID=skillId).first()
+    if skill:
+        return jsonify(
+            {
+                "code": 200,
+                "data": skill.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Skill not found."
+        }
+    ), 404
+
+# create a skill
+@app.route("/skill/create/<string:skillId>", methods=['POST'])
+def create_a_skill(skillId):
+    if (Skill.query.filter_by(Skill_ID=skillId).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "skillId": skillId
+                },
+                "message": "Skill already exists."
+            }
+        ), 400
+
+    data = request.get_json()
+    skill = Skill(skillId, **data)
+ 
+    try:
+        db.session.add(skill)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "skillId": skillId
+                },
+                "message": "An error occurred creating the skill."
+            }
+        ), 500
+ 
+    return jsonify(
+        {
+            "code": 201,
+            "data": skill.json()
+        }
+    ), 201
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+
