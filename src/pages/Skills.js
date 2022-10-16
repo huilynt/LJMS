@@ -1,6 +1,6 @@
 import { useEffect, useState, React } from 'react';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import {Link, Container} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -10,9 +10,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Box from '@mui/material/Box';
 import IconButton from '@material-ui/core/IconButton';
+import Stack from '@mui/material/Stack';
+import { pink } from '@mui/material/colors';
 
 
 
@@ -41,7 +44,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function Skills() {
     const [skills, setSkills] = useState([]);
-    const navigate = useNavigate();
+    let {role} = useParams();
+
 
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/skill`)
@@ -65,7 +69,7 @@ function Skills() {
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Code No</StyledTableCell>
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Name</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
-                            <StyledTableCell align='center'>View Skill</StyledTableCell>
+                            {role === "hr" ? <StyledTableCell align='center'>View Skill</StyledTableCell>: <></>}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -74,11 +78,16 @@ function Skills() {
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_ID}</StyledTableCell>
                                 <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{skill.Skill_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_Desc}</StyledTableCell>
-                                <StyledTableCell align='center'>
-                                    <Link href={'/Skills/edit/' + skill.Skill_ID} underline="none">
-                                        <IconButton><ArrowForwardIosIcon></ArrowForwardIosIcon></IconButton>
-                                    </Link>
-                                </StyledTableCell>
+                                {role === "hr" ? <StyledTableCell align='center'>
+                                    <Stack direction="row">
+                                        <Link href={'skills/edit/' + skill.Skill_ID} underline="none">
+                                            <IconButton><EditIcon></EditIcon></IconButton>
+                                        </Link>
+                                        <Link underline="none" >
+                                            <IconButton><DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon></IconButton>
+                                        </Link>
+                                    </Stack>
+                                </StyledTableCell> : <></>}
                             </StyledTableRow>
                         ))}
                     </TableBody>
