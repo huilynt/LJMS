@@ -372,8 +372,46 @@ def find_by_skillId(skillId):
             "message": "Skill not found."
         }
     ), 404
+    
+# create a skill
+@app.route("/skill/create/<string:skillId>", methods=['POST'])
+def create_a_skill(skillId):
+    if (Skill.query.filter_by(Skill_ID=skillId).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "skillId": skillId
+                },
+                "message": "Skill already exists."
+            }
+        ), 400
 
-# update a skill
+    data = request.get_json()
+    skill = Skill(skillId, **data)
+ 
+    try:
+        db.session.add(skill)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "skillId": skillId
+                },
+                "message": "An error occurred creating the skill."
+            }
+        ), 500
+ 
+    return jsonify(
+        {
+            "code": 201,
+            "data": skill.json()
+        }
+    ), 201
+
+#update a skill
 @app.route("/skill/<string:skillId>", methods=['PUT'])
 def update_a_skill(skillId):
     skill = Skill.query.filter_by(Skill_ID= skillId).first()
@@ -400,5 +438,28 @@ def update_a_skill(skillId):
         }
     ), 404
 
+# delete a skill
+@app.route("/skill/<string:skillId>", methods=['DELETE'])
+def delete_a_skill(skillId):
+    skill = Skill.query.filter_by(Skill_ID=skillId).first()
+    if skill:
+        db.session.delete(skill)
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "skillId": skillId
+            },
+            "message": "Skill not found."
+        }
+    ), 404
+
 if __name__ == '__main__':
     app.run(debug=True)
+
