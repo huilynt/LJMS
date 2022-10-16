@@ -1,6 +1,7 @@
 import { useEffect, useState, React } from 'react';
 import axios from 'axios';
-import Container from '@mui/material/Container';
+import { useNavigate } from "react-router-dom";
+import {Link, Container} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,6 +12,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Box from '@mui/material/Box';
+import IconButton from '@material-ui/core/IconButton';
+
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -38,6 +41,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function Skills() {
     const [skills, setSkills] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/skill`)
@@ -70,7 +74,11 @@ function Skills() {
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_ID}</StyledTableCell>
                                 <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{skill.Skill_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_Desc}</StyledTableCell>
-                                <StyledTableCell align='center'><ArrowForwardIosIcon></ArrowForwardIosIcon></StyledTableCell>
+                                <StyledTableCell align='center'>
+                                    <Link onClick={event => navigate('/Skills/edit/' + skill.Skill_ID)} underline="none">
+                                        <IconButton><ArrowForwardIosIcon></ArrowForwardIosIcon></IconButton>
+                                    </Link>
+                                </StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
