@@ -419,7 +419,7 @@ def create_a_skill():
  
     return jsonify(
         {
-            "code": 201,
+            "code": 200,
             "data": skill.json()
         }
     ), 201
