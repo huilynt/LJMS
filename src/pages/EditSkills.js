@@ -48,7 +48,6 @@ function EditSkills(){
 
     function saveChanges(e) {
         e.preventDefault();
-        console.log(originalSkill == skill)
 
         if (JSON.stringify(originalSkill) == JSON.stringify(skill)){    
             setError("There is no changes made.")
