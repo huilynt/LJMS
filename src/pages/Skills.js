@@ -1,7 +1,8 @@
 import { useEffect, useState, React } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
-import {Link, Container} from '@mui/material';
+import {Grid, Button, Link, Container} from '@mui/material';
+import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -45,6 +46,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function Skills() {
     const [skills, setSkills] = useState([]);
     let location = useLocation();
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/skill`)
@@ -73,7 +76,19 @@ function Skills() {
 
     return (
         <Container sx={{mt:5}}>
-            <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>All Skills</Box>
+            <Grid container sx={{borderBottom:1, display:'flex', alignItems: 'center', pb:1}}>
+                <Grid item sx={{ typography: { xs: 'h6', md:'h4'}}} xs={8} md={4}>
+                    All Skills
+                </Grid>
+                {location.pathname.toLowerCase() === "/hr/skills" ? 
+                <Grid item xs={3} md={2} >
+                <Link href={'/hr/skills/create'} underline="none">
+                    <Button variant="contained" color="success" size="medium">Create</Button>
+                </Link>
+                </Grid>
+                : <></>}
+
+            </Grid>
 
             <TableContainer component={Paper} sx={{marginTop:2, marginBottom:10}}>
                 <Table sx={{minWidth: 200}}>
