@@ -19,6 +19,7 @@ import Stack from '@mui/material/Stack';
 import { pink } from '@mui/material/colors';
 
 
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: "#9CCAFF",
@@ -47,6 +48,7 @@ function Skills() {
     let location = useLocation();
     console.log(location)
     const navigate = useNavigate();
+
 
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/skill`)

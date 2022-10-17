@@ -1,6 +1,6 @@
 import { React, useEffect, useState} from "react";
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
@@ -8,7 +8,8 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-
+import EditConfirm from '../components/EditConfirm'
+import Alert from '@mui/material/Alert';
 
 function EditSkills(){
     const [skill, setSkill] = useState(
@@ -17,6 +18,10 @@ function EditSkills(){
             Skill_Desc: ""
         }
     );
+    const [originalSkill, setOriginalSkill] = useState({})
+    const [editConfirm, setEditConfirm] = useState(false);
+    const [error, setError] = useState("");
+
     let {skillID} = useParams();
     let navigate = useNavigate();
 
@@ -25,10 +30,12 @@ function EditSkills(){
         .then ((response) => {
             console.log(response)
             setSkill(response.data.data)
+            setOriginalSkill(response.data.data)
         })
         .catch(error => {
             console.log(error.message)
         })
+
     },[]);
 
     const handleChange = (event) => {
@@ -42,25 +49,29 @@ function EditSkills(){
     function saveChanges(e) {
         e.preventDefault();
 
-        axios.put('http://127.0.0.1:5000/skill/' + skillID, skill)
-        .then((response) =>{
-            console.log(response)
-        })
-        .catch(error => {
-            console.log(error)
-        })
-
-        navigate('/Skills')
+        if (originalSkill === skill){
+            setError("There is no changes made.")
+        }
+        else{
+            axios.put('http://127.0.0.1:5000/skill/' + skillID, skill)
+            .then((response) =>{
+                setEditConfirm(true);
+            })
+            .catch(error => {
+                console.log(error)
+                setError("The updated name entered is already in used. Kindly enter another name.");
+            })
+        }
     };
 
     function cancelChanges(){
-        window.location.reload();
+        navigate("/hr/Skills")
     }
 
     return (
         <Container sx={{mt:5}}>
-            <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>Video Editing</Box>
-        
+            <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>Edit Skill</Box>
+            {error.length > 0 ? <Alert sx={{mb:-3, mt:2}} severity="error">{error}</Alert> : <></>}
             {/* <form onSubmit={saveChanges} > */}
                 <Box sx={{my:5, py:5, px:2, border:'1px dashed grey'}} component="form">
                     <Stack direction={{xs:"column", md:"row" }} spacing={5}>
@@ -107,9 +118,10 @@ function EditSkills(){
                         <Button variant="outlined" color="error" onClick={cancelChanges}>Cancel</Button>
                         <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
                     </Stack>
+                    {editConfirm === true ? <EditConfirm name="Skills"/> : <></>}
             </Box>
         {/* </form> */}
-
+        
         </Container>
     );
 }

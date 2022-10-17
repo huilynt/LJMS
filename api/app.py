@@ -416,7 +416,7 @@ def create_a_skill():
                 "message": "An error occurred creating the skill."
             }
         ), 500
- 
+
     return jsonify(
         {
             "code": 200,
@@ -431,7 +431,20 @@ def update_a_skill(skillId):
     if skill:
         data = request.get_json()
         if data['Skill_Name']:
-            skill.Skill_Name = data['Skill_Name']
+            skill_check = Skill.query.filter_by(Skill_Name=data['Skill_Name']).first()
+            if skill_check and skill.Skill_Name != data["Skill_Name"]:
+                return jsonify(
+                    {
+                        "code": 404,
+                        "data": {
+                            "skillId": skillId
+                        },
+                        "message": "Skill name is repeated."
+                    }
+                ), 404
+            else:
+                skill.Skill_Name = data['Skill_Name']
+
         if data['Skill_Desc']:
             skill.Skill_Desc = data['Skill_Desc'] 
         db.session.commit()
