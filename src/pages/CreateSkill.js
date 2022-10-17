@@ -35,14 +35,28 @@ function CreateSkill(){
     function saveChanges(e) {
         e.preventDefault();
 
-        axios.post('http://127.0.0.1:5000/skill/create', skill)
-        .then((response) =>{
-            setCreateConfirm(true);
-        })
-        .catch(error => {
-            console.log(error)
-            setError("The skill ID or name entered is already in used. Kindly enter another ID or name.");
-        })
+        if(skill.Skill_ID === "" || skill.Skill_Name === "" || skill.Skill_Desc === ""){
+            setError("All fields must be filled")
+        }
+        else if(skill.Skill_ID.length > 50){
+            setError("Skill ID too long")
+        }
+        else if(skill.Skill_Name.length > 50){
+            setError("Skill Name too long")
+        }
+        else if(skill.Skill_Desc.length > 255){
+            setError("Skill Description too long")
+        }
+        else{
+            axios.post('http://127.0.0.1:5000/skill/create', skill)
+            .then((response) =>{
+                setCreateConfirm(true);
+            })
+            .catch(error => {
+                console.log(error)
+                setError("The skill ID or name entered is already in used. Kindly enter another ID or name.");
+            })
+        }
     };
 
 
