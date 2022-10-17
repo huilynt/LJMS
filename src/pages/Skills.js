@@ -2,6 +2,7 @@ import { useEffect, useState, React } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import {Grid, Button, Link, Container} from '@mui/material';
+import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,7 +17,6 @@ import Box from '@mui/material/Box';
 import IconButton from '@material-ui/core/IconButton';
 import Stack from '@mui/material/Stack';
 import { pink } from '@mui/material/colors';
-
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -46,6 +46,7 @@ function Skills() {
     const [skills, setSkills] = useState([]);
     let location = useLocation();
     console.log(location)
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/skill`)
