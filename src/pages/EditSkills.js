@@ -18,8 +18,9 @@ function EditSkills(){
             Skill_Desc: ""
         }
     );
+    const [originalSkill, setOriginalSkill] = useState({})
     const [editConfirm, setEditConfirm] = useState(false);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState("");
 
     let {skillID} = useParams();
     let navigate = useNavigate();
@@ -29,6 +30,7 @@ function EditSkills(){
         .then ((response) => {
             console.log(response)
             setSkill(response.data.data)
+            setOriginalSkill(response.data.data)
         })
         .catch(error => {
             console.log(error.message)
@@ -47,20 +49,19 @@ function EditSkills(){
     function saveChanges(e) {
         e.preventDefault();
 
-        axios.put('http://127.0.0.1:5000/skill/' + skillID, skill)
-        .then((response) =>{
-            console.log(response.data.code)
-            if (response.data.code !== 200){
-                setError(true);
-            }
-            else{
+        if (originalSkill === skill){
+            setError("There is no changes made.")
+        }
+        else{
+            axios.put('http://127.0.0.1:5000/skill/' + skillID, skill)
+            .then((response) =>{
                 setEditConfirm(true);
-            }
-        })
-        .catch(error => {
-            console.log(error)
-        })
-
+            })
+            .catch(error => {
+                console.log(error)
+                setError("The updated name entered is already in used. Kindly enter another name.");
+            })
+        }
     };
 
     function cancelChanges(){
@@ -70,7 +71,7 @@ function EditSkills(){
     return (
         <Container sx={{mt:5}}>
             <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>Edit Skill</Box>
-            {error === true ? <Alert sx={{mb:-3, mt:2}} severity="error">The updated name or description entered is already in used. Kindly enter another name or description.</Alert> : <></>}
+            {error.length > 0 ? <Alert sx={{mb:-3, mt:2}} severity="error">{error}</Alert> : <></>}
             {/* <form onSubmit={saveChanges} > */}
                 <Box sx={{my:5, py:5, px:2, border:'1px dashed grey'}} component="form">
                     <Stack direction={{xs:"column", md:"row" }} spacing={5}>
