@@ -1,6 +1,6 @@
 import { useEffect, useState, React } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {Link, Container} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -44,8 +44,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function Skills() {
     const [skills, setSkills] = useState([]);
-    let {role} = useParams();
-
+    let location = useLocation();
+    console.log(location)
 
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/skill`)
@@ -69,7 +69,7 @@ function Skills() {
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Code No</StyledTableCell>
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Name</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
-                            {role === "hr" ? <StyledTableCell align='center'>Edit Skill</StyledTableCell>: <></>}
+                            {location.pathname.toLowerCase() === "/hr/skills" ? <StyledTableCell align='center'>Edit Skill</StyledTableCell>: <></>}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -78,10 +78,10 @@ function Skills() {
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_ID}</StyledTableCell>
                                 <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{skill.Skill_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_Desc}</StyledTableCell>
-                                {role === "hr" ? 
+                                {location.pathname.toLowerCase() === "/hr/skills" ? 
                                     <StyledTableCell align='center'>
                                         <Stack direction="row" justifyContent='center'>
-                                            <Link href={'skills/edit/' + skill.Skill_ID} underline="none">
+                                            <Link href={'/hr/edit/skills/' + skill.Skill_ID} underline="none">
                                                 <IconButton><EditIcon></EditIcon></IconButton>
                                             </Link>
                                             <Link underline="none" >

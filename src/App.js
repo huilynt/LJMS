@@ -22,8 +22,8 @@ function App() {
         <Route exact path="/Courses" element={<Courses/>} />
         <Route exact path="/Roles" element={<Roles/>} />
         <Route exact path="/Skills" element={<Skills/>} />
-        <Route exact path=":role/skills" element={<Skills/>}/>
-        <Route exact path="hr/Skills/edit/:skillID" element={<EditSkills/>} />
+        <Route exact path="hr/skills" element={<Skills/>}/>
+        <Route exact path="hr/edit/skills/:skillID" element={<EditSkills/>} />
         <Route exact path="/ViewAllAvailRoles" element={<ViewAllAvailRoles/>} />
         <Route exact path="/Courses/:courseId" element={<CourseDesc/>}/>
         <Route exact path="/:roleID/:skillID/courses" element={<SkillCourses/>} />

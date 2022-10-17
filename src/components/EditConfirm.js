@@ -9,7 +9,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 function EditConfirm(props){
     const [open, setOpen] = React.useState(true);
     let navigate = useNavigate();
-    let location = useLocation();
 
     const handleClickOpen = () => {
         setOpen(true);
