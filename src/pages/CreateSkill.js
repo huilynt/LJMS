@@ -35,7 +35,7 @@ function CreateSkill(){
     function saveChanges(e) {
         e.preventDefault();
 
-        axios.post('http://127.0.0.1:5000/skill/create')
+        axios.post('http://127.0.0.1:5000/skill/create', skill)
         .then((response) =>{
             console.log(response.data.code)
             if (response.data.code !== 200){
@@ -78,12 +78,12 @@ function CreateSkill(){
                             <FormControl>
                                 <InputLabel htmlFor="skill-name">Name</InputLabel>
                                 <OutlinedInput
-                                id="skill-name"
-                                value={skill.Skill_Name}
-                                onChange={handleChange}
-                                name="Skill_Name"
-                                label="skill-name"
-                                sx={{ m: 2, mb:3}}
+                                    id="skill-name"
+                                    value={skill.Skill_Name}
+                                    onChange={handleChange}
+                                    name="Skill_Name"
+                                    label="skill-name"
+                                    sx={{ m: 2, mb:3}}
                                 />  
                             </FormControl>
 
@@ -101,17 +101,6 @@ function CreateSkill(){
                                 />
                             </FormControl>
                         </Stack>
-                        <FormControl sx={{width: {xs:"100%",md:"50%"}}}>
-                                    <InputLabel htmlFor="assign-skill">Assign Skills</InputLabel>
-                                    <OutlinedInput
-                                        id="assign-skill"
-                                        label="assign-skill"
-                                        multiline
-                                        rows={8}
-                                        defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sit amet dictum sit amet. Egestas erat imperdiet sed euismod nisi porta. Arcu felis bibendum ut tristique et egestas quis ipsum."
-                                        sx={{ m: 2 }}
-                                    />
-                        </FormControl>
                     </Stack>
                     <Stack direction="row" spacing={2} justifyContent="center" sx={{mt:2}}>
                         <Button variant="outlined" color="error" onClick={cancelChanges}>Cancel</Button>
