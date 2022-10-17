@@ -20,7 +20,7 @@ function CreateSkill(){
         }
     );
     const [createConfirm, setCreateConfirm] = useState(false);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState("");
 
     let navigate = useNavigate();
 
@@ -37,19 +37,15 @@ function CreateSkill(){
 
         axios.post('http://127.0.0.1:5000/skill/create', skill)
         .then((response) =>{
-            console.log(response.data.code)
-            if (response.data.code !== 200){
-                setError(true);
-            }
-            else{
-                setCreateConfirm(true);
-            }
+            setCreateConfirm(true);
         })
         .catch(error => {
             console.log(error)
+            setError("The skill ID or name entered is already in used. Kindly enter another ID or name.");
         })
-
     };
+
+
 
     function cancelChanges(){
         navigate("/hr/Skills")
@@ -58,7 +54,7 @@ function CreateSkill(){
     return (
         <Container sx={{mt:5}}>
             <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>Create Skill</Box>
-            {error === true ? <Alert sx={{mb:-3, mt:2}} severity="error">The skill ID or name entered is already in used. Kindly enter another ID or name.</Alert> : <></>}
+            {error.length > 0 ? <Alert sx={{mb:-3, mt:2}} severity="error">{error}</Alert> : <></>}
             {/* <form onSubmit={saveChanges} > */}
                 <Box sx={{my:5, py:5, px:2, border:'1px dashed grey'}} component="form">
                     <Stack direction={{xs:"column", md:"row" }} spacing={5}>
