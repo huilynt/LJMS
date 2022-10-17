@@ -97,7 +97,7 @@ class Registration(db.Model):
     Course_ID = db.Column(db.String(20), db.ForeignKey(Course.Course_ID), nullable=False)
     Staff_ID = db.Column(db.Integer, db.ForeignKey(Staff.Staff_ID), nullable=False)
     Reg_Status = db.Column(db.String(20), nullable=False)
-    Completion_Status = db.Column(db.String(20), nullable=False)
+    Completion_Status = db.Column(db.String(20))
 
     def __init__(self, Reg_ID, Course_ID, Staff_ID, Reg_Status, Completion_Status, Role):
         self.Reg_ID = Reg_ID
@@ -131,19 +131,22 @@ class Skill(db.Model):
     Skill_ID = db.Column(db.String, primary_key=True)
     Skill_Name = db.Column(db.String, nullable=False)
     Skill_Desc = db.Column(db.String)
+    Skill_Status = db.Column(db.String)
 
     courses = db.relationship(Course, secondary=Skill_course, backref="skill", lazy=True)
 
-    def __init__(self, Skill_ID, Skill_Name, Skill_Desc=""):
+    def __init__(self, Skill_ID, Skill_Name, Skill_Desc="", Skill_Status=""):
         self.Skill_ID = Skill_ID
         self.Skill_Name = Skill_Name
         self.Skill_Desc = Skill_Desc
+        self.Skill_Status = Skill_Status
 
     def json(self):
         return {
             "Skill_ID": self.Skill_ID,
             "Skill_Name": self.Skill_Name,
-            "Skill_Desc": self.Skill_Desc
+            "Skill_Desc": self.Skill_Desc,
+            "Skill_Status": self.Skill_Status
         }
 
 
@@ -254,7 +257,7 @@ def view_jobrole():
 # retrieve all skills
 @app.route("/skill")
 def view_skills():
-    skills = Skill.query.all()
+    skills = Skill.query.filter_by(Skill_Status = None)
 
     return jsonify(
         {
@@ -271,7 +274,8 @@ def view_skills_for_a_role(jobroleId):
 
     skill_list = []
     for skill in jobrole.skills:
-        skill_list.append(skill)
+        if skill.Skill_Status != "Retired":
+            skill_list.append(skill)
 
     return (
         {
@@ -296,7 +300,7 @@ def check_skills_completed(jobroleId):
             registration = Registration.query.filter_by(Staff_ID = userId, Course_ID = course.Course_ID).first()
             if registration is not None:
                 status = registration.Completion_Status
-                if status == "Completed\r":
+                if status == "Completed":
                     course_found = True
         skills_of_role[i]['Completion_Status'] = course_found
 
@@ -469,7 +473,9 @@ def update_a_skill(skillId):
 def delete_a_skill(skillId):
     skill = Skill.query.filter_by(Skill_ID=skillId).first()
     if skill:
-        db.session.delete(skill)
+        # db.session.delete(skill)
+        # db.session.commit()
+        skill.Skill_Status = "Retired"
         db.session.commit()
         return jsonify(
             {

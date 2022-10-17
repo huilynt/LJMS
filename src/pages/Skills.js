@@ -45,7 +45,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function Skills() {
     const [skills, setSkills] = useState([]);
     let location = useLocation();
-    console.log(location)
 
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/skill`)
@@ -57,6 +56,20 @@ function Skills() {
             console.log(error.message)
         })
     }, [])
+
+    function deleteSkill(e){
+        console.log(e.currentTarget.id)
+        let skill_id = e.currentTarget.id
+        axios.delete(`http://127.0.0.1:5000/skill/` + skill_id)
+        .then ((response) => {
+            console.log(response)
+        })
+        .catch(error => {
+            console.log(error.message)
+        })
+
+        window.location.reload(false)
+    }
 
     return (
         <Container sx={{mt:5}}>
@@ -84,7 +97,7 @@ function Skills() {
                                             <Link href={'/hr/edit/skills/' + skill.Skill_ID} underline="none">
                                                 <IconButton><EditIcon></EditIcon></IconButton>
                                             </Link>
-                                            <Link underline="none" >
+                                            <Link underline="none" id={skill.Skill_ID} onClick={deleteSkill}>
                                                 <IconButton><DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon></IconButton>
                                             </Link>
                                         </Stack>
