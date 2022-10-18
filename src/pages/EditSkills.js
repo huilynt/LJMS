@@ -49,8 +49,24 @@ function EditSkills(){
     function saveChanges(e) {
         e.preventDefault();
 
-        if (originalSkill === skill){
+        if (JSON.stringify(originalSkill) == JSON.stringify(skill)){    
             setError("There is no changes made.")
+        }
+        else if(skill.Skill_Name === "" && skill.Skill_Desc === ""){
+            setError("Skill Name and Description cannot be empty")
+        }
+        else if(skill.Skill_Name === "" || skill.Skill_Desc === ""){
+            let empty = "Description"
+            if (skill.Skill_Name === ""){
+                empty = "Name"
+            }
+            setError("Skill " + empty + " cannot be empty")
+        }
+        else if(skill.Skill_Name.length > 50){
+            setError("Skill Name too long")
+        }
+        else if(skill.Skill_Desc.length > 255){
+            setError("Skill Description too long")
         }
         else{
             axios.put('http://127.0.0.1:5000/skill/' + skillID, skill)
