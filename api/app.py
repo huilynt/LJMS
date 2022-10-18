@@ -492,6 +492,18 @@ def delete_a_skill(skillId):
         }
     ), 404
 
+# retrieve all learning journey
+@app.route("/learningjourney")
+def view_leaningjourney():
+    learningjourneylist = LearningJourney.query.all()
+
+    return jsonify(
+        {
+            "code": 200, 
+            "data": [learningjourney.json() for learningjourney in learningjourneylist]
+        }
+    )
+
 if __name__ == '__main__':
     app.run(debug=True)
 
