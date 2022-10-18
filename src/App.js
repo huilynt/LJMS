@@ -10,6 +10,8 @@ import Roles from "./pages/Roles";
 import Skills from "./pages/Skills";
 import ViewAllAvailRoles from './pages/ViewAllAvailRoles';
 import RoleSkill from "./pages/RoleSkill";
+import CreateSkill from "./pages/CreateSkill";
+import EditSkills from "./pages/EditSkills";
 
 function App() {
 
@@ -21,6 +23,10 @@ function App() {
         <Route exact path="/Courses" element={<Courses/>} />
         <Route exact path="/Roles" element={<Roles/>} />
         <Route exact path="/Skills" element={<Skills/>} />
+        <Route exact path="hr/skills" element={<Skills/>}/>
+        <Route exact path="hr/edit/skills/:skillID" element={<EditSkills/>} />
+        <Route exact path="hr/skills/create" element={<CreateSkill/>} />
+        <Route exact path="/Skills/edit/:skillID" element={<EditSkills/>} />
         <Route exact path="/ViewAllAvailRoles" element={<ViewAllAvailRoles/>} />
         <Route exact path="/Courses/:courseId" element={<CourseDesc/>}/>
         <Route exact path="/:roleID/:skillID/courses" element={<SkillCourses/>} />

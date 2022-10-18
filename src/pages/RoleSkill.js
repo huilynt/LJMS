@@ -48,7 +48,7 @@ function RoleSkill(props) {
     let { jobRole } = useParams();
 
     useEffect(() => {
-        sessionStorage.setItem("userId", "130001");
+        sessionStorage.setItem("userId", "140001");
 
         axios.post('http://127.0.0.1:5000/skills/complete/' + jobRole, {"userId":sessionStorage.userId})
         .then ((response) => {
