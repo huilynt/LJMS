@@ -1,6 +1,6 @@
 import { useEffect, useState, React } from 'react';
 import axios from 'axios';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {Grid, Button, Link, Container} from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
@@ -49,7 +49,9 @@ function LearningJourney() {
 
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:5000/learningjourney`)
+        sessionStorage.setItem("userId", "140001");
+
+        axios.post(`http://127.0.0.1:5000/learningjourney`, {"userId":sessionStorage.userId})
         .then ((response) => {
             console.log(response)
             setLearningJourney(response.data.data)
@@ -84,7 +86,7 @@ function LearningJourney() {
                 <Table sx={{minWidth: 200}}>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Journey ID</StyledTableCell>
+                            <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Role ID</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Job Role</StyledTableCell>
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Status</StyledTableCell>
                             <StyledTableCell align='center'>Edit Learning Journey</StyledTableCell>
@@ -93,7 +95,7 @@ function LearningJourney() {
                     <TableBody>
                         {learningjourney.map((learningjourney) => (
                             <StyledTableRow>
-                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{learningjourney.Journey_ID}</StyledTableCell>
+                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{learningjourney.JobRole_ID}</StyledTableCell>
                                 {jobrole.filter(jobrole => jobrole.JobRole_ID === learningjourney.JobRole_ID).map((jobrole) => (
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{jobrole.JobRole_Name}</StyledTableCell>
                                 ))}
