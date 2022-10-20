@@ -43,18 +43,23 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const handleAddCourse = (courseId) => {
-  // setCourses()
+const saveAddedCourses = (addedCourses) => {
+  console.log("saveAddedCourses", addedCourses);
+  sessionStorage.setItem("addedCourses", JSON.stringify(addedCourses));
+};
+
+const getAddedCourses = () => {
+  return JSON.parse(sessionStorage.getItem("addedCourses")) || [];
 };
 
 function SkillCourses() {
   const [courses, setCourses] = useState([]);
+  const [addedCourses, setAddedCourses] = useState([]);
   const [skill, setSkill] = useState("");
   const [role, setRole] = useState("");
 
-  var addedCourses = JSON.parse(sessionStorage.getItem("addedCourses"));
-  if (addedCourses == null) {
-    addedCourses = [];
+  if (addedCourses.length == 0) {
+    setAddedCourses(getAddedCourses());
   }
 
   let { roleID, skillID } = useParams();
@@ -148,26 +153,26 @@ function SkillCourses() {
                   {course.Course_Desc}
                 </StyledTableCell>
                 <StyledTableCell>
-                  <Button
-                    sx={{ backgroundColor: "lightgreen", color: "black" }}
-                    onClick={() => {
-                      if (!addedCourses.includes(course.Course_ID)) {
-                        addedCourses = [...addedCourses, course.Course_ID];
-                      } else {
-                        console.log("Alr added");
-                      }
-                      console.log(addedCourses);
-                      sessionStorage.setItem(
-                        "addedCourses",
-                        JSON.stringify(addedCourses)
-                      );
-                    }}>
-                    Add
-                  </Button>
-                  <Button
-                    sx={{ backgroundColor: "lightcoral", color: "black" }}>
-                    Remove
-                  </Button>
+                  {addedCourses.includes(course.Course_ID) ? (
+                    <Button
+                      sx={{ backgroundColor: "lightcoral", color: "black" }}>
+                      Remove
+                    </Button>
+                  ) : (
+                    <Button
+                      sx={{ backgroundColor: "lightgreen", color: "black" }}
+                      onClick={() => {
+                        if (!addedCourses.includes(course.Course_ID)) {
+                          let newCoursesArr = [...addedCourses, course.Course_ID];
+                          setAddedCourses(newCoursesArr);
+
+                          console.log("newCoursesArr", newCoursesArr);
+                          saveAddedCourses(newCoursesArr);
+                        }
+                      }}>
+                      Add
+                    </Button>
+                  )}
                 </StyledTableCell>
               </StyledTableRow>
             ))}

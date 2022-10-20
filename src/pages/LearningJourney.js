@@ -77,7 +77,9 @@ function LearningJourney() {
                     Learning Journey
                 </Grid>
                 <Grid item xs={3} md={2} >
+                <Link to='/ViewAllAvailRoles' underline="none">
                     <Button variant="contained" color="success" size="medium">Create</Button>
+                </Link>
                 </Grid>
 
             </Grid>
