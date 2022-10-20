@@ -87,7 +87,7 @@ function LearningJourney() {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Role ID</StyledTableCell>
-                            <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Job Role</StyledTableCell>
+                            <StyledTableCell sx={{ display: { xs: 0 , md: 'table-cell' } }}>Job Role</StyledTableCell>
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Status</StyledTableCell>
                             <StyledTableCell align='center'>Edit Learning Journey</StyledTableCell>
                         </TableRow>
@@ -97,7 +97,7 @@ function LearningJourney() {
                             <StyledTableRow>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{learningjourney.JobRole_ID}</StyledTableCell>
                                 {jobrole.filter(jobrole => jobrole.JobRole_ID === learningjourney.JobRole_ID).map((jobrole) => (
-                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{jobrole.JobRole_Name}</StyledTableCell>
+                                <StyledTableCell sx={{ display: { xs: 0 , md: 'table-cell' } }}>{jobrole.JobRole_Name}</StyledTableCell>
                                 ))}
                                 <StyledTableCell align='center' sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>
                                     {learningjourney.LearningJourney_Status == "Completed" ? <Chip label="Completed" color="success" size="small" /> : <Chip label="Incomplete" size="small" />}
