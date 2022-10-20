@@ -43,10 +43,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const handleAddCourse = (courseId) => {
+  // setCourses()
+};
+
 function SkillCourses() {
   const [courses, setCourses] = useState([]);
   const [skill, setSkill] = useState("");
   const [role, setRole] = useState("");
+
+  var addedCourses = JSON.parse(sessionStorage.getItem("addedCourses"));
+  if (addedCourses == null) {
+    addedCourses = [];
+  }
 
   let { roleID, skillID } = useParams();
   useEffect(() => {
@@ -111,24 +120,48 @@ function SkillCourses() {
         <Table sx={{ minWidth: 200 }}>
           <TableHead>
             <StyledTableRow>
-              <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>ID</StyledTableCell>
+              <StyledTableCell
+                sx={{ display: { xs: "none", md: "table-cell" } }}>
+                ID
+              </StyledTableCell>
               <StyledTableCell>{skill} Courses</StyledTableCell>
-              <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
+              <StyledTableCell
+                sx={{ display: { xs: "none", md: "table-cell" } }}>
+                Description
+              </StyledTableCell>
               <StyledTableCell>Add/Remove Course</StyledTableCell>
             </StyledTableRow>
           </TableHead>
 
           <TableBody>
             {courses.map((course) => (
-              <StyledTableRow>
-                <StyledTableCell component="th" scope="row" sx={{ display: { xs: 'none', md: 'table-cell' } }}>
+              <StyledTableRow key={course.Course_id}>
+                <StyledTableCell
+                  component="th"
+                  scope="row"
+                  sx={{ display: { xs: "none", md: "table-cell" } }}>
                   {course.Course_ID}
                 </StyledTableCell>
                 <StyledTableCell>{course.Course_Name}</StyledTableCell>
-                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{course.Course_Desc}</StyledTableCell>
+                <StyledTableCell
+                  sx={{ display: { xs: "none", md: "table-cell" } }}>
+                  {course.Course_Desc}
+                </StyledTableCell>
                 <StyledTableCell>
                   <Button
-                    sx={{ backgroundColor: "lightgreen", color: "black" }}>
+                    sx={{ backgroundColor: "lightgreen", color: "black" }}
+                    onClick={() => {
+                      if (!addedCourses.includes(course.Course_ID)) {
+                        addedCourses = [...addedCourses, course.Course_ID];
+                      } else {
+                        console.log("Alr added");
+                      }
+                      console.log(addedCourses);
+                      sessionStorage.setItem(
+                        "addedCourses",
+                        JSON.stringify(addedCourses)
+                      );
+                    }}>
                     Add
                   </Button>
                   <Button
