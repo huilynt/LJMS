@@ -54,11 +54,11 @@ const getAddedCourses = () => {
 
 function SkillCourses() {
   const [courses, setCourses] = useState([]);
-  const [addedCourses, setAddedCourses] = useState([]);
+  const [addedCourses, setAddedCourses] = useState();
   const [skill, setSkill] = useState("");
   const [role, setRole] = useState("");
 
-  if (addedCourses.length == 0) {
+  if (!addedCourses) {
     setAddedCourses(getAddedCourses());
   }
 
