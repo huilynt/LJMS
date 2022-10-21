@@ -518,3 +518,53 @@ def view_leaningjourney():
 if __name__ == '__main__':
     app.run(debug=True)
 
+# create a role
+@app.route("/role/create", methods=['POST'])
+def create_a_role():
+    data = request.get_json()
+    role = Role(**data)
+    roleId = role.Role_ID
+    rolename = role.Role_Name
+    
+    if (Role.query.filter_by(Role_ID=roleId).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "roleId": roleId
+                },
+                "message": "Role ID already exists."
+            }
+        ), 400
+
+    if (Role.query.filter_by(Role_Name=rolename).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "rolename": rolename
+                },
+                "message": "Role Name already exists."
+            }
+        ), 400
+
+    try:
+        db.session.add(role)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "roleId": roleId
+                },
+                "message": "An error occurred creating the role."
+            }
+        ), 500
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": role.json()
+        }
+    ), 201
