@@ -519,7 +519,7 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 # create a role
-@app.route("/role/create", methods=['POST'])
+@app.route("/roles/create", methods=['POST'])
 def create_a_role():
     data = request.get_json()
     role = Role(**data)
