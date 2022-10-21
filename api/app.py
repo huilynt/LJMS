@@ -518,7 +518,7 @@ def view_leaningjourney():
 if __name__ == '__main__':
     app.run(debug=True)
 
-# create a role
+# create a role (hr)
 @app.route("/roles/create", methods=['POST'])
 def create_a_role():
     data = request.get_json()
