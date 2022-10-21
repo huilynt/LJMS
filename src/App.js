@@ -12,6 +12,7 @@ import ViewAllAvailRoles from './pages/ViewAllAvailRoles';
 import RoleSkill from "./pages/RoleSkill";
 import CreateSkill from "./pages/CreateSkill";
 import EditSkills from "./pages/EditSkills";
+import EditLearningJourney from "./pages/EditLearningJourney"
 
 function App() {
 
@@ -19,18 +20,18 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route exact path="/LearningJourney" element={<LearningJourney/>} />
+        <Route exact path="/journey" element={<LearningJourney/>} />
         <Route exact path="/Courses" element={<Courses/>} />
         <Route exact path="/Roles" element={<Roles/>} />
         <Route exact path="/Skills" element={<Skills/>} />
         <Route exact path="hr/skills" element={<Skills/>}/>
         <Route exact path="hr/edit/skills/:skillID" element={<EditSkills/>} />
         <Route exact path="hr/skills/create" element={<CreateSkill/>} />
-        <Route exact path="/Skills/edit/:skillID" element={<EditSkills/>} />
         <Route exact path="/ViewAllAvailRoles" element={<ViewAllAvailRoles/>} />
         <Route exact path="/Courses/:courseId" element={<CourseDesc/>}/>
         <Route exact path="/:roleID/:skillID/courses" element={<SkillCourses/>} />
         <Route exact path="/:jobRole/skills" element={<RoleSkill/>} />
+        <Route exact path="/journey/:roleID" element={<EditLearningJourney/>}/>
       </Routes>
     </Router>
   );

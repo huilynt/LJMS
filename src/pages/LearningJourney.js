@@ -1,8 +1,6 @@
 import { useEffect, useState, React } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 import {Grid, Button, Link, Container} from '@mui/material';
-import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -44,12 +42,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function LearningJourney() {
     const [learningjourney, setLearningJourney] = useState([]);
     const [jobrole, setRole] = useState([]);
-    let location = useLocation();
-    const navigate = useNavigate();
 
 
     useEffect(() => {
-        sessionStorage.setItem("userId", "140001");
+        sessionStorage.setItem("userId", "160188");
 
         axios.post(`http://127.0.0.1:5000/learningjourney`, {"userId":sessionStorage.userId})
         .then ((response) => {
@@ -63,10 +59,10 @@ function LearningJourney() {
         axios
         .get("http://127.0.0.1:5000/jobrole")
         .then((response) => {
-          setRole(response.data.data);
+            setRole(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+            console.log(error);
         });
     }, [])
 
@@ -106,7 +102,9 @@ function LearningJourney() {
                                 </StyledTableCell>
                                     <StyledTableCell align='center'>
                                         <Stack direction="row" justifyContent='center'>
-                                                <IconButton><EditIcon></EditIcon></IconButton>
+                                                <Link href={'/journey/' + learningjourney.JobRole_ID} underline="none">
+                                                    <IconButton><EditIcon></EditIcon></IconButton>
+                                                </Link>
                                                 <IconButton><DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon></IconButton>
                                         </Stack>
                                     </StyledTableCell>
