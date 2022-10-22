@@ -198,7 +198,6 @@ function SkillCourses() {
                           let newCoursesArr = addedCourses.filter(
                             (c) => c !== course.Course_ID
                           );
-                          console.log(newCoursesArr)
                           setAddedCourses(newCoursesArr);
 
                           saveAddedCourses(newCoursesArr);

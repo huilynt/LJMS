@@ -18,12 +18,13 @@ function CourseCard(props){
                     </Typography>
                     <Divider/>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        Skill: {props.skills.length > 1 ? props.skills.map(skill => (
-                            <span>{skill["Skill_Name"]},</span>
-                        )) : <span>{props.skills[0]["Skill_Name"]}</span>}
+                        Skills: {props.skills === undefined || props.status !== "Active" ? <span>Retired</span> : 
+                            props.skills.length > 1 ? 
+                            props.skills.map(skill => (<span>{skill["Skill_Name"]},</span>)) : 
+                            <span>{props.skills[0]["Skill_Name"]}</span>}
                     </Typography>
                 </CardContent>
-                { props.completed === false ?
+                { props.completed === false && props.status !== "Pending" && props.status !== "Retired" ?
                 <CardActions sx={{p:2, pt:0}}>
                     <Button size="small" color="error">Remove Course 
                         <RemoveCircleOutlineIcon color="error" fontSize="small"></RemoveCircleOutlineIcon>
