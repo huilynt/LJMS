@@ -1,6 +1,6 @@
 import { useEffect, useState, React } from 'react';
 import axios from 'axios';
-import {Grid, Button, Link, Container} from '@mui/material';
+import {Grid, Button, Container} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -15,6 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Stack from '@mui/material/Stack';
 import { pink } from '@mui/material/colors';
 import Chip from '@mui/material/Chip';
+import { Link } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -73,7 +74,9 @@ function LearningJourney() {
                     Learning Journey
                 </Grid>
                 <Grid item xs={3} md={2} >
+                <Link to='/ViewAllAvailRoles' underline="none">
                     <Button variant="contained" color="success" size="medium">Create</Button>
+                </Link>
                 </Grid>
 
             </Grid>
