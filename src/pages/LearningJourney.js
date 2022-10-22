@@ -1,6 +1,6 @@
 import { useEffect, useState, React } from 'react';
 import axios from 'axios';
-import {Grid, Button, Container} from '@mui/material';
+import {Grid, Container} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -15,7 +15,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Stack from '@mui/material/Stack';
 import { pink } from '@mui/material/colors';
 import Chip from '@mui/material/Chip';
-import { Link } from 'react-router-dom';
+import Link from '@mui/material/Link';
+import Button from '@mui/material/Button';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -46,7 +47,7 @@ function LearningJourney() {
 
 
     useEffect(() => {
-        sessionStorage.setItem("userId", "160188");
+        sessionStorage.setItem("userId", "150166");
 
         axios.post(`http://127.0.0.1:5000/learningjourney`, {"userId":sessionStorage.userId})
         .then ((response) => {
@@ -74,8 +75,8 @@ function LearningJourney() {
                     Learning Journey
                 </Grid>
                 <Grid item xs={3} md={2} >
-                <Link to='/ViewAllAvailRoles' underline="none">
-                    <Button variant="contained" color="success" size="medium">Create</Button>
+                <Link href='/ViewAllAvailRoles' underline="none">
+                    <Button variant="contained" color="success">Create</Button>
                 </Link>
                 </Grid>
 
@@ -101,14 +102,14 @@ function LearningJourney() {
                                 <StyledTableCell align='center' sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>
                                     {learningjourney.LearningJourney_Status == "Completed" ? <Chip label="Completed" color="success" size="small" /> : <Chip label="Incomplete" size="small" />}
                                 </StyledTableCell>
-                                    <StyledTableCell align='center'>
-                                        <Stack direction="row" justifyContent='center'>
-                                                <Link href={'/journey/' + learningjourney.JobRole_ID} underline="none">
-                                                    <IconButton><EditIcon></EditIcon></IconButton>
-                                                </Link>
-                                                <IconButton><DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon></IconButton>
-                                        </Stack>
-                                    </StyledTableCell>
+                                <StyledTableCell align='center'>
+                                    <Stack direction="row" justifyContent='center'>
+                                            <Link href={'/journey/' + learningjourney.JobRole_ID} underline="none">
+                                                <IconButton><EditIcon></EditIcon></IconButton>
+                                            </Link>
+                                            <IconButton><DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon></IconButton>
+                                    </Stack>
+                                </StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>

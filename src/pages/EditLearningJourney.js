@@ -54,7 +54,7 @@ function EditLearningJourney() {
 
     const skill_posts = []
     for (let skill of skills){
-        skill_posts.push(<SkillCard completed={skill.Completion_Status} skill={skill.Skill_Name}/>)
+        skill_posts.push(<SkillCard jobrole={roleID} completed={skill.Completion_Status} skill={skill.Skill_Name} skillId={skill.Skill_ID}/>)
     }
 
     const courses_post_completed = []
@@ -62,10 +62,10 @@ function EditLearningJourney() {
 
     for (let course of courses){
         if (course.Completion_Status === true){
-            courses_post_completed.push(<CourseCard completed={course.Completion_Status} course={course.Course_Name} skills={course.skills}/>)
+            courses_post_completed.push(<CourseCard status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills}/>)
         }
-        else{
-            courses_post_progress.push(<CourseCard completed={course.Completion_Status} course={course.Course_Name} skills={course.skills}/>)
+        else {
+            courses_post_progress.push(<CourseCard status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills}/>)
         }
     }
     return (
