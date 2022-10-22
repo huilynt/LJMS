@@ -682,7 +682,6 @@ def get_courses_in_journey(journeyId):
         course = journey.courses[j]
         for skill in skill_list:
             if course in skill.courses:
-                print('true')
                 if "skills" in course_list[j]:
                     course_list[j]['skills'].append(skill.json())
                 else:
@@ -695,6 +694,34 @@ def get_courses_in_journey(journeyId):
         }
     ), 201
 
+@app.route("/courses/<string:courseId>")
+def get_assgined_courses(courseId):
+    skillList = Skill.query.all()
+    selected_skills = []
+
+    for skill in skillList:
+        courseList = skill.courses
+        course = Course.query.filter_by(Course_ID=courseId).first()
+        if course in courseList:
+            selected_skills.append(skill.Skill_ID)
+
+    print(selected_skills)
+    if selected_skills:
+        return jsonify(
+            {
+                "code": 200,
+                "data": selected_skills,
+                "name": course.Course_Name
+            }
+        ), 201
+
+    return jsonify(
+        { 
+            "code": 404,
+            "message": "skills not found",
+            "name": course.Course_Name
+        }
+    ), 404
 
 
 if __name__ == '__main__':
