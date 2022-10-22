@@ -192,7 +192,18 @@ function SkillCourses() {
                     </Button>
                   ) : (
                     <Button
-                      sx={{ backgroundColor: "lightcoral", color: "black" }}>
+                      sx={{ backgroundColor: "lightcoral", color: "black" }}
+                      onClick={() => {
+                        if (addedCourses.includes(course.Course_ID)) {
+                          let newCoursesArr = addedCourses.filter(
+                            (c) => c !== course.Course_ID
+                          );
+                          console.log(newCoursesArr)
+                          setAddedCourses(newCoursesArr);
+
+                          saveAddedCourses(newCoursesArr);
+                        }
+                      }}>
                       Remove
                     </Button>
                   )}
