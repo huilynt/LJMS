@@ -1,6 +1,6 @@
-import { React, useEffect, useState} from "react";
+import { React, useState} from "react";
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
