@@ -12,11 +12,11 @@ import CreateConfirm from '../components/CreateConfirm'
 import Alert from '@mui/material/Alert';
 
 function CreateRoleHr(){
-    const [role, setRole] = useState(
+    const [jobrole, setJobRole] = useState(
         {
-            Role_ID: "",
-            Role_Name: "",
-            Role_Desc: ""
+            JobRole_ID: "",
+            JobRole_Name: "",
+            JobRole_Desc: ""
         }
     );
     const [createConfirm, setCreateConfirm] = useState(false);
@@ -26,8 +26,8 @@ function CreateRoleHr(){
 
     const handleChange = (event) => {
         const value = event.target.value;
-        setRole({ 
-            ...role,
+        setJobRole({ 
+            ...jobrole,
             [event.target.name]: value
         });
     };
@@ -35,20 +35,20 @@ function CreateRoleHr(){
     function saveChanges(e) {
         e.preventDefault();
 
-        if(role.Role_ID === "" || role.Role_Name === "" || role.Role_Desc === ""){
+        if(jobrole.JobRole_ID === "" || jobrole.JobRole_Name === "" || jobrole.JobRole_Desc === ""){
             setError("All fields must be filled")
         }
-        else if(role.Role_ID.length > 50){
+        else if(jobrole.JobRole_ID.length > 50){
             setError("Role ID too long")
         }
-        else if(role.Role_Name.length > 50){
+        else if(jobrole.JobRole_Name.length > 50){
             setError("Role Name too long")
         }
-        else if(role.Role_Desc.length > 255){
+        else if(jobrole.JobRole_Desc.length > 255){
             setError("Role Description too long")
         }
         else{
-            axios.post('http://127.0.0.1:5000/roles/create', role)
+            axios.post('http://127.0.0.1:50000/roles/create',role)
             .then((response) =>{
                 setCreateConfirm(true);
             })
@@ -74,38 +74,38 @@ function CreateRoleHr(){
                     <Stack direction={{xs:"column", md:"row" }} spacing={5}>
                         <Stack spacing={2} sx={{width: {xs:"100%",md:"50%"}}}>
                             <FormControl>
-                                <InputLabel htmlFor="role-id">ID</InputLabel>
+                                <InputLabel htmlFor="jobrole-id">ID</InputLabel>
                                 <OutlinedInput
-                                id="role-id"
-                                value={role.Role_ID}
+                                id="jobrole-id"
+                                value={jobrole.JobRole_ID}
                                 onChange={handleChange}
-                                name="Role_ID"
-                                label="role-id"
+                                name="JobRole_ID"
+                                label="jobrole-id"
                                 sx={{ m: 2, mb:3}}
                                 />  
                             </FormControl>
                             
                             <FormControl>
-                                <InputLabel htmlFor="role-name">Name</InputLabel>
+                                <InputLabel htmlFor="jobrole-name">Name</InputLabel>
                                 <OutlinedInput
-                                    id="role-name"
-                                    value={role.Role_Name}
+                                    id="jobrole-name"
+                                    value={jobrole.JobRole_Name}
                                     onChange={handleChange}
-                                    name="Role_Name"
-                                    label="role-name"
+                                    name="JobRole_Name"
+                                    label="jobrole-name"
                                     sx={{ m: 2, mb:3}}
                                 />  
                             </FormControl>
 
                             <FormControl>
-                                <InputLabel htmlFor="role-desc">Description</InputLabel>
+                                <InputLabel htmlFor="jobrole-desc">Description</InputLabel>
                                 <OutlinedInput
-                                    id="role-desc"
-                                    label="role-desc"
-                                    name="role_Desc"
+                                    id="jobrole-desc"
+                                    label="jobrole-desc"
+                                    name="jobrole_Desc"
                                     multiline
                                     rows={8}
-                                    value={role.Role_Desc}
+                                    value={jobrole.JobRole_Desc}
                                     onChange={handleChange}
                                     sx={{ m: 2 }}
                                 />
@@ -116,7 +116,7 @@ function CreateRoleHr(){
                         <Button variant="outlined" color="error" onClick={cancelChanges}>Cancel</Button>
                         <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
                     </Stack>
-                    {createConfirm === true ? <CreateConfirm name="Roles"/> : <></>}
+                    {createConfirm === true ? <CreateConfirm name="JobRoles"/> : <></>}
             </Box>
         {/* </form> */}
         
