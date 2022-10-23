@@ -48,7 +48,7 @@ function CreateRoleHr(){
             setError("Role Description too long")
         }
         else{
-            axios.post('http://127.0.0.1:50000/roles/create',role)
+            axios.post('http://127.0.0.1:50000/jobrole/create',jobrole)
             .then((response) =>{
                 setCreateConfirm(true);
             })
