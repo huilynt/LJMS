@@ -518,45 +518,45 @@ def view_leaningjourney():
 if __name__ == '__main__':
     app.run(debug=True)
 
-# create a role (hr)
-@app.route("/roles/create", methods=['POST'])
+# create a jobrole 
+@app.route("/jobrole/create", methods=['POST'])
 def create_a_role():
     data = request.get_json()
-    role = Role(**data)
-    roleId = role.Role_ID
-    rolename = role.Role_Name
+    jobrole = JobRole(**data)
+    jobroleId = jobrole.JobRole_ID
+    jobrolename = jobrole.JobRole_Name
     
-    if (Role.query.filter_by(Role_ID=roleId).first()):
+    if (JobRole.query.filter_by(JobRole_ID=jobroleId).first()):
         return jsonify(
             {
                 "code": 400,
                 "data": {
-                    "roleId": roleId
+                    "jobroleId": jobroleId
                 },
                 "message": "Role ID already exists."
             }
         ), 400
 
-    if (Role.query.filter_by(Role_Name=rolename).first()):
+    if (JobRole.query.filter_by(JobRole_Name=jobrolename).first()):
         return jsonify(
             {
                 "code": 400,
                 "data": {
-                    "rolename": rolename
+                    "jobrolename": jobrolename
                 },
                 "message": "Role Name already exists."
             }
         ), 400
 
     try:
-        db.session.add(role)
+        db.session.add(jobrole)
         db.session.commit()
     except:
         return jsonify(
             {
                 "code": 500,
                 "data": {
-                    "roleId": roleId
+                    "jobroleId": jobroleId
                 },
                 "message": "An error occurred creating the role."
             }
@@ -565,6 +565,6 @@ def create_a_role():
     return jsonify(
         {
             "code": 200,
-            "data": role.json()
+            "data": jobrole.json()
         }
     ), 201
