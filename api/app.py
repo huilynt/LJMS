@@ -495,3 +495,31 @@ def delete_a_skill(skillId):
 if __name__ == '__main__':
     app.run(debug=True)
 
+
+# delete a jobrole
+@app.route("/jobrole/<string:jobroleId>", methods=['DELETE'])
+def delete_a_jobrole(jobroleId):
+    jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
+    if jobrole:
+        # db.session.delete(jobrole)
+        # db.session.commit()
+        jobrole.JobRole_Status = "Retired"
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "jobroleId": jobroleId
+            },
+            "message": "Role not found."
+        }
+    ), 404
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
