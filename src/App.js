@@ -12,6 +12,7 @@ import ViewAllAvailRoles from './pages/ViewAllAvailRoles';
 import RoleSkill from "./pages/RoleSkill";
 import CreateSkill from "./pages/CreateSkill";
 import EditSkills from "./pages/EditSkills";
+import UpdateRoleHR from "./pages/UpdateRoleHR"
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
         <Route exact path="/LearningJourney" element={<LearningJourney/>} />
         <Route exact path="/Courses" element={<Courses/>} />
         <Route exact path="/Roles" element={<Roles/>} />
+        <Route exact path="hr/edit/roles/:jobroleID" element={<UpdateRoleHR/>} />
         <Route exact path="/Skills" element={<Skills/>} />
         <Route exact path="hr/skills" element={<Skills/>}/>
         <Route exact path="hr/edit/skills/:skillID" element={<EditSkills/>} />
