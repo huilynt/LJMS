@@ -643,8 +643,8 @@ def get_courses_in_journey(journeyId):
 #Add skills to existing job role
 @app.route("/hr/jobrole/<string:jobroleId>/edit", methods=["POST"]) 
 def update_skills_to_role(jobroleId):
-    jobroleid = JobRole.query.filter_by(JobRole_ID= jobroleId).first().JobRole_ID
-    skillid_list = request.get_json()["skillId"] #get from the part when the specific skill is added
+    jobroleid = JobRole.query.filter_by(JobRole_ID = jobroleId).first().JobRole_ID
+    skillid_list = request.get_json() #get from the part when the specific skill is added
     deleted_list=[]
 
     if (db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleid).all()): #find all skills of job role and delete
@@ -674,9 +674,10 @@ def update_skills_to_role(jobroleId):
                 "added list": skillid_list,
                 "deleted list": deleted_list
             },
-            "message": "Jobrole skills created successfully."
+            "message": "Jobrole skills updated successfully."
         }
     ), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True)
