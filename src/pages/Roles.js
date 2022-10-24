@@ -42,16 +42,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function Roles() {
-    const [roles, setRoles] = useState([]);
+    const [jobroles, setJobRoles] = useState([]);
     let location = useLocation();
     console.log(location)
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:5000/role`)
+        axios.get(`http://127.0.0.1:5000/jobrole`)
         .then ((response) => {
             console.log(response)
-            setRoles(response.data.data)
+            setJobRoles(response.data.data)
         })
         .catch(error => {
             console.log(error.message)
@@ -85,15 +85,15 @@ function Roles() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {roles.map((role) => (
-                            <StyledTableRow key={role.Role_ID}>
-                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{role.Role_ID}</StyledTableCell>
-                                <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{role.Role_Name}</StyledTableCell>
-                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{role.Role_Desc}</StyledTableCell>
+                        {jobroles.map((jobrole) => (
+                            <StyledTableRow key={jobrole.JobRole_ID}>
+                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{jobrole.JobRole_ID}</StyledTableCell>
+                                <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{jobrole.JobRole_Name}</StyledTableCell>
+                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{jobrole.JobRole_Desc}</StyledTableCell>
                                 {location.pathname.toLowerCase() === "/hr/roles" ? 
                                     <StyledTableCell align='center'>
                                         <Stack direction="row" justifyContent='center'>
-                                            <Link href={'/hr/edit/roles/' + role.Role_ID} underline="none">
+                                            <Link href={'/hr/edit/roles/' + jobrole.JobRole_ID} underline="none">
                                                 <IconButton><EditIcon></EditIcon></IconButton>
                                             </Link>
                                             <Link underline="none" >

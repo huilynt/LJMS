@@ -102,7 +102,7 @@ function CreateRoleHr(){
                                 <OutlinedInput
                                     id="jobrole-desc"
                                     label="jobrole-desc"
-                                    name="jobrole_Desc"
+                                    name="JobRole_Desc"
                                     multiline
                                     rows={8}
                                     value={jobrole.JobRole_Desc}
