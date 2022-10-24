@@ -34,7 +34,7 @@ function EditConfirm(props){
                     <CheckCircleIcon color="success" sx={{fontSize: {xs:100,md:200}, display: 'block', margin:'auto'}}/>
                 </div>
                 <DialogActions >
-                    <Button autoFocus onClick={handleClose}>Return to Skills</Button>
+                    <Button autoFocus onClick={handleClose}>Return to {props.name}</Button>
                 </DialogActions>
             </Dialog>
         </div>

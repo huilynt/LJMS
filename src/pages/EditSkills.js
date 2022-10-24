@@ -82,7 +82,6 @@ function EditSkills(){
         <Container sx={{mt:5}}>
             <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>Edit Skill</Box>
             {error.length > 0 ? <Alert sx={{mb:-3, mt:2}} severity="error">{error}</Alert> : <></>}
-            {/* <form onSubmit={saveChanges} > */}
                 <Box sx={{my:5, py:5, px:2, border:'1px dashed grey'}} component="form">
                     <Stack direction={{xs:"column", md:"row" }} spacing={5}>
                         <Stack spacing={2} sx={{width: "100%"}}>
@@ -118,9 +117,7 @@ function EditSkills(){
                         <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
                     </Stack>
                     {editConfirm === true ? <EditConfirm name="Skills"/> : <></>}
-            </Box>
-        {/* </form> */}
-        
+            </Box>        
         </Container>
     );
 }

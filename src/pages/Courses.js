@@ -11,7 +11,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-//import Box from '@mui/material/Box';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -37,16 +36,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-
-
 function Courses() {
     const [courses, setCourse] = useState([]);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const courseDetails = (event,  message) => {
         console.log('link clicked')
         console.log(message)
-        navigate('/Courses/' + message)
+        // navigate('/Courses/' + message)
     }
 
     useEffect(()=>{

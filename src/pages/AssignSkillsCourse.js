@@ -5,6 +5,7 @@ import {Container, Box, Button, Typography, Grid, Alert} from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import EditConfirm from "../components/EditConfirm";
 
 
 function AssignSkillsCourse(){
@@ -12,6 +13,7 @@ function AssignSkillsCourse(){
     const [selectedSkills, setselectedSkills] = useState([]);
     const [courseName, setcourseName] = useState([]);
     const [error, setError] = useState("");
+    const [saveConfirm, setSaveConfirm] = useState(false);
     const { courseID } = useParams();
 
     useEffect(()=>{
@@ -64,13 +66,14 @@ function AssignSkillsCourse(){
         }
         else{
             console.log(selectedSkills)
-            // axios.put('hr/jobrole/<string:jobroleId>/edit', selectedSkills)
-            // .then((response) =>{
-            //     console.log('response')
-            // })
-            // .catch(error => {
-            //     console.log(error)
-            // })
+            axios.post('http://127.0.0.1:5000/hr/courses/edit/' + courseID, selectedSkills)
+            .then((response) =>{
+                console.log(response)
+                setSaveConfirm(true)
+            })
+            .catch(error => {
+                console.log(error)
+            })
         }
 
     }
@@ -107,6 +110,7 @@ function AssignSkillsCourse(){
                 </Box>
             </Box>
             <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
+            {saveConfirm === true ? <EditConfirm name="Courses"/> : <></>}
         </Container>
     )
 }
