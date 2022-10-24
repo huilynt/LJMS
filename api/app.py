@@ -695,12 +695,9 @@ def get_courses_in_journey(journeyId):
     ), 201
 
 @app.route("/journey/<string:journeyId>/<string:courseId>", methods=['DELETE'])
-def remove_existing_course_learning_journey(journeyId, courseId):
-    # journey = LearningJourney.query.filter_by(Journey_ID= journeyId).first()
-    
+def remove_existing_course_learning_journey(journeyId, courseId):   
     learningjourney = LearningJourney.query.filter_by(Journey_ID=journeyId).first()
-    # existing_courses = [course.json() for course in learningjourney.courses]
-
+    
     for course in learningjourney.courses:
         if(course.Course_ID==courseId):
             

@@ -47,13 +47,6 @@ function EditLearningJourney() {
             console.log(error.message)
         })
 
-        axios.delete('http://127.0.0.1:5000/journey/' + journeyID + "/" + courses.courseID)
-        // .then (() => {
-            
-        // })
-        .catch(error => {
-                console.log(error.message)
-        })
     },[])
 
     const handleChange = (event, newAlignment) => {
@@ -72,7 +65,7 @@ function EditLearningJourney() {
 
     for (let course of courses){
         if (course.Completion_Status === true){
-            courses_post_completed.push(<CourseCard status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills} />)
+            courses_post_completed.push(<CourseCard status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills}/>)
         }
         else {
             courses_post_progress.push(<CourseCard status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills} courseID={course.Course_ID} journeyID={journeyID}/>)
