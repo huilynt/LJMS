@@ -1,4 +1,6 @@
 import React from "react";
+import axios from 'axios';
+
 import {Grid} from '@mui/material';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -9,6 +11,19 @@ import Divider from '@mui/material/Divider';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 function CourseCard(props){
+    
+    function DeleteCourse(){
+        axios.delete('http://127.0.0.1:5000/journey/' + props.journeyID + "/" + props.courseID)
+            .then (() => {
+                window.location.reload(false)
+                console.log('Delete successful')
+
+            })
+            .catch(error => {
+                    console.log(error.message)
+            })
+    }      
+
     return (
         <Grid item xs={12} sm={6} md={3} sx={{display:'flex'}}>
             <Card variant="outlined" sx={{backgroundColor:"#f5f5f5"}} >
@@ -26,7 +41,7 @@ function CourseCard(props){
                 </CardContent>
                 { props.completed === false && props.status !== "Pending" && props.status !== "Retired" ?
                 <CardActions sx={{p:2, pt:0}}>
-                    <Button size="small" color="error">Remove Course 
+                    <Button size="small" color="error" onClick={DeleteCourse}>Remove Course 
                         <RemoveCircleOutlineIcon color="error" fontSize="small"></RemoveCircleOutlineIcon>
                     </Button>
                 </CardActions> : <></>}

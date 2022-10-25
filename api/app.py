@@ -203,7 +203,6 @@ class LearningJourney(db.Model):
             "LearningJourney_Status": self.LearningJourney_Status
         }
 
-
 @app.route("/")
 def hello_world():
     return "Hello, World!"
@@ -695,7 +694,33 @@ def get_courses_in_journey(journeyId):
         }
     ), 201
 
+@app.route("/journey/<string:journeyId>/<string:courseId>", methods=['DELETE'])
+def remove_existing_course_learning_journey(journeyId, courseId):   
+    learningjourney = LearningJourney.query.filter_by(Journey_ID=journeyId).first()
+    
+    for course in learningjourney.courses:
+        if(course.Course_ID==courseId):
+            
+            db.session.delete(course)
+            db.session.commit()
+    
+            return jsonify(
+                        {
+                            "code": 200,
+                            "message": "Delete success"
+                        }
+                    ), 201
 
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "journeyId": journeyId,
+                "courseId": courseId
+            },
+            "message": "Course in selected Learning Journey not found"
+        }
+    ), 404
 
 if __name__ == '__main__':
     app.run(debug=True)

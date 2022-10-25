@@ -18,12 +18,14 @@ function EditLearningJourney() {
     const [skills, setSkills] = useState([])
     const [courses, setCourse] = useState([])
     const [roleName, setRoleName] = useState("")
+    const[journeyID, setJourneyID] = useState("")
     let { roleID } = useParams() 
 
     useEffect(() => {
         sessionStorage.setItem("userId", "150166");
 
         const journeyID = roleID + "-" + sessionStorage.userId
+        setJourneyID(journeyID)
         axios.post('http://127.0.0.1:5000/journey/progress/' + journeyID, {"userId":sessionStorage.userId})
         .then ((response) => {
             const skill_data = response.data.data
@@ -44,6 +46,7 @@ function EditLearningJourney() {
         .catch(error => {
             console.log(error.message)
         })
+
     },[])
 
     const handleChange = (event, newAlignment) => {
@@ -65,7 +68,7 @@ function EditLearningJourney() {
             courses_post_completed.push(<CourseCard status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills}/>)
         }
         else {
-            courses_post_progress.push(<CourseCard status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills}/>)
+            courses_post_progress.push(<CourseCard status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills} courseID={course.Course_ID} journeyID={journeyID}/>)
         }
     }
     return (
