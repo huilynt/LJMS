@@ -85,7 +85,7 @@ function AssignSkillsCourse(){
             checked_skill = true;
         }
         skills_check.push( 
-            <Grid item md={8}>
+            <Grid item md={8} key={skill.Skill_ID}>
                 <FormControlLabel 
                     control={<Checkbox checked={checked_skill}/>} 
                     label={skill.Skill_Name} 
@@ -103,7 +103,7 @@ function AssignSkillsCourse(){
                 <Typography sx={{px:2}} variant="h6">Select the skills you want to assign to the course</Typography>
                 <Box sx={{ m:3}} >
                     <FormGroup component="fieldset" variant="standard">
-                        <Grid container spacing={2} columns={16}>
+                        <Grid container spacing={2} columns={16} data-testid="skill_list">
                             {skills_check}
                         </Grid>
                     </FormGroup>
