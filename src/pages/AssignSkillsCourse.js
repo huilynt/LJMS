@@ -110,7 +110,7 @@ function AssignSkillsCourse(){
                 </Box>
             </Box>
             <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
-            {saveConfirm === true ? <EditConfirm name="Courses"/> : <></>}
+            {saveConfirm === true ? <div data-testid="editMsgCourse"><EditConfirm name="Courses"/></div> : <></>}
         </Container>
     )
 }

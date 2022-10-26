@@ -8,16 +8,16 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 function EditConfirm(props){
     const [open, setOpen] = React.useState(true);
-    let navigate = useNavigate();
+    // let navigate = useNavigate();
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
+    // const handleClickOpen = () => {
+    //     setOpen(true);
+    // };
 
-    const handleClose = () => {
-        setOpen(false);
-        navigate('/hr/' + props.name);
-    };
+    // const handleClose = () => {
+    //     setOpen(false);
+        // navigate('/hr/' + props.name);
+    // };
 
 
     return (
@@ -25,7 +25,7 @@ function EditConfirm(props){
             <Dialog
                 open={open}
                 keepMounted
-                onClose={handleClose}
+                // onClose={handleClose}
                 aria-describedby="edit-success"
                 maxWidth="sm"
             >
@@ -34,7 +34,7 @@ function EditConfirm(props){
                     <CheckCircleIcon color="success" sx={{fontSize: {xs:100,md:200}, display: 'block', margin:'auto'}}/>
                 </div>
                 <DialogActions >
-                    <Button autoFocus onClick={handleClose}>Return to {props.name}</Button>
+                    <Button autoFocus href={'/hr/' + props.name}>Return to {props.name}</Button>
                 </DialogActions>
             </Dialog>
         </div>

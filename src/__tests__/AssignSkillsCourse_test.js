@@ -121,8 +121,51 @@ test('Check if error message is shown when no skill checkbox is being checked', 
     fireEvent.click(screen.getByRole("button"))
 
     await waitFor(() => {
-        const checkboxEl = screen.getByTestId('ErrorOutlineIcon')
-        expect(checkboxEl).toBeInTheDocument()
+        const errorMsg = screen.getByTestId('ErrorOutlineIcon')
+        expect(errorMsg).toBeInTheDocument()
     })
 });
 
+test('Check if success message is shown when skills are checked and clicked on save button', async() => {
+    axios.get
+        .mockResolvedValueOnce({
+            data: {
+                code: 200,
+                data: [
+                    {
+                        "Skill_Desc": "Analysis on how a brand is currently perceived in the market, proceeds to planning how the brand should be perceived",
+                        "Skill_ID": "BM01",
+                        "Skill_Name": "Brand Management",
+                        "Skill_Status": null
+                    },
+                    {
+                        "Skill_Desc": "For all approaches to prepare, support, and help individuals, teams, and organizations in making organizational change.",
+                        "Skill_ID": "CM01",
+                        "Skill_Name": "Change Management",
+                        "Skill_Status": null
+                    },
+                ]
+            }
+        })
+        .mockResolvedValueOnce({
+            data: {
+                code: 200,
+                data: ['BM01'],
+                name: 'Systems Thinking and Design'
+            }
+        })
+    axios.post
+        .mockResolvedValueOnce(['BM01','CM01'])
+
+    await act(async() => {
+        render(<AssignSkillsCourse/>)
+    })
+
+    fireEvent.click(screen.getByLabelText("Change Management"))
+    fireEvent.click(screen.getByRole("button"))
+
+    await waitFor(() => {
+        const successMsg = screen.queryByTestId('editMsgCourse')
+        expect(successMsg).toBeInTheDocument()
+    })
+});
