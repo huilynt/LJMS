@@ -13,6 +13,7 @@ import RoleSkill from "./pages/RoleSkill";
 import CreateSkill from "./pages/CreateSkill";
 import EditSkills from "./pages/EditSkills";
 import EditLearningJourney from "./pages/EditLearningJourney"
+import LjCourseDesc from "./pages/LjCourseDesc";
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
         <Route exact path="/:roleID/:skillID/courses" element={<SkillCourses/>} />
         <Route exact path="/:jobRole/skills" element={<RoleSkill/>} />
         <Route exact path="/journey/:roleID" element={<EditLearningJourney/>}/>
+        <Route exact path="journey/Courses/:courseId" element={<LjCourseDesc/>}/>
       </Routes>
     </Router>
   );
