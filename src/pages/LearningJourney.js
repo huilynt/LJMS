@@ -58,8 +58,7 @@ function LearningJourney() {
             console.log(error.message)
         })
 
-        axios
-        .get("http://127.0.0.1:5000/jobrole")
+        axios.get("http://127.0.0.1:5000/jobrole")
         .then((response) => {
             setRole(response.data.data);
         })
@@ -102,13 +101,11 @@ function LearningJourney() {
                                 <StyledTableCell align='center' sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>
                                     {learningjourney.LearningJourney_Status == "Completed" ? <Chip label="Completed" color="success" size="small" /> : <Chip label="Incomplete" size="small" />}
                                 </StyledTableCell>
-                                <StyledTableCell align='center'>
-                                    <Stack direction="row" justifyContent='center'>
-                                            <Link href={'/journey/' + learningjourney.JobRole_ID} underline="none">
-                                                <IconButton><EditIcon></EditIcon></IconButton>
-                                            </Link>
-                                            <IconButton><DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon></IconButton>
-                                    </Stack>
+                                <StyledTableCell align='center' >
+                                    <Link href={'/journey/' + learningjourney.JobRole_ID} underline="none">
+                                        <EditIcon sx={{mr:2}}></EditIcon>
+                                    </Link>
+                                    <DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon>
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}

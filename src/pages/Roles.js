@@ -74,7 +74,7 @@ export default function Roles() {
 
     return (
         <Container sx={{mt:5}}>
-        <Box sx={{ typography: { xs: 'h6', md:'h4'},borderBottom: 1}}>View Roles</Box>
+        <Box sx={{ typography: { xs: 'h6', md:'h4'},borderBottom: 1}}>Roles</Box>
         
     
         <TableContainer sx={{mt:2}} component={Paper}>            
