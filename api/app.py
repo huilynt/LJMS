@@ -701,7 +701,7 @@ def remove_existing_course_learning_journey(journeyId, courseId):
     for course in learningjourney.courses:
         if(course.Course_ID==courseId):
             
-            db.session.delete(course)
+            learningjourney.courses.remove(course)
             db.session.commit()
     
             return jsonify(
