@@ -258,6 +258,18 @@ def view_jobrole():
 # retrieve all skills
 @app.route("/skill")
 def view_skills():
+    skills = Skill.query.all()
+
+    return jsonify(
+        {
+            "code": 200, 
+            "data": [skill.json() for skill in skills]
+        }
+    )
+
+# retrieve all active skills 
+@app.route("/activeskill")
+def view_active_skills():
     skills = Skill.query.filter_by(Skill_Status = None)
 
     return jsonify(
@@ -267,30 +279,37 @@ def view_skills():
         }
     )
 
-
 # retrieve all skills related to a course
 @app.route("/<string:jobroleId>/skills")
 def view_skills_for_a_role(jobroleId):
     jobrole = JobRole.query.filter_by(JobRole_ID= jobroleId).first()
-
     skill_list = []
     for skill in jobrole.skills:
         if skill.Skill_Status != "Retired":
             skill_list.append(skill)
-
+    if skill_list:
+        return (
+            {
+                "code": 200,
+                "data": [skill.json() for skill in skill_list], 
+                "role": jobrole.JobRole_Name
+            }
+        )
     return (
-        {
-            "code": 200,
-            "data": [skill.json() for skill in skill_list], 
-            "role": jobrole.JobRole_Name
-        }
-    )
+            {
+                "code": 400,
+                "message": "No skills found"
+            }
+        )
 
 # check if the user completed the skill
 @app.route("/skills/complete/<string:jobroleId>", methods=["POST"])
 def check_skills_completed(jobroleId):
     userId = request.get_json()["userId"]
-    skills_of_role = view_skills_for_a_role(jobroleId)["data"]
+    skills_of_role = []
+    check_skill = view_skills_for_a_role(jobroleId)
+    if check_skill["code"] == 200:
+        skills_of_role = check_skill["data"]
 
     for i in range(len(skills_of_role)):
         course_found = False
@@ -493,6 +512,27 @@ def delete_a_skill(skillId):
         }
     ), 404
 
+# restore a deleted skill
+@app.route("/skill/restore/<string:skillId>")
+def restore_skill(skillId):
+    skill = Skill.query.filter_by(Skill_ID=skillId).first()
+    if skill:
+        skill.Skill_Status = None
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "skillId": skillId
+            },
+            "message": "Skill not found."
+        }
+    ), 404
 
 # create a role (hr)
 @app.route("/roles/create", methods=['POST'])
@@ -567,21 +607,17 @@ def view_leaningjourney():
     if registration:
         learningjourneylist = LearningJourney.query.filter_by(Staff_ID = userId).all()
         
-
         for journey in learningjourneylist:
             if journey.LearningJourney_Status == "Progress":
                 url = "http://127.0.0.1:5000/journey/progress/" + journey.Journey_ID
                 x = requests.post(url, json={"userId": userId})
-                progress = json.loads(x.text)["data"]
-                update_journey_completion(journey.Journey_ID, progress)
+                code = json.loads(x.text)["code"]
+                if code == "200":
+                    update_journey_completion(journey.Journey_ID, json.loads(x.text)["data"] )
 
         if learningjourneylist:
             return jsonify(
                     {
-                        "code": 200, 
-                    "code": 200, 
-                        "code": 200, 
-                    "code": 200, 
                         "code": 200, 
                         "data": [learningjourney.json() for learningjourney in learningjourneylist]
                     }
@@ -626,9 +662,11 @@ def update_journey_completion(journeyId, skill_list):
 def get_skills_progress(journeyId):
     userId = request.get_json()["userId"]
     journey = LearningJourney.query.filter_by(Journey_ID = journeyId).first()
-    skill_list = view_skills_for_a_role(journey.JobRole_ID)["data"]
+    skill_list = []
+    check_skill_list = view_skills_for_a_role(journey.JobRole_ID)
+    if check_skill_list["code"] == 200:
+        skill_list = check_skill_list["data"]
     courses_added = journey.courses
-    
     if journey and skill_list:
         for i in range(len(skill_list)):
             course_found = False

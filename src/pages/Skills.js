@@ -13,8 +13,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import Box from '@mui/material/Box';
-import IconButton from '@material-ui/core/IconButton';
+import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import Stack from '@mui/material/Stack';
 import { pink } from '@mui/material/colors';
 
@@ -74,6 +73,19 @@ function Skills() {
         window.location.reload(false)
     }
 
+    function restoreSkill(e){
+        console.log(e.currentTarget.id)
+        let skill_id = e.currentTarget.id
+        axios.get(`http://127.0.0.1:5000/skill/restore/` + skill_id)
+        .then ((response) => {
+            console.log(response)
+        })
+        .catch(error => {
+            console.log(error.message)
+        })
+        window.location.reload(false)
+    }
+
     return (
         <Container sx={{mt:5}}>
             <Grid container sx={{borderBottom:1, display:'flex', alignItems: 'center', pb:1}}>
@@ -112,9 +124,13 @@ function Skills() {
                                             <Link href={'/hr/edit/skills/' + skill.Skill_ID} underline="none">
                                                 <EditIcon sx={{mr:2}}></EditIcon>
                                             </Link>
-                                            <Link underline="none" id={skill.Skill_ID} onClick={deleteSkill}>
-                                                <DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon>
-                                            </Link>
+                                            {skill.Skill_Status === null ? 
+                                                <Link underline="none" id={skill.Skill_ID} onClick={deleteSkill}>
+                                                    <DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon>
+                                                </Link> :
+                                                <Link underline="none" id={skill.Skill_ID} onClick={restoreSkill}>
+                                                    <RestoreFromTrashIcon sx={{ color: pink[100] }}></RestoreFromTrashIcon>
+                                                </Link>}
                                         </Stack>
                                     </StyledTableCell> : <></>}
                             </StyledTableRow>

@@ -17,7 +17,7 @@ function AssignSkillsCourse(){
     const { courseID } = useParams();
 
     useEffect(()=>{
-        axios.get('http://127.0.0.1:5000/skill')
+        axios.get('http://127.0.0.1:5000/activeskill')
         .then(response => {
             console.log("SUCCESS", response)
             setSkill(response.data.data)
