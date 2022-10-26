@@ -14,6 +14,7 @@ import CreateSkill from "./pages/CreateSkill";
 import EditSkills from "./pages/EditSkills";
 import EditLearningJourney from "./pages/EditLearningJourney"
 import LjCourseDesc from "./pages/LjCourseDesc";
+import AssignSkillsCourse from "./pages/AssignSkillsCourse";
 
 
 function App() {
