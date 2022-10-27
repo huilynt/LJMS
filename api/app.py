@@ -494,6 +494,57 @@ def delete_a_skill(skillId):
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
+# create a jobrole 
+@app.route("/jobrole/create", methods=['POST'])
+def create_a_role():
+    data = request.get_json()
+    jobrole = JobRole(**data)
+    jobroleId = jobrole.JobRole_ID
+    jobrolename = jobrole.JobRole_Name
+    
+    if (JobRole.query.filter_by(JobRole_ID=jobroleId).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "jobroleId": jobroleId
+                },
+                "message": "Role ID already exists."
+            }
+        ), 400
+
+    if (JobRole.query.filter_by(JobRole_Name=jobrolename).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "jobrolename": jobrolename
+                },
+                "message": "Role Name already exists."
+            }
+        ), 400
+
+    try:
+        db.session.add(jobrole)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "jobroleId": jobroleId
+                },
+                "message": "An error occurred creating the role."
+            }
+        ), 500
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": jobrole.json()
+        }
+    ), 201
 
 #update a jobrole
 @app.route("/jobrole/<string:jobroleId>", methods=['PUT'])
