@@ -495,7 +495,6 @@ def delete_a_skill(skillId):
 if __name__ == '__main__':
     app.run(debug=True)
 
-
 # delete a jobrole
 @app.route("/jobrole/<string:jobroleId>", methods=['DELETE'])
 def delete_a_jobrole(jobroleId):
@@ -520,6 +519,26 @@ def delete_a_jobrole(jobroleId):
         }
     ), 404
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# restore a deleted jobrole
+@app.route("/jobrole/restore/<string:jobroleId>")
+def restore_jobrole(jobroleId):
+    jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
+    if jobrole:
+        jobrole.JobRole_Status = None
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "jobroleId": jobroleId
+            },
+            "message": "Role not found."
+        }
+    ), 404
+
 
