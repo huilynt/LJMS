@@ -156,6 +156,7 @@ class JobRole(db.Model):
     JobRole_ID = db.Column(db.String, primary_key=True)
     JobRole_Name = db.Column(db.String, nullable=False)
     JobRole_Desc = db.Column(db.String)
+    JobRole_Status = db.Column(db.String)
 
     skills = db.relationship(Skill, secondary=Jobrole_skill, backref="jobroles", lazy=True)
 
@@ -492,9 +493,6 @@ def delete_a_skill(skillId):
         }
     ), 404
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
 # delete a jobrole
 @app.route("/jobrole/<string:jobroleId>", methods=['DELETE'])
 def delete_a_jobrole(jobroleId):
@@ -542,3 +540,5 @@ def restore_jobrole(jobroleId):
     ), 404
 
 
+if __name__ == '__main__':
+    app.run(debug=True)
