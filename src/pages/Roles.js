@@ -13,7 +13,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import IconButton from '@material-ui/core/IconButton';
+import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import Stack from '@mui/material/Stack';
 import { pink } from '@mui/material/colors';
 
@@ -44,8 +44,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function Roles() {
     const [jobroles, setJobRoles] = useState([]);
     let location = useLocation();
-    console.log(location)
     const navigate = useNavigate();
+
 
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/jobrole`)
@@ -57,6 +57,34 @@ function Roles() {
             console.log(error.message)
         })
     }, [])
+
+    function deleteJobRole(e){
+        console.log(e.currentTarget.id)
+        let jobrole_id = e.currentTarget.id
+        axios.delete(`http://127.0.0.1:5000/jobrole/` + jobrole_id)
+        .then ((response) => {
+            console.log(response)
+        })
+        .catch(error => {
+            console.log(error.message)
+        })
+
+        window.location.reload(false)
+    }
+
+    function restoreJobRole(e){
+        console.log(e.currentTarget.id)
+        let jobrole_id = e.currentTarget.id
+        axios.get(`http://127.0.0.1:5000/jobrole/restore/` + jobrole_id)
+        .then ((response) => {
+            console.log(response)
+        })
+        .catch(error => {
+            console.log(error.message)
+        })
+        window.location.reload(false)
+    }
+
 
     return (
         <Container sx={{mt:5}}>
@@ -92,13 +120,17 @@ function Roles() {
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{jobrole.JobRole_Desc}</StyledTableCell>
                                 {location.pathname.toLowerCase() === "/hr/roles" ? 
                                     <StyledTableCell align='center'>
-                                        <Stack direction="row" justifyContent='center'>
+                                        <Stack direction="row" justifyContent='center' sx={{mx:2}}>
                                             <Link href={'/hr/edit/roles/' + jobrole.JobRole_ID} underline="none">
-                                                <IconButton><EditIcon></EditIcon></IconButton>
+                                                <EditIcon sx={{mr:2}}></EditIcon>
                                             </Link>
-                                            <Link underline="none" >
-                                                <IconButton><DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon></IconButton>
-                                            </Link>
+                                            {jobrole.JobRole_Status === null ? 
+                                                <Link underline="none" id={jobrole.JobRole_ID} onClick={deleteJobRole}>
+                                                    <DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon>
+                                                </Link> :
+                                                <Link underline="none" id={jobrole.JobRole_ID} onClick={restoreJobRole}>
+                                                    <RestoreFromTrashIcon sx={{ color: pink[100] }}></RestoreFromTrashIcon>
+                                                </Link>}
                                         </Stack>
                                     </StyledTableCell> : <></>}
                             </StyledTableRow>
