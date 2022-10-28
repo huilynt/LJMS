@@ -1,8 +1,6 @@
 import { useEffect, useState, React } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
-import {Grid, Button, Link, Container} from '@mui/material';
-import { useNavigate } from "react-router-dom";
+import {Grid, Container} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,6 +15,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Stack from '@mui/material/Stack';
 import { pink } from '@mui/material/colors';
 import Chip from '@mui/material/Chip';
+import Link from '@mui/material/Link';
+import Button from '@mui/material/Button';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -44,12 +44,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function LearningJourney() {
     const [learningjourney, setLearningJourney] = useState([]);
     const [jobrole, setRole] = useState([]);
-    let location = useLocation();
-    const navigate = useNavigate();
 
 
     useEffect(() => {
-        sessionStorage.setItem("userId", "140001");
+        sessionStorage.setItem("userId", "150166");
 
         axios.post(`http://127.0.0.1:5000/learningjourney`, {"userId":sessionStorage.userId})
         .then ((response) => {
@@ -60,13 +58,12 @@ function LearningJourney() {
             console.log(error.message)
         })
 
-        axios
-        .get("http://127.0.0.1:5000/jobrole")
+        axios.get("http://127.0.0.1:5000/jobrole")
         .then((response) => {
-          setRole(response.data.data);
+            setRole(response.data.data);
         })
         .catch((error) => {
-          console.log(error);
+            console.log(error);
         });
     }, [])
 
@@ -77,7 +74,9 @@ function LearningJourney() {
                     Learning Journey
                 </Grid>
                 <Grid item xs={3} md={2} >
-                    <Button variant="contained" color="success" size="medium">Create</Button>
+                <Link href='/ViewAllAvailRoles' underline="none">
+                    <Button variant="contained" color="success">Create</Button>
+                </Link>
                 </Grid>
 
             </Grid>
@@ -102,12 +101,12 @@ function LearningJourney() {
                                 <StyledTableCell align='center' sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>
                                     {learningjourney.LearningJourney_Status == "Completed" ? <Chip label="Completed" color="success" size="small" /> : <Chip label="Incomplete" size="small" />}
                                 </StyledTableCell>
-                                    <StyledTableCell align='center'>
-                                        <Stack direction="row" justifyContent='center'>
-                                                <IconButton><EditIcon></EditIcon></IconButton>
-                                                <IconButton><DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon></IconButton>
-                                        </Stack>
-                                    </StyledTableCell>
+                                <StyledTableCell align='center' >
+                                    <Link href={'/journey/' + learningjourney.JobRole_ID} underline="none">
+                                        <EditIcon sx={{mr:2}}></EditIcon>
+                                    </Link>
+                                    <DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon>
+                                </StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>

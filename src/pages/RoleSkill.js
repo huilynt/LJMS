@@ -14,7 +14,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Box from '@mui/material/Box';
 import IconButton from '@material-ui/core/IconButton';
 import Chip from '@mui/material/Chip';
-
+import {Link} from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -42,7 +42,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-function RoleSkill() {
+function RoleSkill(props) {
     const [skills, setSkills] = useState([]);
     const [role, setRole] = useState("")
     let { jobRole } = useParams();
@@ -86,7 +86,15 @@ function RoleSkill() {
                                 <StyledTableCell align='center' sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>
                                     {skill.Completion_Status == true ? <Chip label="Completed" color="success" size="small" /> : <Chip label="Incomplete" size="small" />}
                                 </StyledTableCell>
-                                <StyledTableCell align='center'><IconButton><ArrowForwardIosIcon></ArrowForwardIosIcon></IconButton></StyledTableCell>
+                                <StyledTableCell align='center'>
+                                    <Link to={{
+                                    pathname:"/" + jobRole + "/" + skill.Skill_ID + "/courses",
+                                    state:{stateParam:true}
+                                    }}>
+                                    <IconButton><ArrowForwardIosIcon></ArrowForwardIosIcon></IconButton>
+                                    </Link>
+                                    
+                                </StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
