@@ -78,7 +78,7 @@ function Skills() {
         <Container sx={{mt:5}}>
             <Grid container sx={{borderBottom:1, display:'flex', alignItems: 'center', pb:1}}>
                 <Grid item sx={{ typography: { xs: 'h6', md:'h4'}}} xs={8} md={4}>
-                    All Skills
+                    Skills
                 </Grid>
                 {location.pathname.toLowerCase() === "/hr/skills" ? 
                 <Grid item xs={3} md={2} >
@@ -108,12 +108,12 @@ function Skills() {
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_Desc}</StyledTableCell>
                                 {location.pathname.toLowerCase() === "/hr/skills" ? 
                                     <StyledTableCell align='center'>
-                                        <Stack direction="row" justifyContent='center'>
+                                        <Stack direction="row" justifyContent='center' sx={{mx:2}}>
                                             <Link href={'/hr/edit/skills/' + skill.Skill_ID} underline="none">
-                                                <IconButton><EditIcon></EditIcon></IconButton>
+                                                <EditIcon sx={{mr:2}}></EditIcon>
                                             </Link>
                                             <Link underline="none" id={skill.Skill_ID} onClick={deleteSkill}>
-                                                <IconButton><DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon></IconButton>
+                                                <DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon>
                                             </Link>
                                         </Stack>
                                     </StyledTableCell> : <></>}
