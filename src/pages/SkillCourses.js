@@ -14,6 +14,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Link,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
@@ -64,6 +65,12 @@ function SkillCourses() {
   const [skill, setSkill] = useState("");
   const [role, setRole] = useState("");
   const navigate = useNavigate();
+
+  const courseDetails = (event,  message) => {
+      console.log('link clicked')
+      console.log(message)
+      window.open('http://localhost:3000/journey/Courses/' + message, '_blank')
+  }
 
   let userId = sessionStorage.getItem("userId");
 
@@ -147,7 +154,9 @@ function SkillCourses() {
                   component="th"
                   scope="row"
                   sx={{ display: { xs: "none", md: "table-cell" } }}>
-                  {course.Course_ID}
+                  <Link onClick={event => courseDetails(event, course.Course_ID)} underline="none">
+                    {course.Course_ID}
+                  </Link>
                 </StyledTableCell>
                 <StyledTableCell>{course.Course_Name}</StyledTableCell>
                 <StyledTableCell

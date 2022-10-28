@@ -205,7 +205,6 @@ class LearningJourney(db.Model):
             "LearningJourney_Status": self.LearningJourney_Status
         }
 
-
 @app.route("/")
 def hello_world():
     return "Hello, World!"
@@ -695,7 +694,6 @@ def get_courses_in_journey(journeyId):
         course = journey.courses[j]
         for skill in skill_list:
             if course in skill.courses:
-                print('true')
                 if "skills" in course_list[j]:
                     course_list[j]['skills'].append(skill.json())
                 else:
@@ -713,7 +711,6 @@ def get_courses_in_journey(journeyId):
 def save_learning_journey(staffId, jobRoleId):
     journeyId = jobRoleId + '-' + staffId
     addedCourses = request.get_json()["addedCourses"]
-    print(addedCourses)
     
     journey = LearningJourney(Journey_ID = journeyId, 
                                 Staff_ID = staffId, 
@@ -746,7 +743,6 @@ def save_learning_journey(staffId, jobRoleId):
             journey.courses.append(tobeadded)
             db.session.commit()
         except:
-            print("failure", course)
             return jsonify(
             {
                 "code": 400,
