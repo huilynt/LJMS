@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import {Link, Container, Box, ListItem} from '@mui/material';
+import { Container, Box, ListItem} from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses }  from '@mui/material/TableCell';
@@ -11,6 +11,7 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import List from '@mui/material/List';
+import {Link} from 'react-router-dom';
 
 
 
@@ -39,7 +40,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-export default function ViewAllAvailRoles() {
+export default function ViewAllAvailRoles(props) {
 
 
     const [jobroleData, setJobRoleData] = useState([])
@@ -104,8 +105,12 @@ export default function ViewAllAvailRoles() {
                                 
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                <Link to='/ViewAllAvailRoles' underline="none">
+                                <Link to={{
+                                    pathname:"/"+row.JobRole_ID+"/skills",
+                                    state:{stateParam:true}
+                                }}>
                                 <ArrowForwardIosIcon></ArrowForwardIosIcon>
+                                {}
                                 </Link>
                                 </StyledTableCell>
                             </StyledTableRow>
