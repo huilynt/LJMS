@@ -747,7 +747,8 @@ def save_learning_journey(staffId, jobRoleId):
             {
                 "code": 400,
                 "data": {
-                    "journeyId": journeyId
+                    "journeyId": journeyId,
+                    "course_id": course
                 },
                 "message": "An error occurred creating the learning journey."
             }
