@@ -22,13 +22,14 @@ function SkillCard(props){
                     </CardContent>
                 </Box>
             </Card>
+            {props.status != "Retired" ?
             <Link   to={{
                         pathname:"/" + props.jobrole + "/" + props.skillId + "/courses",
                         state:{stateParam:true}
                         }} 
                     style={{ textDecoration: 'none' }}>
                 <Button startIcon={<AddIcon />} variant="contained" sx={{width:"100%", borderRadius:0, backgroundColor:"#9CCAFF"}}>{props.completed === true ? "Add More Course" : "Add Course"}</Button>
-            </Link>
+            </Link> : <><Button disabled variant="contained" sx={{width:"100%", borderRadius:0, backgroundColor:"#9CCAFF"}}>Not Applicable</Button></>}
         </Grid>
     )
 }

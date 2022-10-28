@@ -57,7 +57,7 @@ function EditLearningJourney() {
 
     const skill_posts = []
     for (let skill of skills){
-        skill_posts.push(<SkillCard jobrole={roleID} completed={skill.Completion_Status} skill={skill.Skill_Name} skillId={skill.Skill_ID}/>)
+        skill_posts.push(<SkillCard jobrole={roleID} status={skill.Skill_Status} completed={skill.Completion_Status} skill={skill.Skill_Name} skillId={skill.Skill_ID}/>)
     }
 
     const courses_post_completed = []

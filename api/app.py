@@ -285,8 +285,8 @@ def view_skills_for_a_role(jobroleId):
     jobrole = JobRole.query.filter_by(JobRole_ID= jobroleId).first()
     skill_list = []
     for skill in jobrole.skills:
-        if skill.Skill_Status != "Retired":
-            skill_list.append(skill)
+        # if skill.Skill_Status != "Retired":
+        skill_list.append(skill)
     if skill_list:
         return (
             {
