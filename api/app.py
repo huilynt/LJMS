@@ -713,7 +713,8 @@ def get_courses_in_journey(journeyId):
 def save_learning_journey(staffId, jobRoleId):
     journeyId = jobRoleId + '-' + staffId
     addedCourses = request.get_json()["addedCourses"]
-
+    print(addedCourses)
+    
     journey = LearningJourney(Journey_ID = journeyId, 
                                 Staff_ID = staffId, 
                                 JobRole_ID = jobRoleId, 
@@ -733,12 +734,19 @@ def save_learning_journey(staffId, jobRoleId):
                 "message": "An error occurred creating the learning journey."
             }
         ), 500    
+    
 
+    # convert str to json
+    addedCourses = json.loads(addedCourses)
     for course in addedCourses:
+        # get course object from db
+        tobeadded = Course.query.filter_by(Course_ID=course).first()
         try:
-            journey.courses.add(course)
+            # add into new journey & commit to db
+            journey.courses.append(tobeadded)
             db.session.commit()
         except:
+            print("failure", course)
             return jsonify(
             {
                 "code": 400,
@@ -754,7 +762,7 @@ def save_learning_journey(staffId, jobRoleId):
             "code": 200,
             "data": journey.json()
         }
-    ), 201
+    ), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
