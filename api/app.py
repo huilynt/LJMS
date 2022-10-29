@@ -736,7 +736,7 @@ def remove_existing_course_learning_journey(journeyId, courseId):
     ), 404
     
 # create a jobrole 
-@app.route("/jobrole/create", methods=['POST'])
+@app.route("/roles/create", methods=['POST'])
 def create_a_jobrole():
     data = request.get_json()
     jobrole = JobRole(**data)
