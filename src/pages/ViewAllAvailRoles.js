@@ -46,7 +46,9 @@ export default function ViewAllAvailRoles(props) {
     const [jobroleData, setJobRoleData] = useState([])
 
     useEffect(()=>{
-        axios.get('http://127.0.0.1:5000/jobrole').then(response => {
+        sessionStorage.setItem("userId", "140525");
+
+        axios.get('http://127.0.0.1:5000/'+ sessionStorage.getItem("userId") +'/jobrole').then(response => {
             console.log("SUCCESS", response)
             // setJobRoleData(response.data.data)
 

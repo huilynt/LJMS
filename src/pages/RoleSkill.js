@@ -11,10 +11,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import Box from '@mui/material/Box';
+import {
+    Box,
+    Button,
+} from "@mui/material";
 import IconButton from '@material-ui/core/IconButton';
 import Chip from '@mui/material/Chip';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import Alert from '@mui/material/Alert';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -46,9 +50,33 @@ function RoleSkill(props) {
     const [skills, setSkills] = useState([]);
     const [role, setRole] = useState("")
     let { jobRole } = useParams();
+    const navigate = useNavigate();
+    const userId = sessionStorage.getItem("userId")
+    const [error, setError] = useState("");
+
+    const saveLearningJourney = async (event,  message) => {
+        console.log(typeof(sessionStorage.getItem("addedCourses")));
+        console.log(sessionStorage.getItem("addedCourses"));
+
+        if((sessionStorage.getItem("addedCourses") == null) || (sessionStorage.getItem("addedCourses") === "[]")){
+            setError("You must add at least one course before saving the Learning Journey")
+        }
+        else{
+            const sendResult = await axios.post('http://127.0.0.1:5000/journey/' + userId + '/' + message, {"addedCourses":sessionStorage.getItem("addedCourses")})
+            console.log(sendResult.data.code)
+
+            sessionStorage.removeItem("addedCourses")
+            navigate('/journey')
+        }
+    };
+
+    const cancelLearningJourney = () => {
+        sessionStorage.removeItem("addedCourses");
+        navigate("/ViewAllAvailRoles");
+    }
 
     useEffect(() => {
-        sessionStorage.setItem("userId", "140001");
+        sessionStorage.setItem("userId", "140525");
 
         axios.post('http://127.0.0.1:5000/skills/complete/' + jobRole, {"userId":sessionStorage.userId})
         .then ((response) => {
@@ -63,8 +91,10 @@ function RoleSkill(props) {
 
     return (
         <Container sx={{mt:5}}>
-            <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>{role}</Box>
+            <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>{role} Learning Journey</Box>
             <Box sx={{ typography: { xs: 'body2', md:'h6'}}}>Skills Needed</Box>
+
+            {error.length > 0 ? <Alert sx={{mb:-3, mt:2}} severity="error">{error}</Alert> : <></>}
 
             <TableContainer component={Paper} sx={{marginTop:2}}>
                 <Table sx={{minWidth: 200}}>
@@ -99,7 +129,30 @@ function RoleSkill(props) {
                         ))}
                     </TableBody>
                 </Table>
-            </TableContainer>
+            </TableContainer>                      
+
+            <Container sx={{ mt: 5 }}>
+                <Button
+                sx={{
+                    color:"black",
+                    float: "left",
+                    backgroundColor: "red"
+                }}
+                onClick = {() => cancelLearningJourney()}
+                >
+                    Cancel
+                </Button>
+                <Button
+                sx={{
+                    color: "black",
+                    float: "right",
+                    backgroundColor: "lightgreen",
+                }}
+                onClick={event => saveLearningJourney(event, jobRole)}>
+                    Save Learning Journey
+                </Button>
+            </Container>
+        
         </Container>
     )
 }

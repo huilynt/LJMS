@@ -1,3 +1,5 @@
+from audioop import add
+from re import L
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -252,6 +254,28 @@ def view_jobrole():
         {
             "code": 200, 
             "data": [role.json() for role in jobrolelist]
+        }
+    )
+    
+@app.route("/<string:staffId>/jobrole")
+def view_relevant_jobrole(staffId):
+    jobrolelist = JobRole.query.all()
+    learningjourneylist = LearningJourney.query.filter_by(Staff_ID=staffId)
+
+    currentljrole = []
+    relevantrolelist = []
+    
+    for learningjourney in learningjourneylist:
+        currentljrole.append(learningjourney.JobRole_ID)
+
+    for role in jobrolelist:
+        if role.JobRole_ID not in currentljrole:
+            relevantrolelist.append(role)
+    
+    return jsonify(
+        {
+            "code": 200, 
+            "data": [relevantrole.json() for relevantrole in relevantrolelist]
         }
     )
 
@@ -787,6 +811,60 @@ def remove_existing_course_learning_journey(journeyId, courseId):
         }
     ), 404
 
+# save learning journey with added courses
+@app.route("/journey/<string:staffId>/<string:jobRoleId>", methods=['POST'])
+def save_learning_journey(staffId, jobRoleId):
+    journeyId = jobRoleId + '-' + staffId
+    addedCourses = request.get_json()["addedCourses"]
+    
+    journey = LearningJourney(Journey_ID = journeyId, 
+                                Staff_ID = staffId, 
+                                JobRole_ID = jobRoleId, 
+                                LearningJourney_Status = 'Progress',
+                            )
+
+    try:
+        db.session.add(journey)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "journeyId": journeyId
+                },
+                "message": "An error occurred creating the learning journey."
+            }
+        ), 500    
+    
+
+    # convert str to json
+    addedCourses = json.loads(addedCourses)
+    for course in addedCourses:
+        # get course object from db
+        tobeadded = Course.query.filter_by(Course_ID=course).first()
+        try:
+            # add into new journey & commit to db
+            journey.courses.append(tobeadded)
+            db.session.commit()
+        except:
+            return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "journeyId": journeyId,
+                    "course_id": course
+                },
+                "message": "An error occurred creating the learning journey."
+            }
+        ), 400
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": journey.json()
+        }
+    ), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
