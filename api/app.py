@@ -493,58 +493,6 @@ def delete_a_skill(skillId):
         }
     ), 404
 
-
-# create a role (hr)
-@app.route("/roles/create", methods=['POST'])
-def create_a_role():
-    data = request.get_json()
-    role = Role(**data)
-    roleId = role.Role_ID
-    rolename = role.Role_Name
-    
-    if (Role.query.filter_by(Role_ID=roleId).first()):
-        return jsonify(
-            {
-                "code": 400,
-                "data": {
-                    "roleId": roleId
-                },
-                "message": "Role ID already exists."
-            }
-        ), 400
-
-    if (Role.query.filter_by(Role_Name=rolename).first()):
-        return jsonify(
-            {
-                "code": 400,
-                "data": {
-                    "rolename": rolename
-                },
-                "message": "Role Name already exists."
-            }
-        ), 400
-
-    try:
-        db.session.add(role)
-        db.session.commit()
-    except:
-        return jsonify(
-            {
-                "code": 500,
-                "data": {
-                    "roleId": roleId
-                },
-                "message": "An error occurred creating the role."
-            }
-        ), 500
-
-    return jsonify(
-        {
-            "code": 200,
-            "data": role.json()
-        }
-    ), 201
-
 # get all courses a staff has added (registered/waitlist)
 @app.route("/staff/courses/added", methods=['POST'])
 def staff_courses_completed():
@@ -786,14 +734,10 @@ def remove_existing_course_learning_journey(journeyId, courseId):
             "message": "Course in selected Learning Journey not found"
         }
     ), 404
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
     
 # create a jobrole 
 @app.route("/jobrole/create", methods=['POST'])
-def create_a_role():
+def create_a_jobrole():
     data = request.get_json()
     jobrole = JobRole(**data)
     jobroleId = jobrole.JobRole_ID
@@ -844,7 +788,7 @@ def create_a_role():
 
 #update a jobrole
 @app.route("/jobrole/<string:jobroleId>", methods=['PUT'])
-def update_a_role(jobroleId):
+def update_a_jobrole(jobroleId):
     jobrole = JobRole.query.filter_by(JobRole_ID= jobroleId).first()
     if jobrole:
         data = request.get_json()
