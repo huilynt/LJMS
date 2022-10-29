@@ -48,18 +48,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function RoleSkill(props) {
     const [skills, setSkills] = useState([]);
-    const [role, setRole] = useState("")
+    const [role, setRole] = useState("");
     let { jobRole } = useParams();
     const navigate = useNavigate();
-    const userId = sessionStorage.getItem("userId")
+    const userId = sessionStorage.getItem("userId");
     const [error, setError] = useState("");
 
     const saveLearningJourney = async (event,  message) => {
         if((sessionStorage.getItem("addedCourses") == null) || (sessionStorage.getItem("addedCourses") === "[]")){
-            setError("You must add at least one course to save the Learning Journey")
+            setError("You must add at least one course before saving the Learning Journey")
         }
         else{
-            const sendResult = await axios.post('http://127.0.0.1:5000/journey/' + userId + '/' + message, {"addedCourses":sessionStorage.getItem("addedCourses")})
+            const sendResult = await axios.post('http://127.0.0.1:5000/journey/' + userId + '/' + message, {"addedCourses":sessionStorage.getItem("addedCourses")});
             console.log(sendResult.data.code);
 
             sessionStorage.removeItem("addedCourses");
@@ -126,7 +126,17 @@ function RoleSkill(props) {
                         ))}
                     </TableBody>
                 </Table>
-            </TableContainer>                      
+            </TableContainer>     
+
+            <Container>
+                {(typeof(sessionStorage.getItem("addedCourses")) === "string" && sessionStorage.getItem("addedCourses") !== "[]") 
+                    ? <h5>Added Courses: 
+                        <br></br> 
+                        {sessionStorage.getItem("addedCourses").slice(2,-2).split('","').join(", ").toUpperCase()}
+                    </h5>
+                    : <></>
+                }
+            </Container>                 
 
             <Container sx={{ mt: 5 }}>
                 <Button
