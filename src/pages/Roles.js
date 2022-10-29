@@ -1,7 +1,7 @@
 import { useEffect, useState, React } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
-import {Grid, Button, Link, Container} from '@mui/material';
+import {Grid, Button, Link, Container, Chip} from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -16,6 +16,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import Stack from '@mui/material/Stack';
 import { pink } from '@mui/material/colors';
+
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -85,7 +86,6 @@ function Roles() {
         window.location.reload(false)
     }
 
-
     return (
         <Container sx={{mt:5}}>
             <Grid container sx={{borderBottom:1, display:'flex', alignItems: 'center', pb:1}}>
@@ -106,9 +106,10 @@ function Roles() {
                 <Table sx={{minWidth: 200}}>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Role_ID</StyledTableCell>
+                            <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Role ID</StyledTableCell>
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Name</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
+                            <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Status</StyledTableCell>
                             {location.pathname.toLowerCase() === "/hr/roles" ? <StyledTableCell align='center'>Edit Role</StyledTableCell>: <></>}
                         </TableRow>
                     </TableHead>
@@ -118,6 +119,7 @@ function Roles() {
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{jobrole.JobRole_ID}</StyledTableCell>
                                 <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{jobrole.JobRole_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{jobrole.JobRole_Desc}</StyledTableCell>
+                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{jobrole.JobRole_Status == "Retired" ? <Chip label="Retired" size="small" /> : <Chip label="Active" size="small" color="success" />}</StyledTableCell>
                                 {location.pathname.toLowerCase() === "/hr/roles" ? 
                                     <StyledTableCell align='center'>
                                         <Stack direction="row" justifyContent='center' sx={{mx:2}}>
