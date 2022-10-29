@@ -11,8 +11,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import IconButton from '@material-ui/core/IconButton';
-import Stack from '@mui/material/Stack';
 import { pink } from '@mui/material/colors';
 import Chip from '@mui/material/Chip';
 import Link from '@mui/material/Link';
@@ -47,7 +45,7 @@ function LearningJourney() {
 
 
     useEffect(() => {
-        sessionStorage.setItem("userId", "150166");
+        sessionStorage.setItem("userId", "140525");
 
         axios.post(`http://127.0.0.1:5000/learningjourney`, {"userId":sessionStorage.userId})
         .then ((response) => {
