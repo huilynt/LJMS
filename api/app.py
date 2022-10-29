@@ -848,9 +848,9 @@ def remove_existing_course_learning_journey(journeyId, courseId):
             "message": "Course in selected Learning Journey not found"
         }
     ), 404
-
+    
 # create a jobrole 
-@app.route("/jobrole/create", methods=['POST'])
+@app.route("/roles/create", methods=['POST'])
 def create_a_jobrole():
     data = request.get_json()
     jobrole = JobRole(**data)
@@ -899,6 +899,46 @@ def create_a_jobrole():
             "data": jobrole.json()
         }
     ), 201
+
+#update a jobrole
+@app.route("/jobrole/<string:jobroleId>", methods=['PUT'])
+def update_a_jobrole(jobroleId):
+    jobrole = JobRole.query.filter_by(JobRole_ID= jobroleId).first()
+    if jobrole:
+        data = request.get_json()
+        if data['JobRole_Name']:
+            jobrole_check = JobRole.query.filter_by(JobRole_Name=data['JobRole_Name']).first()
+            if jobrole_check and jobrole.JobRole_Name != data["JobRole_Name"]:
+                return jsonify(
+                    {
+                        "code": 404,
+                        "data": {
+                            "jobroleId": jobroleId
+                        },
+                        "message": "Role name is repeated."
+                    }
+                ), 404
+            else:
+                jobrole.JobRole_Name = data['JobRole_Name']
+
+        if data['JobRole_Desc']:
+            jobrole.JobRole_Desc = data['JobRole_Desc'] 
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": jobrole.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "jobroleId": jobroleId
+            },
+            "message": "Role not found."
+        }
+    ), 404
 
 # save learning journey with added courses
 @app.route("/journey/<string:staffId>/<string:jobRoleId>", methods=['POST'])
