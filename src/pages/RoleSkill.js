@@ -19,7 +19,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Chip from '@mui/material/Chip';
 import {Link, useNavigate} from 'react-router-dom';
 import Alert from '@mui/material/Alert';
-import { render } from "less";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -56,20 +55,12 @@ function RoleSkill(props) {
     const [error, setError] = useState("");
 
     const saveLearningJourney = async (event,  message) => {
+        console.log(typeof(sessionStorage.getItem("addedCourses")));
         console.log(sessionStorage.getItem("addedCourses"));
-        console.log(userId);
-        console.log(message);
 
-        if(sessionStorage.getItem("addedCourses") == null){
-            console.log(sessionStorage.getItem("addedCourses"));
+        if((sessionStorage.getItem("addedCourses") == null) || (sessionStorage.getItem("addedCourses") === "[]")){
             setError("You must add at least one course before saving the Learning Journey")
         }
-
-        else if (sessionStorage.getItem("addedCourses").length === 0) {
-            console.log(sessionStorage.getItem("addedCourses"));
-            setError("You must add at least one course before saving the Learning Journey")
-        }
-
         else{
             const sendResult = await axios.post('http://127.0.0.1:5000/journey/' + userId + '/' + message, {"addedCourses":sessionStorage.getItem("addedCourses")})
             console.log(sendResult.data.code)
@@ -138,49 +129,30 @@ function RoleSkill(props) {
                         ))}
                     </TableBody>
                 </Table>
-            </TableContainer>
-    
-        <Container sx={{mt:5}}>
-                <TableContainer component={Paper} sx={{marginTop:5}}>
-                    <Table sx={{minWidth: 200}}>
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>Added Courses</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {sessionStorage.getItem("addedCourses") != null 
-                                ? <StyledTableRow>
-                                    <StyledTableCell>{sessionStorage.getItem("addedCourses")}</StyledTableCell>
-                                </StyledTableRow>
-                                : <></>
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-        </Container>
+            </TableContainer>                      
 
-        <Container sx={{ mt: 5 }}>
-            <Button
-            sx={{
-                color:"black",
-                float: "left",
-                backgroundColor: "red"
-            }}
-            onClick = {() => cancelLearningJourney()}
-            >
-                Cancel
-            </Button>
-            <Button
-            sx={{
-                color: "black",
-                float: "right",
-                backgroundColor: "lightgreen",
-            }}
-            onClick={event => saveLearningJourney(event, jobRole)}>
-                Save Learning Journey
-            </Button>
-        </Container>
+            <Container sx={{ mt: 5 }}>
+                <Button
+                sx={{
+                    color:"black",
+                    float: "left",
+                    backgroundColor: "red"
+                }}
+                onClick = {() => cancelLearningJourney()}
+                >
+                    Cancel
+                </Button>
+                <Button
+                sx={{
+                    color: "black",
+                    float: "right",
+                    backgroundColor: "lightgreen",
+                }}
+                onClick={event => saveLearningJourney(event, jobRole)}>
+                    Save Learning Journey
+                </Button>
+            </Container>
+        
         </Container>
     )
 }
