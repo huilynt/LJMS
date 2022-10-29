@@ -904,5 +904,10 @@ def save_learning_journey(staffId, jobRoleId):
         }
     ), 200
 
+# hard delete learning journey and its courses
+@app.route("/journey/delete", methods=['POST'])
+def delete_learning_journey():
+    pass
+
 if __name__ == '__main__':
     app.run(debug=True)
