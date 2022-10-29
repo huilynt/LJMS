@@ -33,7 +33,7 @@ function CourseCard(props){
                     </Typography>
                     <Divider/>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        Skills: {props.skills === undefined || props.status !== "Active" ? <span>Retired</span> : 
+                        {props.skills === undefined ? <></> : 
                             props.skills.length > 1 ? 
                             props.skills.map(skill => (<span>{skill["Skill_Name"]},</span>)) : 
                             <span>{props.skills[0]["Skill_Name"]}</span>}

@@ -22,7 +22,7 @@ function EditLearningJourney() {
     let { roleID } = useParams() 
 
     useEffect(() => {
-        sessionStorage.setItem("userId", "150166");
+        sessionStorage.setItem("userId", "140525");
 
         const journeyID = roleID + "-" + sessionStorage.userId
         setJourneyID(journeyID)
