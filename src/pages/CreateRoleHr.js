@@ -116,7 +116,7 @@ function CreateRoleHr(){
                         <Button variant="outlined" color="error" onClick={cancelChanges}>Cancel</Button>
                         <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
                     </Stack>
-                    {createConfirm === true ? <CreateConfirm name="JobRoles"/> : <></>}
+                    {createConfirm === true ? <CreateConfirm name="Roles"/> : <></>}
             </Box>
         {/* </form> */}
         

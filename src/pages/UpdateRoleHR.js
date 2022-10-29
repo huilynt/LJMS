@@ -107,7 +107,7 @@ function UpdateRoleHR(){
                         <Button variant="outlined" color="error" onClick={cancelChanges}>Cancel</Button>
                         <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
                     </Stack>
-                    {editConfirm === true ? <EditConfirm name="JobRole"/> : <></>}
+                    {editConfirm === true ? <EditConfirm name="Roles"/> : <></>}
             </Box>
         {/* </form> */}
         

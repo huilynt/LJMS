@@ -16,6 +16,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import Stack from '@mui/material/Stack';
 import { pink } from '@mui/material/colors';
+import IconButton from '@material-ui/core/IconButton';
 
 
 
@@ -45,9 +46,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function Roles() {
     const [jobroles, setJobRoles] = useState([]);
     let location = useLocation();
+    console.log(location)
     const navigate = useNavigate();
-
-
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/jobrole`)
         .then ((response) => {

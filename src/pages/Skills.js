@@ -1,8 +1,7 @@
 import { useEffect, useState, React } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
-import {Grid, Button, Link, Container} from '@mui/material';
-import { useNavigate } from "react-router-dom";
+import {Grid, Button, Link, Container, Chip} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -13,8 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import Box from '@mui/material/Box';
-import IconButton from '@material-ui/core/IconButton';
+import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import Stack from '@mui/material/Stack';
 import { pink } from '@mui/material/colors';
 
@@ -46,8 +44,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function Skills() {
     const [skills, setSkills] = useState([]);
     let location = useLocation();
-    const navigate = useNavigate();
-
 
     useEffect(() => {
         axios.get(`http://127.0.0.1:5000/skill`)
@@ -74,6 +70,19 @@ function Skills() {
         window.location.reload(false)
     }
 
+    function restoreSkill(e){
+        console.log(e.currentTarget.id)
+        let skill_id = e.currentTarget.id
+        axios.get(`http://127.0.0.1:5000/skill/restore/` + skill_id)
+        .then ((response) => {
+            console.log(response)
+        })
+        .catch(error => {
+            console.log(error.message)
+        })
+        window.location.reload(false)
+    }
+
     return (
         <Container sx={{mt:5}}>
             <Grid container sx={{borderBottom:1, display:'flex', alignItems: 'center', pb:1}}>
@@ -97,6 +106,7 @@ function Skills() {
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Code No</StyledTableCell>
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Name</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
+                            <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Status</StyledTableCell>
                             {location.pathname.toLowerCase() === "/hr/skills" ? <StyledTableCell align='center'>Edit Skill</StyledTableCell>: <></>}
                         </TableRow>
                     </TableHead>
@@ -106,15 +116,20 @@ function Skills() {
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_ID}</StyledTableCell>
                                 <StyledTableCell sx={{ borderRight: {xs:0, md:'0.5px solid grey'}} }>{skill.Skill_Name}</StyledTableCell>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_Desc}</StyledTableCell>
+                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{skill.Skill_Status == "Retired" ? <Chip label="Retired" size="small" /> : <Chip label="Active" size="small" color="success" />}</StyledTableCell>
                                 {location.pathname.toLowerCase() === "/hr/skills" ? 
                                     <StyledTableCell align='center'>
                                         <Stack direction="row" justifyContent='center' sx={{mx:2}}>
                                             <Link href={'/hr/edit/skills/' + skill.Skill_ID} underline="none">
                                                 <EditIcon sx={{mr:2}}></EditIcon>
                                             </Link>
-                                            <Link underline="none" id={skill.Skill_ID} onClick={deleteSkill}>
-                                                <DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon>
-                                            </Link>
+                                            {skill.Skill_Status === null ? 
+                                                <Link underline="none" id={skill.Skill_ID} onClick={deleteSkill}>
+                                                    <DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon>
+                                                </Link> :
+                                                <Link underline="none" id={skill.Skill_ID} onClick={restoreSkill}>
+                                                    <RestoreFromTrashIcon sx={{ color: pink[100] }}></RestoreFromTrashIcon>
+                                                </Link>}
                                         </Stack>
                                     </StyledTableCell> : <></>}
                             </StyledTableRow>
