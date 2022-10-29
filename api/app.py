@@ -558,7 +558,7 @@ def restore_skill(skillId):
         }
     ), 404
 
-# create a role (hr)
+#create a role
 @app.route("/roles/create", methods=['POST'])
 def create_a_role():
     data = request.get_json()
@@ -848,6 +848,57 @@ def remove_existing_course_learning_journey(journeyId, courseId):
             "message": "Course in selected Learning Journey not found"
         }
     ), 404
+
+# create a jobrole 
+@app.route("/jobrole/create", methods=['POST'])
+def create_a_jobrole():
+    data = request.get_json()
+    jobrole = JobRole(**data)
+    jobroleId = jobrole.JobRole_ID
+    jobrolename = jobrole.JobRole_Name
+    
+    if (JobRole.query.filter_by(JobRole_ID=jobroleId).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "jobroleId": jobroleId
+                },
+                "message": "Role ID already exists."
+            }
+        ), 400
+
+    if (JobRole.query.filter_by(JobRole_Name=jobrolename).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "jobrolename": jobrolename
+                },
+                "message": "Role Name already exists."
+            }
+        ), 400
+
+    try:
+        db.session.add(jobrole)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "jobroleId": jobroleId
+                },
+                "message": "An error occurred creating the role."
+            }
+        ), 500
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": jobrole.json()
+        }
+    ), 201
 
 # save learning journey with added courses
 @app.route("/journey/<string:staffId>/<string:jobRoleId>", methods=['POST'])
