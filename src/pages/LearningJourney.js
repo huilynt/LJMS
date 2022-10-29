@@ -15,6 +15,7 @@ import { pink } from '@mui/material/colors';
 import Chip from '@mui/material/Chip';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
+import DeleteConfirm from '../components/DeleteConfirm';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -40,8 +41,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function LearningJourney() {
-    const [learningjourney, setLearningJourney] = useState([]);
-    const [jobrole, setRole] = useState([]);
+    const [learningjourney, setLearningJourney] = useState();
+    const [jobrole, setRole] = useState();
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const [deleteJourneyId, setDeleteJourneyId] = useState();
 
 
     useEffect(() => {
@@ -90,23 +93,31 @@ function LearningJourney() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {learningjourney.map((learningjourney) => (
-                            <StyledTableRow>
-                                <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{learningjourney.JobRole_ID}</StyledTableCell>
-                                {jobrole.filter(jobrole => jobrole.JobRole_ID === learningjourney.JobRole_ID).map((jobrole) => (
-                                <StyledTableCell sx={{ display: { xs: 0 , md: 'table-cell' } }}>{jobrole.JobRole_Name}</StyledTableCell>
-                                ))}
-                                <StyledTableCell align='center' sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>
-                                    {learningjourney.LearningJourney_Status == "Completed" ? <Chip label="Completed" color="success" size="small" /> : <Chip label="Incomplete" size="small" />}
-                                </StyledTableCell>
-                                <StyledTableCell align='center' >
-                                    <Link href={'/journey/' + learningjourney.JobRole_ID} underline="none">
-                                        <EditIcon sx={{mr:2}}></EditIcon>
-                                    </Link>
-                                    <DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon>
-                                </StyledTableCell>
-                            </StyledTableRow>
-                        ))}
+                        {learningjourney && jobrole && learningjourney.map((lj) =>{
+                            let jr = jobrole.filter(j => j.JobRole_ID === lj.JobRole_ID)[0].JobRole_Name;
+                            return (
+                                <StyledTableRow key={lj.Journey_ID}>
+                                    <StyledTableCell key={lj.Journey_ID} sx={{ display: { xs: 'none', md: 'table-cell' } }}>{lj.JobRole_ID}</StyledTableCell>
+                                    <StyledTableCell key={lj.Journey_ID} sx={{ display: { xs: 0 , md: 'table-cell' } }}>{jr}</StyledTableCell>
+                                    <StyledTableCell align='center' sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>
+                                        {lj.LearningJourney_Status == "Completed" ? <Chip label="Completed" color="success" size="small" /> : <Chip label="Incomplete" size="small" />}
+                                    </StyledTableCell>
+                                    <StyledTableCell key={lj.Journey_ID} align='center' >
+                                        <Link href={'/journey/' + lj.JobRole_ID} underline="none">
+                                            <EditIcon sx={{mr:2}}></EditIcon>
+                                        </Link>
+                                        <DeleteOutlineIcon sx={{ color: pink[200], cursor: 'pointer' }}
+                                            onClick={() => {
+                                                console.log(lj.Journey_ID)
+                                                setDeleteJourneyId(lj.Journey_ID)
+                                                setDeleteConfirm(true)
+                                            }}
+                                        ></DeleteOutlineIcon>
+                                        {deleteJourneyId && deleteConfirm && <DeleteConfirm key={lj.Journey_ID} name="journey" roleName={jr} journeyId={deleteJourneyId} />}
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            )
+                        })}
                     </TableBody>
                 </Table>
             </TableContainer>
