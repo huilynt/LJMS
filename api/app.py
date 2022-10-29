@@ -246,8 +246,19 @@ def view_registration():
         }
     )
 
+@app.route("/jobrole")
+def view_jobrole():
+    jobrolelist = JobRole.query.all()
+
+    return jsonify(
+        {
+            "code": 200, 
+            "data": [role.json() for role in jobrolelist]
+        }
+    )
+    
 @app.route("/<string:staffId>/jobrole")
-def view_jobrole(staffId):
+def view_relevant_jobrole(staffId):
     jobrolelist = JobRole.query.all()
     learningjourneylist = LearningJourney.query.filter_by(Staff_ID=staffId)
 
