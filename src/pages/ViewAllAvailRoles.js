@@ -46,7 +46,9 @@ export default function ViewAllAvailRoles(props) {
     const [jobroleData, setJobRoleData] = useState([])
 
     useEffect(()=>{
-        axios.get('http://127.0.0.1:5000/jobrole').then(response => {
+        sessionStorage.setItem("userId", "140525");
+
+        axios.get('http://127.0.0.1:5000/'+ sessionStorage.getItem("userId") +'/jobrole').then(response => {
             console.log("SUCCESS", response)
             // setJobRoleData(response.data.data)
 
@@ -75,7 +77,7 @@ export default function ViewAllAvailRoles(props) {
 
     return (
         <Container sx={{mt:5}}>
-        <Box sx={{ typography: { xs: 'h6', md:'h4'},borderBottom: 1}}>View Roles</Box>
+        <Box sx={{ typography: { xs: 'h6', md:'h4'},borderBottom: 1}}>Roles</Box>
         
     
         <TableContainer sx={{mt:2}} component={Paper}>            

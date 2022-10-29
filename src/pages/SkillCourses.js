@@ -19,7 +19,7 @@ import {
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 import { Search } from "@mui/icons-material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -64,6 +64,7 @@ function SkillCourses() {
   const [registeredCourses, setRegisteredCourses] = useState([]);
   const [skill, setSkill] = useState("");
   const [role, setRole] = useState("");
+  const navigate = useNavigate();
 
   const courseDetails = (event,  message) => {
       console.log('link clicked')
@@ -126,22 +127,6 @@ function SkillCourses() {
             alignItems: "center",
             justifyContent: "flex-end",
           }}>
-          <Button variant="text">View added courses</Button>
-
-          <Box>
-            <TextField
-              label="Search a course"
-              variant="outlined"
-              size="small"
-              InputAdornment={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
         </Grid>
       </Grid>
 
@@ -201,7 +186,17 @@ function SkillCourses() {
                     </Button>
                   ) : (
                     <Button
-                      sx={{ backgroundColor: "lightcoral", color: "black" }}>
+                      sx={{ backgroundColor: "lightcoral", color: "black" }}
+                      onClick={() => {
+                        if (addedCourses.includes(course.Course_ID)) {
+                          let newCoursesArr = addedCourses.filter(
+                            (c) => c !== course.Course_ID
+                          );
+                          setAddedCourses(newCoursesArr);
+
+                          saveAddedCourses(newCoursesArr);
+                        }
+                      }}>
                       Remove
                     </Button>
                   )}
@@ -218,7 +213,9 @@ function SkillCourses() {
             color: "black",
             float: "right",
             backgroundColor: "lightgreen",
-          }}>
+          }}
+          onClick = {() => navigate("/" + roleID + "/skills")}
+          >
           Save
         </Button>
       </Container>
