@@ -601,7 +601,7 @@ def create_a_role():
         {
             "code": 404,
             "data": {
-                "jobroleId": jobroleId
+                "roleId": roleId
             },
             "message": "Role not found."
         }
@@ -861,7 +861,7 @@ def remove_existing_course_learning_journey(journeyId, courseId):
     ), 404
     
 # create a jobrole 
-@app.route("/roles/create", methods=['POST'])
+@app.route("/jobrole/create", methods=['POST'])
 def create_a_jobrole():
     data = request.get_json()
     jobrole = JobRole(**data)
