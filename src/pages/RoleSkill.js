@@ -55,18 +55,15 @@ function RoleSkill(props) {
     const [error, setError] = useState("");
 
     const saveLearningJourney = async (event,  message) => {
-        console.log(typeof(sessionStorage.getItem("addedCourses")));
-        console.log(sessionStorage.getItem("addedCourses"));
-
         if((sessionStorage.getItem("addedCourses") == null) || (sessionStorage.getItem("addedCourses") === "[]")){
-            setError("You must add at least one course before saving the Learning Journey")
+            setError("You must add at least one course to save the Learning Journey")
         }
         else{
             const sendResult = await axios.post('http://127.0.0.1:5000/journey/' + userId + '/' + message, {"addedCourses":sessionStorage.getItem("addedCourses")})
-            console.log(sendResult.data.code)
+            console.log(sendResult.data.code);
 
-            sessionStorage.removeItem("addedCourses")
-            navigate('/journey')
+            sessionStorage.removeItem("addedCourses");
+            navigate('/journey');
         }
     };
 
@@ -136,7 +133,7 @@ function RoleSkill(props) {
                 sx={{
                     color:"black",
                     float: "left",
-                    backgroundColor: "red"
+                    backgroundColor: "lightcoral"
                 }}
                 onClick = {() => cancelLearningJourney()}
                 >
@@ -144,9 +141,9 @@ function RoleSkill(props) {
                 </Button>
                 <Button
                 sx={{
+                    backgroundColor: "lightgreen", 
                     color: "black",
-                    float: "right",
-                    backgroundColor: "lightgreen",
+                    float:"right"
                 }}
                 onClick={event => saveLearningJourney(event, jobRole)}>
                     Save Learning Journey
