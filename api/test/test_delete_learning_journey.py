@@ -19,7 +19,8 @@ class TestDeleteLearningJourney(unittest.TestCase):
         self.app_context.push()
         self.app.config = app.config
         self.app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root@localhost:3306/ljps_test"
-        
+        db.create_all()
+        _init_db()
         return super().setUp()
     
     def tearDown(self) -> None:
@@ -28,7 +29,7 @@ class TestDeleteLearningJourney(unittest.TestCase):
     def test_index(self):
         res = self.app.post('/journey/delete',
             json={
-                "journeyId": "EN001-140525"
+                "journeyId": "DA001-140525"
             }
         )
         res_data = res.get_json()
