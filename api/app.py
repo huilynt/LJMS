@@ -162,16 +162,18 @@ class JobRole(db.Model):
 
     skills = db.relationship(Skill, secondary=Jobrole_skill, backref="jobroles", lazy=True)
 
-    def __init__(self, JobRole_ID, JobRole_Name, JobRole_Desc=""):
+    def __init__(self, JobRole_ID, JobRole_Name, JobRole_Desc="", JobRole_Status=""):
         self.JobRole_ID = JobRole_ID
         self.JobRole_Name = JobRole_Name
         self.JobRole_Desc = JobRole_Desc
+        self.JobRole_Status = JobRole_Status
 
     def json(self):
         return {
             "JobRole_ID": self.JobRole_ID,
             "JobRole_Name": self.JobRole_Name,
-            "JobRole_Desc": self.JobRole_Desc
+            "JobRole_Desc": self.JobRole_Desc,
+            "JobRole_Status": self.JobRole_Status
         }
 
 # Learning Journey
