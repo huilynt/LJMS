@@ -160,19 +160,22 @@ class JobRole(db.Model):
     JobRole_ID = db.Column(db.String, primary_key=True)
     JobRole_Name = db.Column(db.String, nullable=False)
     JobRole_Desc = db.Column(db.String)
+    JobRole_Status = db.Column(db.String)
 
     skills = db.relationship(Skill, secondary=Jobrole_skill, backref="jobroles", lazy=True)
 
-    def __init__(self, JobRole_ID, JobRole_Name, JobRole_Desc=""):
+    def __init__(self, JobRole_ID, JobRole_Name, JobRole_Desc="", JobRole_Status=""):
         self.JobRole_ID = JobRole_ID
         self.JobRole_Name = JobRole_Name
         self.JobRole_Desc = JobRole_Desc
+        self.JobRole_Status = JobRole_Status
 
     def json(self):
         return {
             "JobRole_ID": self.JobRole_ID,
             "JobRole_Name": self.JobRole_Name,
-            "JobRole_Desc": self.JobRole_Desc
+            "JobRole_Desc": self.JobRole_Desc,
+            "JobRole_Status": self.JobRole_Status
         }
 
 # Learning Journey
@@ -204,6 +207,7 @@ class LearningJourney(db.Model):
             "Staff_ID": self.Staff_ID,
             "LearningJourney_Status": self.LearningJourney_Status
         }
+
 
 @app.route("/")
 def hello_world():
@@ -536,6 +540,16 @@ def delete_a_skill(skillId):
         }
     ), 404
 
+# delete a jobrole
+@app.route("/jobrole/<string:jobroleId>", methods=['DELETE'])
+def delete_a_jobrole(jobroleId):
+    jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
+    if jobrole:
+        # db.session.delete(jobrole)
+        # db.session.commit()
+        jobrole.JobRole_Status = "Retired"
+        db.session.commit()
+
 # restore a deleted skill
 @app.route("/skill/restore/<string:skillId>")
 def restore_skill(skillId):
@@ -580,34 +594,31 @@ def create_a_role():
     if (Role.query.filter_by(Role_Name=rolename).first()):
         return jsonify(
             {
-                "code": 400,
-                "data": {
-                    "rolename": rolename
-                },
-                "message": "Role Name already exists."
+                "code": 200,
             }
-        ), 400
-
-    try:
-        db.session.add(role)
-        db.session.commit()
-    except:
-        return jsonify(
-            {
-                "code": 500,
-                "data": {
-                    "roleId": roleId
-                },
-                "message": "An error occurred creating the role."
-            }
-        ), 500
-
+        )
     return jsonify(
         {
-            "code": 200,
-            "data": role.json()
+            "code": 404,
+            "data": {
+                "jobroleId": jobroleId
+            },
+            "message": "Role not found."
         }
-    ), 201
+    ), 404
+
+# restore a deleted jobrole
+@app.route("/jobrole/restore/<string:jobroleId>")
+def restore_jobrole(jobroleId):
+    jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
+    if jobrole:
+        jobrole.JobRole_Status = None
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+            }
+        )
 
 # get all courses a staff has added (registered/waitlist)
 @app.route("/staff/courses/added", methods=['POST'])
