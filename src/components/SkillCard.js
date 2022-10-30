@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AddIcon from '@mui/icons-material/Add';
 import CircleIcon from '@mui/icons-material/Circle';
+import {Link} from 'react-router-dom';
 
 function SkillCard(props){
     return (
@@ -21,7 +22,13 @@ function SkillCard(props){
                     </CardContent>
                 </Box>
             </Card>
-            <Button startIcon={<AddIcon />} variant="contained" sx={{width:"100%", borderRadius:0, backgroundColor:"#9CCAFF"}}>{props.completed === true ? "Add More Course" : "Add Course"}</Button>
+            <Link   to={{
+                        pathname:"/" + props.jobrole + "/" + props.skillId + "/courses",
+                        state:{stateParam:true}
+                        }} 
+                    style={{ textDecoration: 'none' }}>
+                <Button startIcon={<AddIcon />} variant="contained" sx={{width:"100%", borderRadius:0, backgroundColor:"#9CCAFF"}}>{props.completed === true ? "Add More Course" : "Add Course"}</Button>
+            </Link> 
         </Grid>
     )
 }

@@ -1,3 +1,5 @@
+from audioop import add
+from re import L
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -159,19 +161,22 @@ class JobRole(db.Model):
     JobRole_ID = db.Column(db.String, primary_key=True)
     JobRole_Name = db.Column(db.String, nullable=False)
     JobRole_Desc = db.Column(db.String)
+    JobRole_Status = db.Column(db.String)
 
     skills = db.relationship(Skill, secondary=Jobrole_skill, backref="jobroles", lazy=True)
 
-    def __init__(self, JobRole_ID, JobRole_Name, JobRole_Desc=""):
+    def __init__(self, JobRole_ID, JobRole_Name, JobRole_Desc="", JobRole_Status=""):
         self.JobRole_ID = JobRole_ID
         self.JobRole_Name = JobRole_Name
         self.JobRole_Desc = JobRole_Desc
+        self.JobRole_Status = JobRole_Status
 
     def json(self):
         return {
             "JobRole_ID": self.JobRole_ID,
             "JobRole_Name": self.JobRole_Name,
-            "JobRole_Desc": self.JobRole_Desc
+            "JobRole_Desc": self.JobRole_Desc,
+            "JobRole_Status": self.JobRole_Status
         }
 
 # Learning Journey
@@ -256,10 +261,44 @@ def view_jobrole():
             "data": [role.json() for role in jobrolelist]
         }
     )
+    
+@app.route("/<string:staffId>/jobrole")
+def view_relevant_jobrole(staffId):
+    jobrolelist = JobRole.query.all()
+    learningjourneylist = LearningJourney.query.filter_by(Staff_ID=staffId)
+
+    currentljrole = []
+    relevantrolelist = []
+    
+    for learningjourney in learningjourneylist:
+        currentljrole.append(learningjourney.JobRole_ID)
+
+    for role in jobrolelist:
+        if role.JobRole_ID not in currentljrole:
+            relevantrolelist.append(role)
+    
+    return jsonify(
+        {
+            "code": 200, 
+            "data": [relevantrole.json() for relevantrole in relevantrolelist]
+        }
+    )
 
 # retrieve all skills
 @app.route("/skill")
 def view_skills():
+    skills = Skill.query.all()
+
+    return jsonify(
+        {
+            "code": 200, 
+            "data": [skill.json() for skill in skills]
+        }
+    )
+
+# retrieve all active skills 
+@app.route("/activeskill")
+def view_active_skills():
     skills = Skill.query.filter_by(Skill_Status = None)
 
     return jsonify(
@@ -269,18 +308,15 @@ def view_skills():
         }
     )
 
-
 # retrieve all skills related to a course
 @app.route("/<string:jobroleId>/skills")
 def view_skills_for_a_role(jobroleId):
     jobrole = JobRole.query.filter_by(JobRole_ID= jobroleId).first()
-
-    if jobrole:
-        skill_list = []
-        for skill in jobrole.skills:
-            if skill.Skill_Status != "Retired":
-                skill_list.append(skill)
-
+    skill_list = []
+    for skill in jobrole.skills:
+        if skill.Skill_Status != "Retired":
+            skill_list.append(skill)
+    if skill_list:
         return (
             {
                 "code": 200,
@@ -289,46 +325,41 @@ def view_skills_for_a_role(jobroleId):
             }
         )
     return (
-        {
-            "code": 404,
-            "message": "jobrole not found"
-        }
-    )
+            {
+                "code": 400,
+                "message": "No skills found"
+            }
+        )
 
 # check if the user completed the skill
 @app.route("/skills/complete/<string:jobroleId>", methods=["POST"])
 def check_skills_completed(jobroleId):
     userId = request.get_json()["userId"]
-    skills_of_role = view_skills_for_a_role(jobroleId)["data"]
+    skills_of_role = []
+    check_skill = view_skills_for_a_role(jobroleId)
+    if check_skill["code"] == 200:
+        skills_of_role = check_skill["data"]
 
-    if skills_of_role and userId:
-        for i in range(len(skills_of_role)):
-            course_found = False
-            skill_id = skills_of_role[i]['Skill_ID']
+    for i in range(len(skills_of_role)):
+        course_found = False
+        skill_id = skills_of_role[i]['Skill_ID']
 
-            skill = Skill.query.filter_by(Skill_ID=skill_id).first()
-            for course in skill.courses:
-                registration = Registration.query.filter_by(Staff_ID = userId, Course_ID = course.Course_ID).first()
-                if registration is not None:
-                    status = registration.Completion_Status
-                    if status == "Completed":
-                        course_found = True
-            skills_of_role[i]['Completion_Status'] = course_found
+        skill = Skill.query.filter_by(Skill_ID=skill_id).first()
+        for course in skill.courses:
+            registration = Registration.query.filter_by(Staff_ID = userId, Course_ID = course.Course_ID).first()
+            if registration is not None:
+                status = registration.Completion_Status
+                if status == "Completed":
+                    course_found = True
+        skills_of_role[i]['Completion_Status'] = course_found
 
-        jobrole = JobRole.query.filter_by(JobRole_ID= jobroleId).first()
-    
-        return jsonify(
-            {
-                "code": 200,
-                "data": skills_of_role,
-                "role": jobrole.JobRole_Name
-            }
-        )
-
+    jobrole = JobRole.query.filter_by(JobRole_ID= jobroleId).first()
+        
     return jsonify(
         {
-            "code": 404,
-            "message": "Not found"
+            "code": 200,
+            "data": skills_of_role,
+            "role": jobrole.JobRole_Name
         }
     )
     
@@ -510,6 +541,99 @@ def delete_a_skill(skillId):
         }
     ), 404
 
+# delete a jobrole
+@app.route("/jobrole/<string:jobroleId>", methods=['DELETE'])
+def delete_a_jobrole(jobroleId):
+    jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
+    if jobrole:
+        # db.session.delete(jobrole)
+        # db.session.commit()
+        jobrole.JobRole_Status = "Retired"
+        db.session.commit()
+
+# restore a deleted skill
+@app.route("/skill/restore/<string:skillId>")
+def restore_skill(skillId):
+    skill = Skill.query.filter_by(Skill_ID=skillId).first()
+    if skill:
+        skill.Skill_Status = None
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "skillId": skillId
+            },
+            "message": "Skill not found."
+        }
+    ), 404
+
+#create a role
+@app.route("/roles/create", methods=['POST'])
+def create_a_role():
+    data = request.get_json()
+    role = Role(**data)
+    roleId = role.Role_ID
+    rolename = role.Role_Name
+    
+    if (Role.query.filter_by(Role_ID=roleId).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "roleId": roleId
+                },
+                "message": "Role ID already exists."
+            }
+        ), 400
+
+    if (Role.query.filter_by(Role_Name=rolename).first()):
+        return jsonify(
+            {
+                "code": 200,
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "roleId": roleId
+            },
+            "message": "Role not found."
+        }
+    ), 404
+
+# restore a deleted jobrole
+@app.route("/jobrole/restore/<string:jobroleId>")
+def restore_jobrole(jobroleId):
+    jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
+    if jobrole:
+        jobrole.JobRole_Status = None
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+            }
+        )
+
+# get all courses a staff has added (registered/waitlist)
+@app.route("/staff/courses/added", methods=['POST'])
+def staff_courses_completed():
+    userId = request.get_json()["userId"]
+    registration = Registration.query.filter_by(Staff_ID = userId)
+    
+    return jsonify(
+        {
+            "code": 200,
+            "data": [reg.json() for reg in registration]
+        }
+    ), 200
+
 # retrieve all user learning journey
 @app.route("/learningjourney", methods=["POST"])
 def view_leaningjourney():
@@ -523,15 +647,18 @@ def view_leaningjourney():
             if journey.LearningJourney_Status == "Progress":
                 url = "http://127.0.0.1:5000/journey/progress/" + journey.Journey_ID
                 x = requests.post(url, json={"userId": userId})
-                progress = json.loads(x.text)["data"]
-                update_journey_completion(journey.Journey_ID, progress)
+                code = json.loads(x.text)["code"]
+                if code == "200":
+                    update_journey_completion(journey.Journey_ID, json.loads(x.text)["data"] )
 
-        return jsonify(
-                {
-                    "code": 200, 
-                    "data": [learningjourney.json() for learningjourney in learningjourneylist]
-                }
-            )
+        if learningjourneylist:
+            return jsonify(
+                    {
+                        "code": 200, 
+                        "data": [learningjourney.json() for learningjourney in learningjourneylist]
+                    }
+                )
+                
     return jsonify(
         { 
             "code": 404,
@@ -567,14 +694,15 @@ def update_journey_completion(journeyId, skill_list):
     ), 404
 
 
-
 @app.route("/journey/progress/<string:journeyId>", methods=["POST"])
 def get_skills_progress(journeyId):
     userId = request.get_json()["userId"]
     journey = LearningJourney.query.filter_by(Journey_ID = journeyId).first()
-    skill_list = view_skills_for_a_role(journey.JobRole_ID)["data"]
+    skill_list = []
+    check_skill_list = view_skills_for_a_role(journey.JobRole_ID)
+    if check_skill_list["code"] == 200:
+        skill_list = check_skill_list["data"]
     courses_added = journey.courses
-    
     if journey and skill_list:
         for i in range(len(skill_list)):
             course_found = False
@@ -627,7 +755,6 @@ def get_courses_in_journey(journeyId):
         course = journey.courses[j]
         for skill in skill_list:
             if course in skill.courses:
-                print('true')
                 if "skills" in course_list[j]:
                     course_list[j]['skills'].append(skill.json())
                 else:
@@ -639,6 +766,73 @@ def get_courses_in_journey(journeyId):
             "data": course_list
         }
     ), 201
+
+
+@app.route("/courses/<string:courseId>")
+def get_assgined_courses(courseId):
+    skillList = Skill.query.all()
+    selected_skills = []
+
+    for skill in skillList:
+        courseList = skill.courses
+        course = Course.query.filter_by(Course_ID=courseId).first()
+        if course in courseList:
+            selected_skills.append(skill.Skill_ID)
+
+    if selected_skills:
+        return jsonify(
+            {
+                "code": 200,
+                "data": selected_skills,
+                "name": course.Course_Name
+            }
+        ), 201
+
+    return jsonify(
+        { 
+            "code": 404,
+            "message": "skills not found",
+            "name": course.Course_Name
+        }
+    ), 404
+
+#Add skills to existing course
+@app.route("/hr/courses/edit/<string:courseId>", methods=["POST"]) 
+def update_skills_to_course(courseId):
+    courseid = Course.query.filter_by(Course_ID = courseId).first().Course_ID
+    skillid_list = request.get_json() #get from the part when the specific skill is added
+    deleted_list=[]
+
+    if (db.session.query(Skill_course).filter_by(Course_ID=courseId).all()): #find all skills of courses and delete
+        existing_course_skills_list = db.session.query(Skill_course).filter_by(Course_ID=courseId).all()
+        for existing_course_skills in existing_course_skills_list:
+            deleted_list.append(existing_course_skills.Skill_ID)              
+            db.session.query(Skill_course).filter_by(Course_ID=courseId, Skill_ID=existing_course_skills.Skill_ID).delete()
+            db.session.commit()
+
+    if (skillid_list == []): #check if there is at least one skill selected
+        return jsonify(
+            {
+                "code": 400,
+                "message": "There must at least be one skill selected"
+            }
+        ), 400
+        
+    for skillid in skillid_list: #add skills to courses
+        course_skill = Skill_course.insert().values(Course_ID=courseId, Skill_ID=skillid)
+        db.engine.execute(course_skill)
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": {
+                "Course": courseId,
+                "added list": skillid_list,
+                "deleted list": deleted_list
+            },
+            "message": "Course skills updated successfully."
+        }
+    ), 200
 
 #Add skills to existing job role
 @app.route("/hr/jobrole/<string:jobroleId>/edit", methods=["POST"]) 
@@ -661,7 +855,7 @@ def update_skills_to_role(jobroleId):
                 "message": "There must at least be one skill selected"
             }
         ), 400
-    
+        
     for skillid in skillid_list: #add skills to job role
         jobrole_skill = Jobrole_skill.insert().values(JobRole_ID=jobroleid, Skill_ID=skillid)
         db.engine.execute(jobrole_skill)
@@ -678,7 +872,180 @@ def update_skills_to_role(jobroleId):
         }
     ), 200
 
+@app.route("/journey/<string:journeyId>/<string:courseId>", methods=['DELETE'])
+def remove_existing_course_learning_journey(journeyId, courseId):   
+    learningjourney = LearningJourney.query.filter_by(Journey_ID=journeyId).first()
+    
+    for course in learningjourney.courses:
+        if(course.Course_ID==courseId):
+            
+            learningjourney.courses.remove(course)
+            db.session.commit()
+    
+            return jsonify(
+                        {
+                            "code": 200,
+                            "message": "Delete success"
+                        }
+                    ), 201
+
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "journeyId": journeyId,
+                "courseId": courseId
+            },
+            "message": "Course in selected Learning Journey not found"
+        }
+    ), 404
+    
+# create a jobrole 
+@app.route("/jobrole/create", methods=['POST'])
+def create_a_jobrole():
+    data = request.get_json()
+    jobrole = JobRole(**data)
+    jobroleId = jobrole.JobRole_ID
+    jobrolename = jobrole.JobRole_Name
+    
+    if (JobRole.query.filter_by(JobRole_ID=jobroleId).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "jobroleId": jobroleId
+                },
+                "message": "Role ID already exists."
+            }
+        ), 400
+
+    if (JobRole.query.filter_by(JobRole_Name=jobrolename).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "jobrolename": jobrolename
+                },
+                "message": "Role Name already exists."
+            }
+        ), 400
+
+    try:
+        db.session.add(jobrole)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "jobroleId": jobroleId
+                },
+                "message": "An error occurred creating the role."
+            }
+        ), 500
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": jobrole.json()
+        }
+    ), 201
+
+#update a jobrole
+@app.route("/jobrole/<string:jobroleId>", methods=['PUT'])
+def update_a_jobrole(jobroleId):
+    jobrole = JobRole.query.filter_by(JobRole_ID= jobroleId).first()
+    if jobrole:
+        data = request.get_json()
+        if data['JobRole_Name']:
+            jobrole_check = JobRole.query.filter_by(JobRole_Name=data['JobRole_Name']).first()
+            if jobrole_check and jobrole.JobRole_Name != data["JobRole_Name"]:
+                return jsonify(
+                    {
+                        "code": 404,
+                        "data": {
+                            "jobroleId": jobroleId
+                        },
+                        "message": "Role name is repeated."
+                    }
+                ), 404
+            else:
+                jobrole.JobRole_Name = data['JobRole_Name']
+
+        if data['JobRole_Desc']:
+            jobrole.JobRole_Desc = data['JobRole_Desc'] 
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": jobrole.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "jobroleId": jobroleId
+            },
+            "message": "Role not found."
+        }
+    ), 404
+
+# save learning journey with added courses
+@app.route("/journey/<string:staffId>/<string:jobRoleId>", methods=['POST'])
+def save_learning_journey(staffId, jobRoleId):
+    journeyId = jobRoleId + '-' + staffId
+    addedCourses = request.get_json()["addedCourses"]
+    
+    journey = LearningJourney(Journey_ID = journeyId, 
+                                Staff_ID = staffId, 
+                                JobRole_ID = jobRoleId, 
+                                LearningJourney_Status = 'Progress',
+                            )
+
+    try:
+        db.session.add(journey)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "journeyId": journeyId
+                },
+                "message": "An error occurred creating the learning journey."
+            }
+        ), 500    
+    
+
+    # convert str to json
+    addedCourses = json.loads(addedCourses)
+    for course in addedCourses:
+        # get course object from db
+        tobeadded = Course.query.filter_by(Course_ID=course).first()
+        try:
+            # add into new journey & commit to db
+            journey.courses.append(tobeadded)
+            db.session.commit()
+        except:
+            return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "journeyId": journeyId,
+                    "course_id": course
+                },
+                "message": "An error occurred creating the learning journey."
+            }
+        ), 400
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": journey.json()
+        }
+    ), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True)
-
