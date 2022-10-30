@@ -3,6 +3,7 @@ from re import L
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from sqlalchemy import delete
 import requests
 import json
 
@@ -766,6 +767,7 @@ def get_courses_in_journey(journeyId):
         }
     ), 201
 
+
 @app.route("/courses/<string:courseId>")
 def get_assgined_courses(courseId):
     skillList = Skill.query.all()
@@ -815,7 +817,7 @@ def update_skills_to_course(courseId):
                 "message": "There must at least be one skill selected"
             }
         ), 400
-    
+        
     for skillid in skillid_list: #add skills to courses
         course_skill = Skill_course.insert().values(Course_ID=courseId, Skill_ID=skillid)
         db.engine.execute(course_skill)
@@ -829,6 +831,44 @@ def update_skills_to_course(courseId):
                 "deleted list": deleted_list
             },
             "message": "Course skills updated successfully."
+        }
+    ), 200
+
+#Add skills to existing job role
+@app.route("/hr/jobrole/<string:jobroleId>/edit", methods=["POST"]) 
+def update_skills_to_role(jobroleId):
+    jobroleid = JobRole.query.filter_by(JobRole_ID = jobroleId).first().JobRole_ID
+    skillid_list = request.get_json() #get from the part when the specific skill is added
+    deleted_list=[]
+
+    if (db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleid).all()): #find all skills of job role and delete
+        existing_jobrole_skills_list = db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleid).all()
+        for existing_jobrole_skills in existing_jobrole_skills_list:
+            deleted_list.append(existing_jobrole_skills.Skill_ID)              
+            db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleid, Skill_ID=existing_jobrole_skills.Skill_ID).delete()
+            db.session.commit()
+
+    if (skillid_list == []): #check if there is at least one skill selected
+        return jsonify(
+            {
+                "code": 400,
+                "message": "There must at least be one skill selected"
+            }
+        ), 400
+        
+    for skillid in skillid_list: #add skills to job role
+        jobrole_skill = Jobrole_skill.insert().values(JobRole_ID=jobroleid, Skill_ID=skillid)
+        db.engine.execute(jobrole_skill)
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": {
+                "job role": jobroleid,
+                "added list": skillid_list,
+                "deleted list": deleted_list
+            },
+            "message": "Jobrole skills updated successfully."
         }
     ), 200
 
@@ -1005,6 +1045,7 @@ def save_learning_journey(staffId, jobRoleId):
             "data": journey.json()
         }
     ), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True)
