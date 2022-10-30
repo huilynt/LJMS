@@ -132,7 +132,7 @@ function CreateRoleHr(){
             {/* <form onSubmit={saveChanges} > */}
                 <Box sx={{my:5, py:5, px:2, border:'1px dashed grey'}} component="form">
                     <Stack direction={{xs:"column", md:"row" }} spacing={5}>
-                        <Stack spacing={2} sx={{width: {xs:"100%",md:"50%"}}}>
+                        <Stack spacing={2} sx={{width: {xs:"100%",md:"100%"}}}>
                             <FormControl>
                                 <InputLabel htmlFor="jobrole-id">ID</InputLabel>
                                 <OutlinedInput
