@@ -1,15 +1,15 @@
 import { React, useEffect, useState} from "react";
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
+import {Container, Box, Button, Typography, Grid, Alert} from '@mui/material';
 import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import Checkbox from '@mui/material/Checkbox';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import EditConfirm from '../components/EditConfirm'
-import Alert from '@mui/material/Alert';
 
 function UpdateRoleHR(){
     const [jobrole, setJobRole] = useState(
@@ -21,6 +21,8 @@ function UpdateRoleHR(){
     const [originalJobRole, setOriginalJobRole] = useState({})
     const [editConfirm, setEditConfirm] = useState(false);
     const [error, setError] = useState("");
+    const [skills, setSkill] = useState([]);
+    const [selectedSkills, setselectedSkills] = useState([]);
 
     let {jobroleID} = useParams();
     let navigate = useNavigate();
@@ -36,6 +38,23 @@ function UpdateRoleHR(){
             console.log(error.message)
         })
 
+        axios.get('http://127.0.0.1:5000/activeskill')
+        .then(response => {
+            console.log("SUCCESS", response)
+            setSkill(response.data.data)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+
+        axios.get('http://127.0.0.1:5000/jobrole/assignedskills/' + jobroleID)
+        .then(response => {
+            console.log("SUCCESS", response)
+            setselectedSkills(response.data.data)
+        })
+        .catch(error => {
+            console.log(error)
+        })
     },[]);
 
     const handleChange = (event) => {
@@ -44,6 +63,26 @@ function UpdateRoleHR(){
             ...jobrole,
             [event.target.name]: value
         });
+
+        let checked = event.target.checked;
+        let skillId = event.target.name;
+        if (checked){
+            if (selectedSkills.includes(skillId) === false){
+                if (selectedSkills.length === 0){
+                    setselectedSkills([skillId])
+                }
+                else{
+                    setselectedSkills(current => [...current, skillId])
+                }
+            }
+        }
+        else{
+            setselectedSkills(current => 
+                current.filter(skill => {
+                    return skill !== skillId;
+                })
+            )  
+        }
     };
 
     function saveChanges(e) {
@@ -52,10 +91,20 @@ function UpdateRoleHR(){
         if (originalJobRole === jobrole){
             setError("There is no changes made.")
         }
+        else if(selectedSkills.length < 1){
+            setError("At least one skill is required.")
+        }
         else{
             axios.put('http://127.0.0.1:5000/jobrole/' + jobroleID, jobrole)
             .then((response) =>{
-                setEditConfirm(true);
+                console.log(response)
+                axios.post('http://127.0.0.1:5000/hr/jobrole/edit/' + jobroleID, selectedSkills)
+                .then((response) =>{
+                    setEditConfirm(true);
+                })
+                .catch(error => {
+                    console.log(error)
+                })
             })
             .catch(error => {
                 console.log(error)
@@ -68,6 +117,23 @@ function UpdateRoleHR(){
         navigate("/hr/roles")
     }
 
+    const skills_check = []
+    for (let skill of skills){
+        let checked_skill = false
+        if (selectedSkills.includes(skill.Skill_ID)){
+            checked_skill = true;
+        }
+        skills_check.push( 
+            <Grid item md={8} key={skill.Skill_ID}>
+                <FormControlLabel 
+                    control={<Checkbox checked={checked_skill}/>} 
+                    label={skill.Skill_Name} 
+                    name={skill.Skill_ID}
+                    onChange={handleChange}
+                />
+            </Grid>)
+    }
+
     return (
         <Container sx={{mt:5}}>
             <Box sx={{ typography: { xs: 'h6', md:'h4'}}}>Edit Role</Box>
@@ -75,7 +141,7 @@ function UpdateRoleHR(){
             {/* <form onSubmit={saveChanges} > */}
                 <Box sx={{my:5, py:5, px:2, border:'1px dashed grey'}} component="form">
                     <Stack direction={{xs:"column", md:"row" }} spacing={5}>
-                        <Stack spacing={2} sx={{width: {xs:"100%",md:"50%"}}}>
+                        <Stack spacing={2} sx={{width: {xs:"100%",md:"100%"}}}>
                             <FormControl>
                                 <InputLabel htmlFor="jobrole-name">Name</InputLabel>
                                 <OutlinedInput
@@ -103,6 +169,14 @@ function UpdateRoleHR(){
                             </FormControl>
                         </Stack>
                     </Stack>
+                    <Typography sx={{px:2}} variant="h6">Select the skills you want to assign to the role</Typography>
+                    <Box sx={{ m:3}} >
+                        <FormGroup component="fieldset" variant="standard">
+                            <Grid container spacing={2} columns={16} data-testid="skill_list">
+                                {skills_check}
+                            </Grid>
+                        </FormGroup>
+                    </Box>
                     <Stack direction="row" spacing={2} justifyContent="center" sx={{mt:2}}>
                         <Button variant="outlined" color="error" onClick={cancelChanges}>Cancel</Button>
                         <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
