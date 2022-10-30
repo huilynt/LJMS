@@ -834,8 +834,36 @@ def update_skills_to_course(courseId):
         }
     ), 200
 
+#return the skills assigned to the specific job role
+@app.route("/jobrole/assignedskills/<string:jobroleId>")
+def get_assigned_skills(jobroleId):
+    jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
+    skillList = Skill.query.all()
+    selected_skills = []
+    
+    for skill in skillList:
+        assigned_skills_list = jobrole.skills
+        if skill in assigned_skills_list:
+            selected_skills.append(skill.Skill_ID)
+
+    if selected_skills:
+        return jsonify(
+            {
+                "code": 200,
+                "data": selected_skills,
+            }
+        ), 200
+
+    return jsonify(
+        { 
+            "code": 404,
+            "message": "skills not found",
+        }
+    ), 404
+
+
 #Add skills to existing job role
-@app.route("/hr/jobrole/<string:jobroleId>/edit", methods=["POST"]) 
+@app.route("/hr/jobrole/edit/<string:jobroleId>", methods=["POST"]) 
 def update_skills_to_role(jobroleId):
     jobroleid = JobRole.query.filter_by(JobRole_ID = jobroleId).first().JobRole_ID
     skillid_list = request.get_json() #get from the part when the specific skill is added
@@ -904,7 +932,11 @@ def remove_existing_course_learning_journey(journeyId, courseId):
 @app.route("/jobrole/create", methods=['POST'])
 def create_a_jobrole():
     data = request.get_json()
-    jobrole = JobRole(**data)
+    jobrole = JobRole(
+        JobRole_ID = data["JobRole_ID"], 
+        JobRole_Name  = data["JobRole_Name"], 
+        JobRole_Desc  = data["JobRole_Desc"]
+        )
     jobroleId = jobrole.JobRole_ID
     jobrolename = jobrole.JobRole_Name
     
