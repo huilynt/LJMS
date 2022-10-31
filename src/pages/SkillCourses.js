@@ -100,8 +100,9 @@ function SkillCourses() {
       });
 
     axios
-      .post("http://127.0.0.1:5000/staff/courses/added", { userId: userId })
+      .post("http://127.0.0.1:5000/staff/courses/added", { userId: userId, roleId: roleID })
       .then((response) => {
+        console.log(response)
         setRegisteredCourses(response.data.data);
       })
       .catch((error) => {

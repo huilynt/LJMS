@@ -22,8 +22,6 @@ function EditLearningJourney() {
     let { roleID } = useParams() 
 
     useEffect(() => {
-        sessionStorage.setItem("userId", "150166");
-
         const journeyID = roleID + "-" + sessionStorage.userId
         setJourneyID(journeyID)
         axios.post('http://127.0.0.1:5000/journey/progress/' + journeyID, {"userId":sessionStorage.userId})
