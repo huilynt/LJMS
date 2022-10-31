@@ -905,7 +905,7 @@ def update_skills_to_role(jobroleId):
 @app.route("/journey/<string:journeyId>/<string:courseId>", methods=['DELETE'])
 def remove_existing_course_learning_journey(journeyId, courseId):   
     learningjourney = LearningJourney.query.filter_by(Journey_ID=journeyId).first()
-    print("check")
+    print(learningjourney)
     for course in learningjourney.courses:
         if(course.Course_ID==courseId):       
             try:
@@ -919,6 +919,16 @@ def remove_existing_course_learning_journey(journeyId, courseId):
                         ), 201
             except:
                 return jsonify(
+                    {
+                        "code": 404,
+                        "data": {
+                            "journeyId": journeyId,
+                            "courseId": courseId
+                        },
+                        "message": "Course in selected Learning Journey not found"
+                    }
+                ), 404
+    return jsonify(
                     {
                         "code": 404,
                         "data": {
