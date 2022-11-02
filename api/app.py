@@ -274,7 +274,7 @@ def view_relevant_jobrole(staffId):
         currentljrole.append(learningjourney.JobRole_ID)
 
     for role in jobrolelist:
-        if role.JobRole_ID not in currentljrole:
+        if role.JobRole_ID not in currentljrole and role.JobRole_Status != "Retired":
             relevantrolelist.append(role)
     
     return jsonify(
