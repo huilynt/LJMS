@@ -116,7 +116,9 @@ function SkillCourses() {
 
   return (
     <Container sx={{ mt: 5 }}>
-      <Grid container spacing={2}>
+      {purpose == "edit" ? <Link href={'/journey/' + roleID} underline="none">{"< Back"}</Link> : <></>}
+
+      <Grid container spacing={2} sx={{mt:1}}>
         <Grid item md={6}>
           <Box sx={{ typography: { xs: "h6", md: "h4" } }}>{role}</Box>
           <Box sx={{ typography: { xs: "body2", md: "h6" } }}>
@@ -134,7 +136,7 @@ function SkillCourses() {
           }}>
         </Grid>
       </Grid>
-
+      
       {error.length > 0 ? <Alert sx={{mb:-3, my:2}} severity="error">{error}</Alert> : <></>}
 
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
