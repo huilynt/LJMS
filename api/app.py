@@ -625,12 +625,14 @@ def restore_jobrole(jobroleId):
 @app.route("/staff/courses/added", methods=['POST'])
 def staff_courses_completed():
     userId = request.get_json()["userId"]
-    registration = Registration.query.filter_by(Staff_ID = userId)
+    roleId = request.get_json()["roleId"]
+    journeyId = roleId + "-" + userId
+    journey = LearningJourney.query.filter_by(Journey_ID=journeyId).first()
     
     return jsonify(
         {
             "code": 200,
-            "data": [reg.json() for reg in registration]
+            "data": [course.Course_ID for course in journey.courses]
         }
     ), 200
 
@@ -903,30 +905,39 @@ def update_skills_to_role(jobroleId):
 @app.route("/journey/<string:journeyId>/<string:courseId>", methods=['DELETE'])
 def remove_existing_course_learning_journey(journeyId, courseId):   
     learningjourney = LearningJourney.query.filter_by(Journey_ID=journeyId).first()
-    
+    print(learningjourney)
     for course in learningjourney.courses:
-        if(course.Course_ID==courseId):
-            
-            learningjourney.courses.remove(course)
-            db.session.commit()
-    
-            return jsonify(
-                        {
-                            "code": 200,
-                            "message": "Delete success"
-                        }
-                    ), 201
-
+        if(course.Course_ID==courseId):       
+            try:
+                db.session.query(LearningJourney_SelectedCourse).filter_by(Course_ID=courseId, Journey_ID=journeyId).delete()
+                db.session.commit()
+                return jsonify(
+                            {
+                                "code": 200,
+                                "message": "Delete success"
+                            }
+                        ), 201
+            except:
+                return jsonify(
+                    {
+                        "code": 404,
+                        "data": {
+                            "journeyId": journeyId,
+                            "courseId": courseId
+                        },
+                        "message": "Course in selected Learning Journey not found"
+                    }
+                ), 404
     return jsonify(
-        {
-            "code": 404,
-            "data": {
-                "journeyId": journeyId,
-                "courseId": courseId
-            },
-            "message": "Course in selected Learning Journey not found"
-        }
-    ), 404
+                    {
+                        "code": 404,
+                        "data": {
+                            "journeyId": journeyId,
+                            "courseId": courseId
+                        },
+                        "message": "Course in selected Learning Journey not found"
+                    }
+                ), 404
     
 # create a jobrole 
 @app.route("/jobrole/create", methods=['POST'])
@@ -1027,27 +1038,29 @@ def update_a_jobrole(jobroleId):
 @app.route("/journey/<string:staffId>/<string:jobRoleId>", methods=['POST'])
 def save_learning_journey(staffId, jobRoleId):
     journeyId = jobRoleId + '-' + staffId
+    print(journeyId)
     addedCourses = request.get_json()["addedCourses"]
     
-    journey = LearningJourney(Journey_ID = journeyId, 
-                                Staff_ID = staffId, 
-                                JobRole_ID = jobRoleId, 
-                                LearningJourney_Status = 'Progress',
-                            )
-
-    try:
-        db.session.add(journey)
-        db.session.commit()
-    except:
-        return jsonify(
-            {
-                "code": 500,
-                "data": {
-                    "journeyId": journeyId
-                },
-                "message": "An error occurred creating the learning journey."
-            }
-        ), 500    
+    journey = LearningJourney.query.filter_by(Journey_ID=journeyId).first()
+    if journey == None:
+        journey = LearningJourney(Journey_ID = journeyId, 
+                                    Staff_ID = staffId, 
+                                    JobRole_ID = jobRoleId, 
+                                    LearningJourney_Status = 'Progress',
+                                )
+        try:
+            db.session.add(journey)
+            db.session.commit()
+        except:
+            return jsonify(
+                {
+                    "code": 500,
+                    "data": {
+                        "journeyId": journeyId
+                    },
+                    "message": "An error occurred creating the learning journey."
+                }
+            ), 500    
     
 
     # convert str to json

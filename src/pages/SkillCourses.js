@@ -74,11 +74,12 @@ function SkillCourses() {
 
   let userId = sessionStorage.getItem("userId");
 
+
   if (!addedCourses) {
     setAddedCourses(getAddedCourses());
   }
 
-  let { roleID, skillID } = useParams();
+  let { purpose, roleID, skillID } = useParams();
   useEffect(() => {
     axios
       .get("http://127.0.0.1:5000/jobrole/" + roleID)
@@ -100,8 +101,9 @@ function SkillCourses() {
       });
 
     axios
-      .post("http://127.0.0.1:5000/staff/courses/added", { userId: userId })
+      .post("http://127.0.0.1:5000/staff/courses/added", { userId: userId, roleId: roleID })
       .then((response) => {
+        console.log(response)
         setRegisteredCourses(response.data.data);
       })
       .catch((error) => {
@@ -109,6 +111,8 @@ function SkillCourses() {
       });
   }, []);
 
+  console.log(addedCourses)
+  console.log(registeredCourses)
   return (
     <Container sx={{ mt: 5 }}>
       <Grid container spacing={2}>
@@ -178,7 +182,6 @@ function SkillCourses() {
                             course.Course_ID,
                           ];
                           setAddedCourses(newCoursesArr);
-
                           saveAddedCourses(newCoursesArr);
                         }
                       }}>
@@ -193,8 +196,17 @@ function SkillCourses() {
                             (c) => c !== course.Course_ID
                           );
                           setAddedCourses(newCoursesArr);
-
                           saveAddedCourses(newCoursesArr);
+                        }
+                        if (registeredCourses.includes(course.Course_ID) && purpose == "edit"){
+                          axios.delete('http://127.0.0.1:5000/journey/' + roleID + "-" + userId + "/" + course.Course_ID)
+                          .then (() => {
+                              window.location.reload(false)
+                              console.log('Delete successful')
+                          })
+                          .catch(error => {
+                                  console.log(error.message)
+                          })
                         }
                       }}>
                       Remove
@@ -206,8 +218,8 @@ function SkillCourses() {
           </TableBody>
         </Table>
       </TableContainer>
-
       <Container sx={{ mt: 5 }}>
+      { purpose == "create" ?
         <Button
           sx={{
             color: "black",
@@ -218,7 +230,25 @@ function SkillCourses() {
           >
           Save
         </Button>
-      </Container>
+          : 
+        <Button
+          sx={{
+            color: "black",
+            float: "right",
+            backgroundColor: "lightgreen",
+          }}
+          onClick = {() => {
+            console.log(addedCourses)
+            console.log(userId, roleID)
+            const sendResult = axios.post('http://127.0.0.1:5000/journey/' + userId + '/' + roleID, {"addedCourses":sessionStorage.getItem("addedCourses")})
+            console.log(sendResult.data);
+            sessionStorage.removeItem("addedCourses");
+            navigate('/journey/' + roleID);
+          }}
+        >
+        Save
+      </Button>}
+      </Container> 
     </Container>
   );
 }

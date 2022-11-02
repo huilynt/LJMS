@@ -11,11 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import {
-    Box,
-    Button,
-} from "@mui/material";
-import IconButton from '@material-ui/core/IconButton';
+import {Box,Button,} from "@mui/material";
 import Chip from '@mui/material/Chip';
 import {Link, useNavigate} from 'react-router-dom';
 import Alert from '@mui/material/Alert';
@@ -101,7 +97,7 @@ function RoleSkill(props) {
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Name</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
                             <StyledTableCell align='center' sx={{borderRight: { xs:0, md:'0.5px solid grey'}}}>Status</StyledTableCell>
-                            <StyledTableCell align='center'>Select Skill</StyledTableCell>
+                            <StyledTableCell align='center'>Select Course</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -115,10 +111,10 @@ function RoleSkill(props) {
                                 </StyledTableCell>
                                 <StyledTableCell align='center'>
                                     <Link to={{
-                                    pathname:"/" + jobRole + "/" + skill.Skill_ID + "/courses",
+                                    pathname:"/create/" + jobRole + "/" + skill.Skill_ID + "/courses",
                                     state:{stateParam:true}
                                     }}>
-                                    <IconButton><ArrowForwardIosIcon></ArrowForwardIosIcon></IconButton>
+                                    <ArrowForwardIosIcon></ArrowForwardIosIcon>
                                     </Link>
                                     
                                 </StyledTableCell>
