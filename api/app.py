@@ -1086,6 +1086,29 @@ def save_learning_journey(staffId, jobRoleId):
         }
     ), 200
 
+# hard delete learning journey and its courses
+@app.route("/journey/delete", methods=['POST'])
+def delete_learning_journey():
+    journeyId = request.get_json()["journeyId"]
 
+    try:
+        journey = LearningJourney.query.filter_by(Journey_ID=journeyId).first()
+        db.session.delete(journey)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+            "code": 400,
+            "data": journeyId
+        }
+    ), 400
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": journeyId
+        }
+    ), 200
+    
 if __name__ == '__main__':
     app.run(debug=True)
