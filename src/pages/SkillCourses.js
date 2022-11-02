@@ -15,10 +15,10 @@ import {
   TableRow,
   TextField,
   Link,
+  Alert
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
-import { Search } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -60,10 +60,11 @@ const isCourseAvailable = (registeredCourses, addedCourses, courseId) => {
 
 function SkillCourses() {
   const [courses, setCourses] = useState([]);
-  const [addedCourses, setAddedCourses] = useState();
+  const [addedCourses, setAddedCourses] = useState("");
   const [registeredCourses, setRegisteredCourses] = useState([]);
   const [skill, setSkill] = useState("");
   const [role, setRole] = useState("");
+  const [error,setError] = useState("");
   const navigate = useNavigate();
 
   const courseDetails = (event,  message) => {
@@ -112,7 +113,7 @@ function SkillCourses() {
   }, []);
 
   console.log(addedCourses)
-  console.log(registeredCourses)
+
   return (
     <Container sx={{ mt: 5 }}>
       <Grid container spacing={2}>
@@ -133,6 +134,8 @@ function SkillCourses() {
           }}>
         </Grid>
       </Grid>
+
+      {error.length > 0 ? <Alert sx={{mb:-3, my:2}} severity="error">{error}</Alert> : <></>}
 
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
         <Table sx={{ minWidth: 200 }}>
@@ -184,6 +187,16 @@ function SkillCourses() {
                           setAddedCourses(newCoursesArr);
                           saveAddedCourses(newCoursesArr);
                         }
+                        if (purpose === "edit"){
+                          axios.post('http://127.0.0.1:5000/journey/add/course/' + roleID + "/" + course.Course_ID, { staffId : userId})
+                          .then ((response) => {
+                            window.location.reload(false)
+                            console.log('Add successful')    
+                          })
+                          .catch(error => {
+                                  console.log(error.message)
+                          })
+                        }
                       }}>
                       Add
                     </Button>
@@ -200,9 +213,15 @@ function SkillCourses() {
                         }
                         if (registeredCourses.includes(course.Course_ID) && purpose == "edit"){
                           axios.delete('http://127.0.0.1:5000/journey/' + roleID + "-" + userId + "/" + course.Course_ID)
-                          .then (() => {
-                              window.location.reload(false)
-                              console.log('Delete successful')
+                          .then ((response) => {
+                              if (response.data.message == "Only one course left"){
+                                console.log("Only one course")
+                                setError("At least one course is needed to save the learning journey")
+                              }
+                              else{
+                                  window.location.reload(false)
+                                  console.log('Delete successful')    
+                              }
                           })
                           .catch(error => {
                                   console.log(error.message)
@@ -230,24 +249,7 @@ function SkillCourses() {
           >
           Save
         </Button>
-          : 
-        <Button
-          sx={{
-            color: "black",
-            float: "right",
-            backgroundColor: "lightgreen",
-          }}
-          onClick = {() => {
-            console.log(addedCourses)
-            console.log(userId, roleID)
-            const sendResult = axios.post('http://127.0.0.1:5000/journey/' + userId + '/' + roleID, {"addedCourses":sessionStorage.getItem("addedCourses")})
-            console.log(sendResult.data);
-            sessionStorage.removeItem("addedCourses");
-            navigate('/journey/' + roleID);
-          }}
-        >
-        Save
-      </Button>}
+          : <></>}
       </Container> 
     </Container>
   );

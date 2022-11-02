@@ -15,6 +15,7 @@ import {Box,Button,} from "@mui/material";
 import Chip from '@mui/material/Chip';
 import {Link, useNavigate} from 'react-router-dom';
 import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -127,8 +128,13 @@ function RoleSkill(props) {
             <Container>
                 {(typeof(sessionStorage.getItem("addedCourses")) === "string" && sessionStorage.getItem("addedCourses") !== "[]") 
                     ? <h5>Added Courses: 
-                        <br></br> 
-                        {sessionStorage.getItem("addedCourses").slice(2,-2).split('","').join(", ").toUpperCase()}
+                        <Stack sx={{my:1}} spacing={2} direction="row">
+                        {sessionStorage.getItem("addedCourses").slice(2,-2).split('","').map((course) => {
+                            return (
+                            <Chip label={course}></Chip>
+                            )
+                        })}
+                        </Stack>
                     </h5>
                     : <></>
                 }

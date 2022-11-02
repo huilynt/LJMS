@@ -629,12 +629,20 @@ def staff_courses_completed():
     journeyId = roleId + "-" + userId
     journey = LearningJourney.query.filter_by(Journey_ID=journeyId).first()
     
+    if journey:
+        return jsonify(
+            {
+                "code": 200,
+                "data": [course.Course_ID for course in journey.courses]
+            }
+        ), 200
+
     return jsonify(
-        {
-            "code": 200,
-            "data": [course.Course_ID for course in journey.courses]
+        { 
+            "code": 404,
+            "message": "No Learning Journey"
         }
-    ), 200
+    ), 404
 
 # retrieve all user learning journey
 @app.route("/learningjourney", methods=["POST"])
@@ -700,10 +708,12 @@ def update_journey_completion(journeyId, skill_list):
 def get_skills_progress(journeyId):
     userId = request.get_json()["userId"]
     journey = LearningJourney.query.filter_by(Journey_ID = journeyId).first()
+
     skill_list = []
     check_skill_list = view_skills_for_a_role(journey.JobRole_ID)
     if check_skill_list["code"] == 200:
         skill_list = check_skill_list["data"]
+    
     courses_added = journey.courses
     if journey and skill_list:
         for i in range(len(skill_list)):
@@ -905,39 +915,46 @@ def update_skills_to_role(jobroleId):
 @app.route("/journey/<string:journeyId>/<string:courseId>", methods=['DELETE'])
 def remove_existing_course_learning_journey(journeyId, courseId):   
     learningjourney = LearningJourney.query.filter_by(Journey_ID=journeyId).first()
-    print(learningjourney)
-    for course in learningjourney.courses:
-        if(course.Course_ID==courseId):       
-            try:
-                db.session.query(LearningJourney_SelectedCourse).filter_by(Course_ID=courseId, Journey_ID=journeyId).delete()
-                db.session.commit()
-                return jsonify(
-                            {
-                                "code": 200,
-                                "message": "Delete success"
-                            }
-                        ), 201
-            except:
-                return jsonify(
-                    {
-                        "code": 404,
-                        "data": {
-                            "journeyId": journeyId,
-                            "courseId": courseId
-                        },
-                        "message": "Course in selected Learning Journey not found"
-                    }
-                ), 404
+    if len(learningjourney.courses) > 1:
+        for course in learningjourney.courses:
+            if(course.Course_ID==courseId):       
+                try:
+                    db.session.query(LearningJourney_SelectedCourse).filter_by(Course_ID=courseId, Journey_ID=journeyId).delete()
+                    db.session.commit()
+                    return jsonify(
+                                {
+                                    "code": 200,
+                                    "message": "Delete success"
+                                }
+                            ), 201
+                except:
+                    return jsonify(
+                        {
+                            "code": 404,
+                            "data": {
+                                "journeyId": journeyId,
+                                "courseId": courseId
+                            },
+                            "message": "Course in selected Learning Journey not found"
+                        }
+                    ), 404
+    else:
+        return jsonify(
+            {
+                "code": 200,
+                "message": "Only one course left"
+            }
+        ), 201
     return jsonify(
-                    {
-                        "code": 404,
-                        "data": {
-                            "journeyId": journeyId,
-                            "courseId": courseId
-                        },
-                        "message": "Course in selected Learning Journey not found"
-                    }
-                ), 404
+        {
+            "code": 404,
+            "data": {
+                "journeyId": journeyId,
+                "courseId": courseId
+            },
+            "message": "Course in selected Learning Journey not found"
+        }
+    ), 404
     
 # create a jobrole 
 @app.route("/jobrole/create", methods=['POST'])
@@ -1112,6 +1129,35 @@ def delete_learning_journey():
         {
             "code": 200,
             "data": journeyId
+        }
+    ), 200
+
+@app.route("/journey/add/course/<string:jobRoleId>/<string:courseId>", methods=['POST'])
+def add_course_in_learning_journey(jobRoleId, courseId):
+    staffId = request.get_json()["staffId"]
+    journeyId = jobRoleId + '-' + staffId    
+    journey = LearningJourney.query.filter_by(Journey_ID=journeyId).first()
+    tobeadded = Course.query.filter_by(Course_ID=courseId).first()
+    try:
+        # add into new journey & commit to db
+        journey.courses.append(tobeadded)
+        db.session.commit()
+    except:
+        return jsonify(
+        {
+            "code": 400,
+            "data": {
+                "journeyId": journeyId,
+                "course_id": courseId
+            },
+            "message": "An error occurred creating the learning journey."
+        }
+    ), 400
+
+    return jsonify(
+        {
+            "code": 200,
+            "data": journey.json()
         }
     ), 200
     
