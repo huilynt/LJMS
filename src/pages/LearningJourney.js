@@ -48,8 +48,6 @@ function LearningJourney() {
 
 
     useEffect(() => {
-        sessionStorage.setItem("userId", "140525");
-
         axios.post(`http://127.0.0.1:5000/learningjourney`, {"userId":sessionStorage.userId})
         .then ((response) => {
             console.log(response)
