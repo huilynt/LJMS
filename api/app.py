@@ -742,7 +742,6 @@ def get_courses_in_journey(journeyId):
 
 
     for i in range(len(course_list)):
-
             course_found = False
             course = course_list[i]
             registration = Registration.query.filter_by(Staff_ID = userId, Course_ID = course['Course_ID']).first()
@@ -768,8 +767,7 @@ def get_courses_in_journey(journeyId):
     return jsonify(
         {
             "code": 200,
-            "data": course_list,
-            "length": len(course_list)
+            "data": course_list
 
         }
     ), 201
