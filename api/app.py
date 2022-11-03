@@ -752,7 +752,6 @@ def get_courses_in_journey(journeyId):
     course_list = [course.json() for course in journey.courses]
     skill_list = JobRole.query.filter_by(JobRole_ID= journey.JobRole_ID).first().skills
 
-
     for i in range(len(course_list)):
             course_found = False
             course = course_list[i]
@@ -773,14 +772,11 @@ def get_courses_in_journey(journeyId):
                         course_list[j]['skills'].append(skill.json())
                     else:
                         course_list[j]["skills"] = [skill.json()]
-        else:
-            course_list.pop(j)
-
+        
     return jsonify(
         {
             "code": 200,
             "data": course_list
-
         }
     ), 201
 
