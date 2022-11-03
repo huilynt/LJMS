@@ -147,17 +147,18 @@ def get_courses_in_journey(journeyId):
                     course_found = True
             
             course_list[i]["Completion_Status"] = course_found
-
+    
     for j in range(len(journey.courses)):
         course = journey.courses[j]
+        course_list[j]["skills"]=[]
         if course.Course_Status!='Retired':
             for skill in skill_list:
-                if course in skill.courses:
-                    if "skills" in course_list[j] and skill.Skill_Status!='Retired':
+                if course in skill.courses and skill.Skill_Status!='Retired':
+                    if "skills" in course_list[j]:
                         course_list[j]['skills'].append(skill.json())
                     else:
                         course_list[j]["skills"] = [skill.json()]
-        
+
     return jsonify(
         {
             "code": 200,
