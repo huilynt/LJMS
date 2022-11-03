@@ -15,15 +15,14 @@ import {
 } from "@mui/material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SchoolIcon from '@mui/icons-material/School';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Navbar = () => {
   const [value, setValue] = useState();
   const theme = useTheme();
   const isMatch = useMediaQuery(theme.breakpoints.down("md"));
-  const userRoutes = ["/journey", "/courses", "/skills", "/roles"];
-  const hrRoutes = ["/hr/courses", "/hr/skills", "/hr/roles"];
-  const hrPages = ["Courses", "Skills", "Roles"];
-  const userPages = ["Learning Journey", "Courses", "Skills", "Roles"];
+  const routes = ["/journey", "/hr/courses", "/hr/skills", "/hr/roles"];
+  const pages = ["Learning Journey", "Courses", "Skills", "Roles"];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const navigate = useNavigate();
@@ -33,6 +32,11 @@ const Navbar = () => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+  const logoutClick = () => {
+    sessionStorage.clear();
+    navigate("/");
+    window.location.reload();
+  }
   
   
   return (
@@ -50,6 +54,22 @@ const Navbar = () => {
               </Typography>
               {sessionStorage.role === "1" ?
                 <Menu
+                    anchorEl={anchorElNav}
+                    anchorOrigin={{vertical: 'bottom',horizontal: 'left'}}
+                    keepMounted
+                    transformOrigin={{vertical: 'top',horizontal: 'left'}}
+                    open={Boolean(anchorElNav)}
+                    onClose={handleCloseNavMenu}
+                    sx={{display: { xs: 'block', md: 'none' }}}
+                  >
+                    {pages.map((page, idx) => (
+                      <MenuItem key={page} onClick={() => {navigate(routes[idx])}}>
+                        <Typography textAlign="center">{page}</Typography>
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                :  
+                  <Menu
                   anchorEl={anchorElNav}
                   anchorOrigin={{vertical: 'bottom',horizontal: 'left'}}
                   keepMounted
@@ -58,29 +78,11 @@ const Navbar = () => {
                   onClose={handleCloseNavMenu}
                   sx={{display: { xs: 'block', md: 'none' }}}
                 >
-                  {hrPages.map((page, idx) => (
-                    <MenuItem key={page} onClick={() => {navigate(hrRoutes[idx])}}>
-                      <Typography textAlign="center">{page}</Typography>
+                    <MenuItem key="Learning Journey" onClick={() => {navigate(routes[0])}}>
+                      <Typography textAlign="center">Learning Journey</Typography>
                     </MenuItem>
-                  ))}
-                </Menu> 
-              :
-                <Menu
-                anchorEl={anchorElNav}
-                anchorOrigin={{vertical: 'bottom',horizontal: 'left'}}
-                keepMounted
-                transformOrigin={{vertical: 'top',horizontal: 'left'}}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{display: { xs: 'block', md: 'none' }}}
-              >
-                {userPages.map((page, idx) => (
-                  <MenuItem key={page} onClick={() => {navigate(userRoutes[idx])}}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-              }      
+                </Menu>
+                }
             </Box>
           </> :
           <>
@@ -100,17 +102,16 @@ const Navbar = () => {
                 value={value}
                 onChange={(e, value) => setValue(value)}
               >
-                {sessionStorage.role === "1" ? <Tab label="Courses" value={hrRoutes[0]} component={Link} to={hrRoutes[0]}/> 
-                : <Tab label="Learning Journey" value={userRoutes[0]} component={Link} to={userRoutes[0]}/>}
+                <Tab label="Learning Journey" value={routes[0]} component={Link} to={routes[0]}/>
 
-                {sessionStorage.role === "1" ? <Tab label="Skills" value={hrRoutes[1]} component={Link} to={hrRoutes[1]}/>
-                : <Tab label="Courses" value={userRoutes[1]} component={Link} to={userRoutes[1]}/>}
+                {sessionStorage.role === "1" ? <Tab label="Courses" value={routes[1]} component={Link} to={routes[1]}/>
+                : <></>}
 
-                {sessionStorage.role === "1" ? <Tab label="Roles" value={hrRoutes[2]} component={Link} to={hrRoutes[2]}/>
-                : <Tab label="Skills" value={userRoutes[2]} component={Link} to={userRoutes[2]}/>}
+                {sessionStorage.role === "1" ? <Tab label="Skills" value={routes[2]} component={Link} to={routes[2]}/>
+                : <></>}
 
-                {sessionStorage.role === "1" ? <></>
-                : <Tab label="Roles" value={userRoutes[3]} component={Link} to={userRoutes[3]}/>}
+                {sessionStorage.role === "1" ? <Tab label="Roles" value={routes[3]} component={Link} to={routes[3]}/>
+                : <></>}
 
               </Tabs>
             </>
@@ -127,6 +128,9 @@ const Navbar = () => {
                   User
           </Typography>}
           
+          <IconButton size="large" color="inherit" onClick={logoutClick}>
+              <LogoutIcon/>
+          </IconButton>
         </Toolbar> 
       </AppBar>
     </React.Fragment>

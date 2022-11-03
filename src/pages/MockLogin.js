@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 
-function CreateSkill(){
+function MockLogin(){
     const [userId, setUserId] = useState("");
     const [error, setError] = useState("");
 
@@ -70,4 +70,4 @@ function CreateSkill(){
     );
 }
 
-export default CreateSkill;
+export default MockLogin;
