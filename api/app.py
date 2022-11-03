@@ -274,7 +274,7 @@ def view_relevant_jobrole(staffId):
         currentljrole.append(learningjourney.JobRole_ID)
 
     for role in jobrolelist:
-        if role.JobRole_ID not in currentljrole:
+        if role.JobRole_ID not in currentljrole and role.JobRole_Status != "Retired":
             relevantrolelist.append(role)
     
     return jsonify(
@@ -729,7 +729,7 @@ def get_skills_progress(journeyId):
             skill_list[i]['Completion_Status'] = course_found
 
         jobrole = JobRole.query.filter_by(JobRole_ID= journey.JobRole_ID).first()
-
+        
         return jsonify(
             {
                 "code": 200,
@@ -752,30 +752,35 @@ def get_courses_in_journey(journeyId):
     course_list = [course.json() for course in journey.courses]
     skill_list = JobRole.query.filter_by(JobRole_ID= journey.JobRole_ID).first().skills
 
+
     for i in range(len(course_list)):
-        course_found = False
-        course = course_list[i]
-        registration = Registration.query.filter_by(Staff_ID = userId, Course_ID = course['Course_ID']).first()
-        if registration is not None:
-            status = registration.Completion_Status
-            if status == "Completed":
-                course_found = True
-        
-        course_list[i]["Completion_Status"] = course_found
+            course_found = False
+            course = course_list[i]
+            registration = Registration.query.filter_by(Staff_ID = userId, Course_ID = course['Course_ID']).first()
+            if registration is not None:
+                status = registration.Completion_Status
+                if status == "Completed":
+                    course_found = True
+            
+            course_list[i]["Completion_Status"] = course_found
 
     for j in range(len(journey.courses)):
         course = journey.courses[j]
-        for skill in skill_list:
-            if course in skill.courses:
-                if "skills" in course_list[j]:
-                    course_list[j]['skills'].append(skill.json())
-                else:
-                    course_list[j]["skills"] = [skill.json()]
+        if course.Course_Status!='Retired':
+            for skill in skill_list:
+                if course in skill.courses:
+                    if "skills" in course_list[j] and skill.Skill_Status!='Retired':
+                        course_list[j]['skills'].append(skill.json())
+                    else:
+                        course_list[j]["skills"] = [skill.json()]
+        else:
+            course_list.pop(j)
 
     return jsonify(
         {
             "code": 200,
             "data": course_list
+
         }
     ), 201
 
@@ -1050,6 +1055,7 @@ def update_a_jobrole(jobroleId):
             "message": "Role not found."
         }
     ), 404
+
 
 # save learning journey with added courses
 @app.route("/journey/<string:staffId>/<string:jobRoleId>", methods=['POST'])
