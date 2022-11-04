@@ -35,6 +35,9 @@ function CreateSkill(){
     function saveChanges(e) {
         e.preventDefault();
 
+        skill.Skill_ID = skill.Skill_ID.trim()
+        skill.Skill_Name = skill.Skill_Name.trim()
+
         if(skill.Skill_ID === "" || skill.Skill_Name === "" || skill.Skill_Desc === ""){
             setError("All fields must be filled")
         }

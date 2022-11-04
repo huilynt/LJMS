@@ -88,6 +88,9 @@ function UpdateRoleHR(){
     function saveChanges(e) {
         e.preventDefault();
 
+        jobrole.JobRole_ID = jobrole.JobRole_ID.trim()
+        jobrole.JobRole_Name = jobrole.JobRole_Name.trim()
+
         if (originalJobRole === jobrole){
             setError("There is no changes made.")
         }
