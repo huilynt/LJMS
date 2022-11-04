@@ -11,14 +11,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import {
-    Box,
-    Button,
-} from "@mui/material";
-import IconButton from '@material-ui/core/IconButton';
+import {Box,Button,} from "@mui/material";
 import Chip from '@mui/material/Chip';
 import {Link, useNavigate} from 'react-router-dom';
 import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -48,18 +45,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function RoleSkill(props) {
     const [skills, setSkills] = useState([]);
-    const [role, setRole] = useState("")
+    const [role, setRole] = useState("");
     let { jobRole } = useParams();
     const navigate = useNavigate();
-    const userId = sessionStorage.getItem("userId")
+    const userId = sessionStorage.getItem("userId");
     const [error, setError] = useState("");
 
     const saveLearningJourney = async (event,  message) => {
         if((sessionStorage.getItem("addedCourses") == null) || (sessionStorage.getItem("addedCourses") === "[]")){
-            setError("You must add at least one course to save the Learning Journey")
+            setError("You must add at least one course before saving the Learning Journey")
         }
         else{
-            const sendResult = await axios.post('http://127.0.0.1:5000/journey/' + userId + '/' + message, {"addedCourses":sessionStorage.getItem("addedCourses")})
+            const sendResult = await axios.post('http://127.0.0.1:5000/journey/' + userId + '/' + message, {"addedCourses":sessionStorage.getItem("addedCourses")});
             console.log(sendResult.data.code);
 
             sessionStorage.removeItem("addedCourses");
@@ -99,7 +96,7 @@ function RoleSkill(props) {
                             <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>Name</StyledTableCell>
                             <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</StyledTableCell>
                             <StyledTableCell align='center' sx={{borderRight: { xs:0, md:'0.5px solid grey'}}}>Status</StyledTableCell>
-                            <StyledTableCell align='center'>Select Skill</StyledTableCell>
+                            <StyledTableCell align='center'>Select Course</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -113,10 +110,10 @@ function RoleSkill(props) {
                                 </StyledTableCell>
                                 <StyledTableCell align='center'>
                                     <Link to={{
-                                    pathname:"/" + jobRole + "/" + skill.Skill_ID + "/courses",
+                                    pathname:"/create/" + jobRole + "/" + skill.Skill_ID + "/courses",
                                     state:{stateParam:true}
                                     }}>
-                                    <IconButton><ArrowForwardIosIcon></ArrowForwardIosIcon></IconButton>
+                                    <ArrowForwardIosIcon></ArrowForwardIosIcon>
                                     </Link>
                                     
                                 </StyledTableCell>
@@ -124,7 +121,22 @@ function RoleSkill(props) {
                         ))}
                     </TableBody>
                 </Table>
-            </TableContainer>                      
+            </TableContainer>     
+
+            <Container>
+                {(typeof(sessionStorage.getItem("addedCourses")) === "string" && sessionStorage.getItem("addedCourses") !== "[]") 
+                    ? <h5>Added Courses: 
+                        <Stack sx={{my:1}} spacing={2} direction="row">
+                        {sessionStorage.getItem("addedCourses").slice(2,-2).split('","').map((course) => {
+                            return (
+                            <Chip label={course}></Chip>
+                            )
+                        })}
+                        </Stack>
+                    </h5>
+                    : <></>
+                }
+            </Container>                 
 
             <Container sx={{ mt: 5 }}>
                 <Button

@@ -68,6 +68,9 @@ function CreateRoleHr(){
 
     function saveChanges(e) {
         e.preventDefault();
+            
+        jobrole.JobRole_ID = jobrole.JobRole_ID.trim()
+        jobrole.JobRole_Name = jobrole.JobRole_Name.trim()
 
         if(jobrole.JobRole_ID === "" || jobrole.JobRole_Name === "" || jobrole.JobRole_Desc === ""){
             setError("All fields must be filled")

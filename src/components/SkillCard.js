@@ -23,7 +23,7 @@ function SkillCard(props){
                 </Box>
             </Card>
             <Link   to={{
-                        pathname:"/" + props.jobrole + "/" + props.skillId + "/courses",
+                        pathname:"/edit/" + props.jobrole + "/" + props.skillId + "/courses",
                         state:{stateParam:true}
                         }} 
                     style={{ textDecoration: 'none' }}>

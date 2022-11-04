@@ -66,6 +66,8 @@ function LearningJourney() {
         });
     }, [])
 
+    console.log(sessionStorage.getItem("addCourses"))
+
     return (
         <Container sx={{mt:5}}>
             <Grid container sx={{borderBottom:1, display:'flex', alignItems: 'center', pb:1}}>

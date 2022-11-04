@@ -1,6 +1,6 @@
 import {React, useState, useEffect} from "react";
 import axios from 'axios';
-import {Container, Box, Stack, Grid} from '@mui/material';
+import {Container, Box, Stack, Grid, Alert} from '@mui/material';
 import { useParams } from 'react-router-dom';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -19,6 +19,7 @@ function EditLearningJourney() {
     const [courses, setCourse] = useState([])
     const [roleName, setRoleName] = useState("")
     const[journeyID, setJourneyID] = useState("")
+    const [error, setError] = useState("")
     let { roleID } = useParams() 
 
     useEffect(() => {
@@ -45,6 +46,7 @@ function EditLearningJourney() {
             console.log(error.message)
         })
 
+        sessionStorage.removeItem("addedCourses");
     },[])
 
     const handleChange = (event, newAlignment) => {
@@ -62,12 +64,15 @@ function EditLearningJourney() {
     const courses_post_progress = []
 
     for (let course of courses){
-        if (course.Completion_Status === true){
-            courses_post_completed.push(<CourseCard status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills}/>)
-        }
-        else {
-            courses_post_progress.push(<CourseCard status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills} courseID={course.Course_ID} journeyID={journeyID}/>)
-        }
+        if (course.Course_Status !== "Retired" && course.skills.length!=0){
+                if (course.Completion_Status === true){
+                    courses_post_completed.push(<CourseCard error={setError} status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills}/>)
+                }
+                else {
+                    courses_post_progress.push(<CourseCard error={setError} status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills} courseID={course.Course_ID} journeyID={journeyID}/>)
+                }
+        
+        } 
     }
     return (
         <Container sx={{mt:5}}>
@@ -87,9 +92,11 @@ function EditLearningJourney() {
                         <ToggleButton value="courses" sx={{fontWeight:"bold"}}>Existing Courses</ToggleButton>
                     </ToggleButtonGroup>
                 </Box>
-
+                
                     {alignment == "courses" ? 
                         <>
+                            {error.length > 0 ? <Alert sx={{mb:-3, my:2}} severity="error">{error}</Alert> : <></>}
+
                             <Accordion defaultExpanded={true}>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
