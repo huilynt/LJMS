@@ -94,6 +94,22 @@ function UpdateRoleHR(){
         if (originalJobRole === jobrole){
             setError("There is no changes made.")
         }
+        else if(jobrole.JobRole_Name === "" && jobrole.JobRole_Desc === ""){
+            setError("Role Name and Description cannot be empty")
+        }
+        else if(jobrole.JobRole_Name === "" || jobrole.JobRole_Desc === ""){
+            let empty = "Description"
+            if (jobrole.JobRole_Name === ""){
+                empty = "Name"
+            }
+            setError("Role " + empty + " cannot be empty")
+        }
+        else if(jobrole.JobRole_Name.length > 50){
+            setError("Role Name too long")
+        }
+        else if(jobrole.JobRole_Desc.length > 255){
+            setError("Role Description too long")
+        }
         else if(selectedSkills.length < 1){
             setError("At least one skill is required.")
         }
@@ -103,7 +119,7 @@ function UpdateRoleHR(){
                 console.log(response)
                 axios.post('http://127.0.0.1:5000/hr/jobrole/edit/' + jobroleID, selectedSkills)
                 .then((response) =>{
-                    setEditConfirm(true);
+                setEditConfirm(true);
                 })
                 .catch(error => {
                     console.log(error)
