@@ -70,6 +70,8 @@ function LearningJourney() {
         console.log(error);
       });
   }, []);
+  
+  console.log(sessionStorage.getItem("addCourses"))
 
   return (
     <Container sx={{ mt: 5 }}>
