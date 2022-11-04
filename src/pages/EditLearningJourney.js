@@ -64,13 +64,14 @@ function EditLearningJourney() {
     const courses_post_progress = []
 
     for (let course of courses){
-        if (course.Course_Status !== "Retired"){
-            if (course.Completion_Status === true){
-                courses_post_completed.push(<CourseCard error={setError} status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills}/>)
-            }
-            else {
-                courses_post_progress.push(<CourseCard error={setError} status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills} courseID={course.Course_ID} journeyID={journeyID}/>)
-            }
+        if (course.Course_Status !== "Retired" && course.skills.length!=0){
+                if (course.Completion_Status === true){
+                    courses_post_completed.push(<CourseCard error={setError} status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills}/>)
+                }
+                else {
+                    courses_post_progress.push(<CourseCard error={setError} status={course.Course_Status} completed={course.Completion_Status} course={course.Course_Name} skills={course.skills} courseID={course.Course_ID} journeyID={journeyID}/>)
+                }
+        
         } 
     }
     return (
