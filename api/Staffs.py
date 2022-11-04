@@ -59,3 +59,23 @@ def create_a_role():
             "message": "Role not found."
         }
     ), 404
+
+# get role for login
+@app.route("/login/<string:userId>")
+def login(userId):
+    print(userId)
+
+    if(Staff.query.filter_by(Staff_ID=userId).first()):
+        return jsonify(
+            {
+                "code": 200,
+                "data": [Staff.query.filter_by(Staff_ID=userId).first().json()]
+            }
+        ), 200
+
+    return jsonify(
+        {
+            "code": 400,
+            "message": "User ID does not exist"
+        }
+    ), 400
