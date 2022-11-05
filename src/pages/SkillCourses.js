@@ -15,10 +15,10 @@ import {
   TableRow,
   TextField,
   Link,
+  Alert
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
-import { Search } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -60,10 +60,11 @@ const isCourseAvailable = (registeredCourses, addedCourses, courseId) => {
 
 function SkillCourses() {
   const [courses, setCourses] = useState([]);
-  const [addedCourses, setAddedCourses] = useState();
+  const [addedCourses, setAddedCourses] = useState("");
   const [registeredCourses, setRegisteredCourses] = useState([]);
   const [skill, setSkill] = useState("");
   const [role, setRole] = useState("");
+  const [error,setError] = useState("");
   const navigate = useNavigate();
 
   const courseDetails = (event,  message) => {
@@ -74,11 +75,12 @@ function SkillCourses() {
 
   let userId = sessionStorage.getItem("userId");
 
+
   if (!addedCourses) {
     setAddedCourses(getAddedCourses());
   }
 
-  let { roleID, skillID } = useParams();
+  let { purpose, roleID, skillID } = useParams();
   useEffect(() => {
     axios
       .get("http://127.0.0.1:5000/jobrole/" + roleID)
@@ -100,8 +102,9 @@ function SkillCourses() {
       });
 
     axios
-      .post("http://127.0.0.1:5000/staff/courses/added", { userId: userId })
+      .post("http://127.0.0.1:5000/staff/courses/added", { userId: userId, roleId: roleID })
       .then((response) => {
+        console.log(response)
         setRegisteredCourses(response.data.data);
       })
       .catch((error) => {
@@ -109,9 +112,13 @@ function SkillCourses() {
       });
   }, []);
 
+  console.log(addedCourses)
+
   return (
     <Container sx={{ mt: 5 }}>
-      <Grid container spacing={2}>
+      {purpose == "edit" ? <Link href={'/journey/' + roleID} underline="none">{"< Back"}</Link> : <></>}
+
+      <Grid container spacing={2} sx={{mt:1}}>
         <Grid item md={6}>
           <Box sx={{ typography: { xs: "h6", md: "h4" } }}>{role}</Box>
           <Box sx={{ typography: { xs: "body2", md: "h6" } }}>
@@ -129,6 +136,8 @@ function SkillCourses() {
           }}>
         </Grid>
       </Grid>
+      
+      {error.length > 0 ? <Alert sx={{mb:-3, my:2}} severity="error">{error}</Alert> : <></>}
 
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
         <Table sx={{ minWidth: 200 }}>
@@ -178,8 +187,17 @@ function SkillCourses() {
                             course.Course_ID,
                           ];
                           setAddedCourses(newCoursesArr);
-
                           saveAddedCourses(newCoursesArr);
+                        }
+                        if (purpose === "edit"){
+                          axios.post('http://127.0.0.1:5000/journey/add/course/' + roleID + "/" + course.Course_ID, { staffId : userId})
+                          .then ((response) => {
+                            window.location.reload(false)
+                            console.log('Add successful')    
+                          })
+                          .catch(error => {
+                                  console.log(error.message)
+                          })
                         }
                       }}>
                       Add
@@ -193,8 +211,23 @@ function SkillCourses() {
                             (c) => c !== course.Course_ID
                           );
                           setAddedCourses(newCoursesArr);
-
                           saveAddedCourses(newCoursesArr);
+                        }
+                        if (registeredCourses.includes(course.Course_ID) && purpose == "edit"){
+                          axios.delete('http://127.0.0.1:5000/journey/' + roleID + "-" + userId + "/" + course.Course_ID)
+                          .then ((response) => {
+                              if (response.data.message == "Only one course left"){
+                                console.log("Only one course")
+                                setError("At least one course is needed to save the learning journey")
+                              }
+                              else{
+                                  window.location.reload(false)
+                                  console.log('Delete successful')    
+                              }
+                          })
+                          .catch(error => {
+                                  console.log(error.message)
+                          })
                         }
                       }}>
                       Remove
@@ -206,8 +239,8 @@ function SkillCourses() {
           </TableBody>
         </Table>
       </TableContainer>
-
       <Container sx={{ mt: 5 }}>
+      { purpose == "create" ?
         <Button
           sx={{
             color: "black",
@@ -218,7 +251,8 @@ function SkillCourses() {
           >
           Save
         </Button>
-      </Container>
+          : <></>}
+      </Container> 
     </Container>
   );
 }

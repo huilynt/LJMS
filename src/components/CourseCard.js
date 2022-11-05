@@ -14,10 +14,15 @@ function CourseCard(props){
     
     function DeleteCourse(){
         axios.delete('http://127.0.0.1:5000/journey/' + props.journeyID + "/" + props.courseID)
-            .then (() => {
-                window.location.reload(false)
-                console.log('Delete successful')
-
+            .then ((response) => {
+                if (response.data.message == "Only one course left"){
+                    console.log("Only one course")
+                    props.error("At least one course is needed to save the learning journey")
+                }
+                else{
+                    window.location.reload(false)
+                    console.log('Delete successful')    
+                }
             })
             .catch(error => {
                     console.log(error.message)
