@@ -43,6 +43,9 @@ function EditSkills(){
     function saveChanges(e) {
         e.preventDefault();
 
+        skill.Skill_ID = skill.Skill_ID.trim()
+        skill.Skill_Name = skill.Skill_Name.trim()
+
         if (JSON.stringify(originalSkill) == JSON.stringify(skill)){    
             setError("There is no changes made.")
         }
