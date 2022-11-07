@@ -49,7 +49,7 @@ jobs:
         run: |
           # stop the build if there are Python syntax errors or undefined names
           cd api
-          flake8 --ignore E231,W293,E225,E302,E303,W291,E501,F811,E128,E265,E122,E117,F841,E121,E111,E123,E222,E203,E251,E201,E241,E126,E202,F401
+          flake8
 
       # - name: Test with unittest
       #   #runs the unittest

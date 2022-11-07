@@ -3,6 +3,7 @@ import unittest
 from app import app
 import json
 
+
 class AppTestCase(unittest.TestCase):
     def setUp(self):
         self.ctx = app.app_context()
@@ -22,7 +23,7 @@ class AppTestCase(unittest.TestCase):
         data = json.loads(response.get_data(as_text=True))
 
         # self.assertEqual(data['data2'], ["DM01"])
-        self.assertEqual(data['role'], "Data Analyst")
+        self.assertEqual(data["role"], "Data Analyst")
 
     # def test_check_skills_completed(self):
     #     response = self.client.post("/skills/complete/DA001", data=json.dumps(dict(userId=140001)), content_type='application/json')
@@ -31,12 +32,11 @@ class AppTestCase(unittest.TestCase):
 
     #     self.assertEqual(data['role'], "Data Analyst")
 
-
     # def test_home(self): #example from internet
     #     response = self.client.post("/", data={"content": "hello world"})
     #     assert response.status_code == 200
     #     assert "POST method called" == response.get_data(as_text=True)
 
+
 if __name__ == "__main__":
     unittest.main()
-
