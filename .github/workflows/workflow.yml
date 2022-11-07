@@ -57,5 +57,5 @@ jobs:
           #TODO: Add the command to run all the unittest here.
           cd api
           dir
-          venv\scripts\activate
+          venv/scripts/activate
           python -m unittest
