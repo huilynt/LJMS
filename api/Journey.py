@@ -121,7 +121,7 @@ def get_skills_progress(journeyId):
                 "data": skill_list,
                 "role": jobrole.JobRole_Name
             }
-        ), 201
+        ), 200
 
     return jsonify(
         { 
@@ -164,7 +164,7 @@ def get_courses_in_journey(journeyId):
             "code": 200,
             "data": course_list
         }
-    ), 201
+    ), 200
 
 @app.route("/journey/<string:journeyId>/<string:courseId>", methods=['DELETE'])
 def remove_existing_course_learning_journey(journeyId, courseId):   
@@ -198,7 +198,7 @@ def remove_existing_course_learning_journey(journeyId, courseId):
                 "code": 200,
                 "message": "Only one course left"
             }
-        ), 201
+        ), 200
     return jsonify(
         {
             "code": 404,

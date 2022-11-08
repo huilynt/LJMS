@@ -101,7 +101,7 @@ def create_a_jobrole():
             "code": 200,
             "data": jobrole.json()
         }
-    ), 201
+    ), 200
 
 #update a jobrole
 @app.route("/jobrole/<string:jobroleId>", methods=['PUT'])

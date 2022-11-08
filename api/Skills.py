@@ -149,7 +149,7 @@ def create_a_skill():
             "code": 200,
             "data": skill.json()
         }
-    ), 201
+    ), 200
 
 #update a skill
 @app.route("/skill/<string:skillId>", methods=['PUT'])
@@ -159,7 +159,7 @@ def update_a_skill(skillId):
         data = request.get_json()
         if data['Skill_Name']:
             skill_check = Skill.query.filter_by(Skill_Name=data['Skill_Name']).first()
-            if skill_check and skill.Skill_Name != data["Skill_Name"]:
+            if skill_check and skill.Skill_Name == data["Skill_Name"]:
                 return jsonify(
                     {
                         "code": 404,
@@ -174,13 +174,21 @@ def update_a_skill(skillId):
 
         if data['Skill_Desc']:
             skill.Skill_Desc = data['Skill_Desc'] 
-        db.session.commit()
+
+        try:
+            db.session.commit()
+        except Exception:
+            return {
+                "message": "Unable to commit to database."
+            }, 404
+            
         return jsonify(
             {
                 "code": 200,
                 "data": skill.json()
             }
         )
+
     return jsonify(
         {
             "code": 404,
@@ -199,7 +207,13 @@ def delete_a_skill(skillId):
         # db.session.delete(skill)
         # db.session.commit()
         skill.Skill_Status = "Retired"
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception:
+            return {
+                "message": "Unable to commit to database."
+            }, 404
+        
         return jsonify(
             {
                 "code": 200,
@@ -221,7 +235,13 @@ def restore_skill(skillId):
     skill = Skill.query.filter_by(Skill_ID=skillId).first()
     if skill:
         skill.Skill_Status = None
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception:
+            return {
+                "message": "Unable to commit to database."
+            }, 404
+            
         return jsonify(
             {
                 "code": 200,
