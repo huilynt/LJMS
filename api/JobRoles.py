@@ -169,28 +169,28 @@ def restore_jobrole(jobroleId):
 
 #return the skills assigned to the specific job role
 @app.route("/jobrole/assignedskills/<string:jobroleId>")
-def get_assigned_skills(jobroleId):
+def get_assigned_skills_to_role(jobroleId):
     jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
     skillList = Skill.query.all()
     selected_skills = []
     
-    for skill in skillList:
-        assigned_skills_list = jobrole.skills
-        if skill in assigned_skills_list:
-            selected_skills.append(skill.Skill_ID)
+    if jobrole:
+        for skill in skillList:
+            assigned_skills_list = jobrole.skills
+            if skill in assigned_skills_list:
+                selected_skills.append(skill.Skill_ID)
 
-    if selected_skills:
-        return jsonify(
-            {
-                "code": 200,
-                "data": selected_skills,
-            }
-        ), 200
+            return jsonify(
+                {
+                    "code": 200,
+                    "data": selected_skills
+                }
+            ), 200
 
     return jsonify(
         { 
             "code": 404,
-            "message": "skills not found",
+            "message": "JobRole not found",
         }
     ), 404
 

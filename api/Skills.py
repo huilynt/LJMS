@@ -62,7 +62,6 @@ def check_skills_completed(jobroleId):
     for i in range(len(skills_of_role)):
         course_found = False
         skill_id = skills_of_role[i]['Skill_ID']
-
         skill = Skill.query.filter_by(Skill_ID=skill_id).first()
         for course in skill.courses:
             registration = Registration.query.filter_by(Staff_ID = userId, Course_ID = course.Course_ID).first()
