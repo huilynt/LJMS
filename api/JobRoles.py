@@ -174,12 +174,12 @@ def get_assigned_skills(jobroleId):
     skillList = Skill.query.all()
     selected_skills = []
     
-    for skill in skillList:
-        assigned_skills_list = jobrole.skills
-        if skill in assigned_skills_list:
-            selected_skills.append(skill.Skill_ID)
+    if jobrole:
+        for skill in skillList:
+            assigned_skills_list = jobrole.skills
+            if skill in assigned_skills_list:
+                selected_skills.append(skill.Skill_ID)
 
-    if selected_skills:
         return jsonify(
             {
                 "code": 200,
@@ -190,45 +190,71 @@ def get_assigned_skills(jobroleId):
     return jsonify(
         { 
             "code": 404,
-            "message": "skills not found",
+            "message": "Jobrole not found",
         }
     ), 404
 
 #Add skills to existing job role
 @app.route("/hr/jobrole/edit/<string:jobroleId>", methods=["POST"]) 
 def update_skills_to_role(jobroleId):
-    jobroleid = JobRole.query.filter_by(JobRole_ID = jobroleId).first().JobRole_ID
-    skillid_list = request.get_json() #get from the part when the specific skill is added
-    deleted_list=[]
+    jobrole = JobRole.query.filter_by(JobRole_ID = jobroleId).first()
+    if jobrole:
+        jobroleId = jobrole.JobRole_ID
+        skills_list = request.get_json()
+        deleted_list = []
+        added_list = []
 
-    if (db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleid).all()): #find all skills of job role and delete
-        existing_jobrole_skills_list = db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleid).all()
-        for existing_jobrole_skills in existing_jobrole_skills_list:
-            deleted_list.append(existing_jobrole_skills.Skill_ID)              
-            db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleid, Skill_ID=existing_jobrole_skills.Skill_ID).delete()
-            db.session.commit()
+        # check if there is at least one skill selected  
+        if (skills_list == []): 
+            return jsonify(
+                {
+                    "code": 400,
+                    "message": "There must at least be one skill selected"
+                }
+            ), 400
 
-    if (skillid_list == []): #check if there is at least one skill selected
+        # delete all unassignment of skills to the role
+        all_skills_role = db.session.query(Jobrole_skill).filter_by(JobRole_ID = jobroleId).all()
+        for skill in all_skills_role:
+            if skill.Skill_ID not in skills_list:
+                try:
+                    db.session.query(Jobrole_skill).filter_by(JobRole_ID = jobroleId, Skill_ID=skill.Skill_ID).delete()
+                    db.session.commit()
+                    deleted_list.append(skill.Skill_ID)
+                except Exception:
+                    return {
+                        "message": "Unable to commit to database."
+                    }, 404
+
+        # add the new assigned skills to role
+        for skillId in skills_list: 
+            check = db.session.query(Jobrole_skill).filter_by(JobRole_ID = jobroleId, Skill_ID=skillId).first()
+            if check == None:
+                try:
+                    role_skill = Jobrole_skill.insert().values(JobRole_ID = jobroleId, Skill_ID=skillId)
+                    db.engine.execute(role_skill)
+                    added_list.append(skillId)
+                except Exception:
+                    return {
+                        "message": "Unable to commit to database."
+                    }, 404
+
         return jsonify(
             {
-                "code": 400,
-                "message": "There must at least be one skill selected"
+                "code": 200,
+                "data": {
+                    "Jobrole": jobroleId,
+                    "added list": added_list,
+                    "deleted list": deleted_list
+                },
+                "message": "Jobrole skills updated successfully."
             }
-        ), 400
-        
-    for skillid in skillid_list: #add skills to job role
-        jobrole_skill = Jobrole_skill.insert().values(JobRole_ID=jobroleid, Skill_ID=skillid)
-        db.engine.execute(jobrole_skill)
+        ), 200
 
     return jsonify(
-        {
-            "code": 200,
-            "data": {
-                "job role": jobroleid,
-                "added list": skillid_list,
-                "deleted list": deleted_list
-            },
-            "message": "Jobrole skills updated successfully."
+        { 
+            "code": 404,
+            "message": "Jobrole not found",
         }
-    ), 200
+    ), 404
 
