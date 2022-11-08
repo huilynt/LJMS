@@ -23,6 +23,7 @@ def view_courses_for_a_skill(skillId):
     skill = Skill.query.filter_by(Skill_ID=skillId).first()
 
     course_list = []
+
     for course in skill.courses:
         if course.Course_Status == "Active":
             course_list.append(course)
@@ -39,15 +40,16 @@ def view_courses_for_a_skill(skillId):
 
 
 @app.route("/courses/<string:courseId>")
-def get_assgined_courses(courseId):
+def get_assgined_skills_to_course(courseId):
     skillList = Skill.query.all()
+    course = Course.query.filter_by(Course_ID=courseId).first()
     selected_skills = []
 
-    for skill in skillList:
-        courseList = skill.courses
-        course = Course.query.filter_by(Course_ID=courseId).first()
-        if course in courseList:
-            selected_skills.append(skill.Skill_ID)
+    if course:
+        for skill in skillList:
+            courseList = skill.courses
+            if course in courseList:
+                selected_skills.append(skill.Skill_ID)
 
     if selected_skills:
         return (
