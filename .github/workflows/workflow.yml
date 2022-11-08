@@ -51,13 +51,9 @@ jobs:
           cd api
           flake8 .
 
-      # - name: Test with unittest
-      #   #runs the unittest
-      #   run: |
-      #     #TODO: Add the command to run all the unittest here.
-      #     cd api
-      #     dir
-      #     # cd venv
-      #     # dir
-      #     # venv/scripts/activate
-      #     python -m unittest
+      - name: Test with unittest
+        #runs the unittest
+        run: |
+          #TODO: Add the command to run all the unittest here.
+          cd api
+          python -m unittest discover -s test -p "test_unit_*.py
