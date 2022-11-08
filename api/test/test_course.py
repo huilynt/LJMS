@@ -4,9 +4,15 @@ from app import app
 from Courses import Course
 import json
 
-class TestSkills(unittest.TestCase):
+class TestCourse(unittest.TestCase):
     def test_course_json(self):
-        course = Course('COR001','Systems Thinking and Design','This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking', 'Active', 'Internal', 'Core')
+        course = Course(
+                        'COR001',
+                        'Systems Thinking and Design',
+                        'This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking', 
+                        'Active', 
+                        'Internal', 
+                        'Core')
         self.assertEqual(
             course.json(),
             {
