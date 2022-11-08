@@ -175,7 +175,7 @@ class LearningJourney(db.Model):
 
     Journey_ID = db.Column(db.String(20), primary_key=True)
     JobRole_ID = db.Column(db.String(20), db.ForeignKey(JobRole.JobRole_ID), nullable=False)
-    Staff_ID = db.Column(db.String(20), db.ForeignKey(Staff.Staff_ID), nullable=False)
+    Staff_ID = db.Column(db.Integer, db.ForeignKey(Staff.Staff_ID), nullable=False)
     LearningJourney_Status = db.Column(db.String(20))
 
     courses = db.relationship(Course, secondary=LearningJourney_SelectedCourse, backref="learningjourneys", lazy=True)
