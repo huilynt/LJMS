@@ -30,7 +30,7 @@ class TestGetAssignSkillsToRole(TestApp):
         self.assertEqual(response.json, 
             {
                 "code": 404,
-                "message": "skills not found"
+                "message": "Jobrole not found"
             }
         )
 
@@ -65,14 +65,17 @@ class TestGetAssignSkillsToRole(TestApp):
     # test if 1 skill assign to the role, it return 200 response with the skill inside selected_skill list
     def test_get_assigned_skills(self):
         s1 = Skill('BM01','Brand Management','Analysis on how to manage the brand')
-        s2 = Skill('CM01','Change Management','For all approaches to prepare, support, and help individuals, teams, and organizations in making organizational change.')
         j1 = JobRole("CO001", "C-level Executive", "Play a strategic role within an organization; they hold senior positions and impact company-wide decisions")
         db.session.add(s1)
-        db.session.add(s2)
         db.session.add(j1)
         db.session.commit()
         role_skill = Jobrole_skill.insert().values(JobRole_ID='CO001', Skill_ID='BM01')
         db.engine.execute(role_skill)
+
+        s2 = Skill('CM01','Change Management','For all approaches to prepare, support, and help individuals, teams, and organizations in making organizational change.')
+        db.session.add(s2)
+        db.session.commit()
+        
 
         response = self.client.get("/jobrole/assignedskills/CO001")
         self.assertEqual(response.json, 
@@ -115,16 +118,24 @@ class TestUpdateAssignedSkillsToRoles(TestApp):
     def test_delete_all_skills_of_role(self):
         s1 = Skill('BM01','Brand Management','Analysis on how to manage the brand')
         s2 = Skill('CM01','Change Management','For all approaches to prepare, support, and help individuals, teams, and organizations in making organizational change.')
+        s3 = Skill('LE01','Leadership Skill','How to be a leader')
         j1 = JobRole("CO001", "C-level Executive", "Play a strategic role within an organization; they hold senior positions and impact company-wide decisions")
         db.session.add(s1)
-        db.session.add(s2)
         db.session.add(j1)
-        role_skill = Jobrole_skill.insert().values(JobRole_ID='CO001', Skill_ID='CM01')
+        role_skill1 = Jobrole_skill.insert().values(JobRole_ID='CO001', Skill_ID='BM01')
         db.session.commit()
-        db.engine.execute(role_skill)
+        db.engine.execute(role_skill1)
 
-        request_body = ['BM01']
-        response = self.client.post("/hr/courses/edit/COR001", 
+        db.session.add(s2)
+        role_skill2 = Jobrole_skill.insert().values(JobRole_ID='CO001', Skill_ID='CM01')
+        db.session.commit()
+        db.engine.execute(role_skill2)
+
+        db.session.add(s3)
+        db.session.commit()
+
+        request_body = ['LE01']
+        response = self.client.post("/hr/jobrole/edit/CO001", 
                                     data=json.dumps(request_body),
                                     content_type='application/json')
 
@@ -133,8 +144,8 @@ class TestUpdateAssignedSkillsToRoles(TestApp):
                 "code": 200,
                 "data": {
                     "Jobrole": "CO001",
-                    "added list": [],
-                    "deleted list": ["CM01"]
+                    "added list": ['LE01'],
+                    "deleted list": ["BM01", "CM01"]
                 },
                 "message": "Jobrole skills updated successfully."
             }
