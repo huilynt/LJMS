@@ -7,7 +7,6 @@ from app import app, db
 
 class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
-    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
 
     def create_app(self):
