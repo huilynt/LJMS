@@ -169,7 +169,7 @@ def restore_jobrole(jobroleId):
 
 #return the skills assigned to the specific job role
 @app.route("/jobrole/assignedskills/<string:jobroleId>")
-def get_assigned_skills(jobroleId):
+def get_assigned_skills_to_role(jobroleId):
     jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
     skillList = Skill.query.all()
     selected_skills = []
