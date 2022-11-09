@@ -106,22 +106,22 @@ class Registration(db.Model):
         }
 
 Jobrole_skill = db.Table('jobrole_skill',
-                        db.Column('JobRole_ID', db.String, db.ForeignKey('jobrole.JobRole_ID')),
-                        db.Column('Skill_ID', db.String, db.ForeignKey('skill.Skill_ID'))
+                        db.Column('JobRole_ID', db.String(20), db.ForeignKey('jobrole.JobRole_ID')),
+                        db.Column('Skill_ID', db.String(20), db.ForeignKey('skill.Skill_ID'))
 )
 
 Skill_course = db.Table('skill_course',
-                        db.Column('Skill_ID', db.String, db.ForeignKey('skill.Skill_ID')),
-                        db.Column('Course_ID', db.String, db.ForeignKey('course.Course_ID'))
+                        db.Column('Skill_ID', db.String(20), db.ForeignKey('skill.Skill_ID')),
+                        db.Column('Course_ID', db.String(20), db.ForeignKey('course.Course_ID'))
 )
 
 class Skill(db.Model):
     __tablename__ = "skill"
 
-    Skill_ID = db.Column(db.String, primary_key=True)
-    Skill_Name = db.Column(db.String, nullable=False)
-    Skill_Desc = db.Column(db.String)
-    Skill_Status = db.Column(db.String)
+    Skill_ID = db.Column(db.String(20), primary_key=True)
+    Skill_Name = db.Column(db.String(20), nullable=False)
+    Skill_Desc = db.Column(db.String(150))
+    Skill_Status = db.Column(db.String(20))
 
     courses = db.relationship(Course, secondary=Skill_course, backref="skill", lazy=True)
 
@@ -143,10 +143,10 @@ class Skill(db.Model):
 class JobRole(db.Model):
     __tablename__ = "jobrole"
 
-    JobRole_ID = db.Column(db.String, primary_key=True)
-    JobRole_Name = db.Column(db.String, nullable=False)
-    JobRole_Desc = db.Column(db.String)
-    JobRole_Status = db.Column(db.String)
+    JobRole_ID = db.Column(db.String(20), primary_key=True)
+    JobRole_Name = db.Column(db.String(20), nullable=False)
+    JobRole_Desc = db.Column(db.String(255))
+    JobRole_Status = db.Column(db.String(20))
 
     skills = db.relationship(Skill, secondary=Jobrole_skill, backref="jobroles", lazy=True)
 
@@ -166,17 +166,17 @@ class JobRole(db.Model):
 
 # Learning Journey
 LearningJourney_SelectedCourse = db.Table("learningjourney_selectedcourse",
-                        db.Column('Journey_ID', db.String, db.ForeignKey("learningjourney.Journey_ID")),
-                        db.Column('Course_ID', db.String, db.ForeignKey(Course.Course_ID)),
+                        db.Column('Journey_ID', db.String(20), db.ForeignKey("learningjourney.Journey_ID")),
+                        db.Column('Course_ID', db.String(20), db.ForeignKey(Course.Course_ID)),
 )
 
 class LearningJourney(db.Model):
     __tablename__ = "learningjourney"
 
-    Journey_ID = db.Column(db.String, primary_key=True)
-    JobRole_ID = db.Column(db.String, db.ForeignKey(JobRole.JobRole_ID), nullable=False)
-    Staff_ID = db.Column(db.String, db.ForeignKey(Staff.Staff_ID), nullable=False)
-    LearningJourney_Status = db.Column(db.String)
+    Journey_ID = db.Column(db.String(20), primary_key=True)
+    JobRole_ID = db.Column(db.String(20), db.ForeignKey(JobRole.JobRole_ID), nullable=False)
+    Staff_ID = db.Column(db.String(20), db.ForeignKey(Staff.Staff_ID), nullable=False)
+    LearningJourney_Status = db.Column(db.String(20))
 
     courses = db.relationship(Course, secondary=LearningJourney_SelectedCourse, backref="learningjourneys", lazy=True)
 
