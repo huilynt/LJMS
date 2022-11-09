@@ -108,7 +108,7 @@ def create_a_jobrole():
     ), 200
 
 
-#update a jobrole
+# update a jobrole
 @app.route("/jobrole/<string:jobroleId>", methods=['PUT'])
 def update_a_jobrole(jobroleId):
     jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
