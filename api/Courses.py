@@ -62,7 +62,7 @@ def get_assgined_skills_to_course(courseId):
         ), 201
 
     return jsonify(
-        { 
+        {
             "code": 404,
             "message": "Course not found",
         }
