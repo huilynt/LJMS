@@ -165,7 +165,7 @@ def update_a_skill(skillId):
         data = request.get_json()
         if data['Skill_Name']:
             skill_check = Skill.query.filter_by(Skill_Name=data['Skill_Name']).first()
-            if skill_check and skill.Skill_Name == data["Skill_Name"]:
+            if skill_check and skill_check.Skill_ID != data["Skill_ID"]:
                 return jsonify(
                     {
                         "code": 404,

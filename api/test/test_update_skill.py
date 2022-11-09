@@ -29,6 +29,7 @@ class TestUpdateSkill(TestApp):
         db.session.commit()
 
         request_body = {
+            "Skill_ID": "LE01",
             "Skill_Name": "TestingName200",
             "Skill_Desc": "TestingDesc200"
         }
@@ -39,20 +40,23 @@ class TestUpdateSkill(TestApp):
     # test if update skill with existing name will return error
     def test_update_invalid_skill_with_same_name(self):
         s1 = Skill("LE01", "Leadership Skill", "How to be a leader")
+        s2 = Skill("CM01", "Change Management", "For all approaches to prepare, support, and help organizations in making change.")
         db.session.add(s1)
+        db.session.add(s2)
         db.session.commit()
 
         request_body = {
+            "Skill_ID": "CM01",
             "Skill_Name": "Leadership Skill",
             "Skill_Desc": "Testing Description"
         }
 
-        response = self.client.put("/skill/LE01", data=json.dumps(request_body), content_type='application/json')
+        response = self.client.put("/skill/CM01", data=json.dumps(request_body), content_type='application/json')
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json, {
             "code": 404,
             "data": {
-                "skillId": "LE01"
+                "skillId": "CM01"
             },
             "message": "Skill name is repeated."
         })
@@ -64,6 +68,7 @@ class TestUpdateSkill(TestApp):
         db.session.commit()
 
         request_body = {
+            "Skill_ID": "TT200",
             "Skill_Name": "Testing Name",
             "Skill_Desc": "Testing Description"
         }
