@@ -1,6 +1,7 @@
 import unittest
 from app import Staff
 
+
 class Staffs(unittest.TestCase):
     def test_staff_json(self):
         staff = Staff("130001", "John" , "Sim", "Chairman", "jack.sim@allinone.com.sg", "1")
@@ -15,6 +16,7 @@ class Staffs(unittest.TestCase):
                 "Role": "1"
             }
         )
+
 
 if __name__ == "__main__":
     unittest.main()

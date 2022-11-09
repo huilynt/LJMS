@@ -1,6 +1,7 @@
 import unittest
 from app import JobRole
 
+
 class JobRoles(unittest.TestCase):
     def test_jobrole_json(self):
         jobRole = JobRole(
@@ -17,6 +18,7 @@ class JobRoles(unittest.TestCase):
                 "JobRole_Status":""
             }
         )
+
 
 if __name__ == "__main__":
     unittest.main()

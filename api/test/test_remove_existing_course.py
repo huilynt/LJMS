@@ -22,9 +22,9 @@ class TestApp(flask_testing.TestCase):
 class RemoveExistingCourse(TestApp):
 
     def test_existing_course_not_found(self):
-        
+
         role = Role(1, "Admin")
-        staff = Staff(140525, 'John','Sim','Chariman', 'jack.sim@allinone.com.sg',1)
+        staff = Staff(140525, 'John', 'Sim', 'Chariman', 'jack.sim@allinone.com.sg', 1)
         jobrole = JobRole('EN002', 'DevOps Engineer', 'It is an IT generalist who should have a wide-ranging knowledge of both development and operations, including coding and infrastructure management.')
         course1 = Course('FIN003',
                          'Business Continuity Planning',
@@ -62,8 +62,8 @@ class RemoveExistingCourse(TestApp):
                 "courseId": 'tch008'
             },
             "message": "Course in selected Learning Journey not found"
-        })
-        
+        })       
+
     def test_at_least_one_course(self):
         role = Role(1, "Admin")
         staff = Staff(130001, 'John', 'Sim', 'Chariman', 'jack.sim@allinone.com.sg', 1)
@@ -72,8 +72,8 @@ class RemoveExistingCourse(TestApp):
         course = Course('COR001',
                         'Systems Thinking and Design',
                         'This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking',
-                        'Active','Internal','Core')
-        
+                        'Active', 'Internal', 'Core')
+
         db.session.add(jobrole)
         db.session.add(role)
         db.session.add(staff)
@@ -97,13 +97,13 @@ class RemoveExistingCourse(TestApp):
         jobrole = JobRole('EN002', 'DevOps Engineer', 'It is an IT generalist who should have a wide-ranging knowledge of both development and operations, including coding and infrastructure management.')
         lj_obj = LearningJourney("EN002-140525", "EN002", '140525', 'Progress')
         course1 = Course('COR002',
-                            'Lean Six Sigma Green Belt Certification',
-                            'Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics',
-                            'Active','Internal','Core')
+                         'Lean Six Sigma Green Belt Certification',
+                         'Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics',
+                         'Active', 'Internal', 'Core')
         course2 = Course('COR006',
-                            'Manage Change',
-                            'Identify risks associated with change and develop risk mitigation plans.',
-                            'Active','External','Core')           
+                         'Manage Change',
+                         'Identify risks associated with change and develop risk mitigation plans.',
+                          'Active', 'External', 'Core')           
 
         db.session.add(jobrole)
         db.session.add(role)
@@ -114,8 +114,8 @@ class RemoveExistingCourse(TestApp):
         db.session.add(lj_obj)
         db.session.commit()
 
-        lj_course1=LearningJourney_SelectedCourse.insert().values(Journey_ID='EN002-140525', Course_ID='COR002')
-        lj_course2=LearningJourney_SelectedCourse.insert().values(Journey_ID='EN002-140525', Course_ID='COR006')
+        lj_course1 = LearningJourney_SelectedCourse.insert().values(Journey_ID='EN002-140525', Course_ID='COR002')
+        lj_course2 = LearningJourney_SelectedCourse.insert().values(Journey_ID='EN002-140525', Course_ID='COR006')
         db.engine.execute(lj_course1)
         db.engine.execute(lj_course2)
 
@@ -123,10 +123,7 @@ class RemoveExistingCourse(TestApp):
         self.assertEqual(response.json, {
                                         "code": 200,
                                         "message": "Delete success"
-                                    })
-        
-
-    
+                                    })                     
 
 
 if __name__ == '__main__':
