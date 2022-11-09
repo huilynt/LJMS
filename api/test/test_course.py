@@ -1,8 +1,5 @@
-# import unittest
-
-# from app import app
-# from Courses import Course
-# import json
+import unittest
+from Courses import Course
 
 
 class TestCourse(unittest.TestCase):

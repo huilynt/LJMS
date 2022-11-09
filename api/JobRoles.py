@@ -110,7 +110,7 @@ def update_a_jobrole(jobroleId):
                         "code": 404,
                         "data": {
                             "jobroleId": jobroleId,
-                            "existing job role" : jobrole.JobRole_Name,
+                            "existing job role": jobrole.JobRole_Name,
                             "updated job role": data["JobRole_Name"]
                         },
                         "message": "Role name is repeated."

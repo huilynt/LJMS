@@ -115,15 +115,14 @@ class Registration(db.Model):
             "Completion_Status": self.Completion_Status,
         }
 
+
 Jobrole_skill = db.Table('jobrole_skill',
                         db.Column('JobRole_ID', db.String(20), db.ForeignKey('jobrole.JobRole_ID')),
-                        db.Column('Skill_ID', db.String(20), db.ForeignKey('skill.Skill_ID'))
-)
+                        db.Column('Skill_ID', db.String(20), db.ForeignKey('skill.Skill_ID')))
 
 Skill_course = db.Table('skill_course',
                         db.Column('Skill_ID', db.String(20), db.ForeignKey('skill.Skill_ID')),
-                        db.Column('Course_ID', db.String(20), db.ForeignKey('course.Course_ID'))
-)
+                        db.Column('Course_ID', db.String(20), db.ForeignKey('course.Course_ID')))
 
 
 class Skill(db.Model):

@@ -3,6 +3,7 @@ from models import LearningJourney
 from app import db, app
 import flask_testing
 
+
 # create a flask app for testing purposes
 class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
@@ -25,25 +26,24 @@ class TestApp(flask_testing.TestCase):
         db.session.remove()
         db.drop_all()
 
+
 class TestDeleteLearningJourney(TestApp):
     def test_valid(self):
-        res = self.client.post('/journey/delete',
-            json={
+        res = self.client.post('/journey/delete', json={
                 "journeyId": "DA001-140525"
             }
         )
         res_data = res.get_json()
         self.assertEqual(res_data["code"], 200)
-    
+
     def test_invalid(self):
-        res = self.client.post('/journey/delete',
-            json={
+        res = self.client.post('/journey/delete', json={
                 "journeyId": "DA002-140525"
             }
         )
         res_data = res.get_json()
         self.assertEqual(res_data["code"], 400)
 
-    
+
 if __name__ == '__main__':
     unittest.main()
