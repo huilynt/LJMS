@@ -57,7 +57,8 @@ class TestViewSkill(TestApp):
         response = self.client.get("/skill/TT200", content_type='application/json')
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json, {
-            'message': 'Skill not found.'
+            "code": 404,
+            "message": "Skill not found."
         })
 
     # test for no skill in db will cause an error
