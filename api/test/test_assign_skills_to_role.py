@@ -1,11 +1,11 @@
 import unittest
-from unittest.mock import patch
 import flask_testing
 import json
 from Skills import Skill
 from JobRoles import JobRole
 from models import Jobrole_skill
-from app import app,db 
+from app import app, db
+
 
 # create a flask app for testing purposes
 class TestApp(flask_testing.TestCase):
@@ -22,13 +22,13 @@ class TestApp(flask_testing.TestCase):
         db.session.remove()
         db.drop_all()
 
+
 # tests for get_skills_assigned_to_role
 class TestGetAssignSkillsToRole(TestApp):
     # test if the course is not found
     def test_no_course_found(self):
         response = self.client.get("/jobrole/assignedskills/CO001")
-        self.assertEqual(response.json, 
-            {
+        self.assertEqual(response.json, {
                 "code": 404,
                 "message": "Jobrole not found"
             }
@@ -40,8 +40,7 @@ class TestGetAssignSkillsToRole(TestApp):
         db.session.add(j1)
         db.session.commit()
         response = self.client.get("/jobrole/assignedskills/CO001")
-        self.assertEqual(response.json, 
-            {
+        self.assertEqual(response.json, {
                 "code": 200,
                 "data": [],
             }
@@ -49,14 +48,13 @@ class TestGetAssignSkillsToRole(TestApp):
 
     # test if no skill assigned to role, it return 200 response but with an empty selected_skill list too
     def test_no_skills_assigned_to_course(self):
-        s1 = Skill('BM01','Brand Management','Analysis on how to manage the brand')
+        s1 = Skill('BM01','Brand Management', 'Analysis on how to manage the brand')
         j1 = JobRole("CO001", "C-level Executive", "Play a strategic role within an organization; they hold senior positions and impact company-wide decisions")
         db.session.add(s1)
         db.session.add(j1)
         db.session.commit()
         response = self.client.get("/jobrole/assignedskills/CO001")
-        self.assertEqual(response.json, 
-            {
+        self.assertEqual(response.json, {
                 "code": 200,
                 "data": [],
             }
@@ -72,25 +70,23 @@ class TestGetAssignSkillsToRole(TestApp):
         role_skill = Jobrole_skill.insert().values(JobRole_ID='CO001', Skill_ID='BM01')
         db.engine.execute(role_skill)
 
-        s2 = Skill('CM01','Change Management','For all approaches to prepare, support, and help individuals, teams, and organizations in making organizational change.')
+        s2 = Skill('CM01', 'Change Management','For all approaches to prepare, support, and help individuals, teams, and organizations in making organizational change.')
         db.session.add(s2)
         db.session.commit()
-        
 
         response = self.client.get("/jobrole/assignedskills/CO001")
-        self.assertEqual(response.json, 
-            {
+        self.assertEqual(response.json, {
                 "code": 200,
                 "data": ['BM01'],
             }
         )
 
+
 class TestUpdateAssignedSkillsToRoles(TestApp):
     # test if the role is not found
     def test_no_role_found(self):
         response = self.client.post("/hr/jobrole/edit/CO001")
-        self.assertEqual(response.json, 
-            {
+        self.assertEqual(response.json, {
                 "code": 404,
                 "message": "Jobrole not found"
             }
@@ -103,11 +99,10 @@ class TestUpdateAssignedSkillsToRoles(TestApp):
         db.session.commit()
 
         request_body = []
-        response = self.client.post("/hr/jobrole/edit/CO001", 
+        response = self.client.post("/hr/jobrole/edit/CO001",
                                     data=json.dumps(request_body),
                                     content_type='application/json')
-        self.assertEqual(response.json, 
-            {
+        self.assertEqual(response.json, {
                 "code": 400,
                 "message": "There must at least be one skill selected"
             }
@@ -116,9 +111,9 @@ class TestUpdateAssignedSkillsToRoles(TestApp):
 
     # test if the deleting of skills work
     def test_delete_all_skills_of_role(self):
-        s1 = Skill('BM01','Brand Management','Analysis on how to manage the brand')
-        s2 = Skill('CM01','Change Management','For all approaches to prepare, support, and help individuals, teams, and organizations in making organizational change.')
-        s3 = Skill('LE01','Leadership Skill','How to be a leader')
+        s1 = Skill('BM01', 'Brand Management', 'Analysis on how to manage the brand')
+        s2 = Skill('CM01', 'Change Management', 'For all approaches to prepare, support, and help individuals, teams, and organizations in making organizational change.')
+        s3 = Skill('LE01', 'Leadership Skill', 'How to be a leader')
         j1 = JobRole("CO001", "C-level Executive", "Play a strategic role within an organization; they hold senior positions and impact company-wide decisions")
         db.session.add(s1)
         db.session.add(j1)
@@ -135,12 +130,11 @@ class TestUpdateAssignedSkillsToRoles(TestApp):
         db.session.commit()
 
         request_body = ['LE01']
-        response = self.client.post("/hr/jobrole/edit/CO001", 
+        response = self.client.post("/hr/jobrole/edit/CO001",
                                     data=json.dumps(request_body),
                                     content_type='application/json')
 
-        self.assertEqual(response.json, 
-            {
+        self.assertEqual(response.json, {
                 "code": 200,
                 "data": {
                     "Jobrole": "CO001",
@@ -151,6 +145,7 @@ class TestUpdateAssignedSkillsToRoles(TestApp):
             }
         )
         self.assertEqual(response.status_code, 200)
+
 
 if __name__ == '__main__':
     unittest.main()
