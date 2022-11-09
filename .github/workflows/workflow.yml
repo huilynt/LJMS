@@ -1,0 +1,37 @@
+name: Lint and Unittest
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # install modules
+          pip install -r requirements.txt
+
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Lint with flake8
+        # lints the api folder, excludes /venv
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          cd api
+          flake8 .
+
+      - name: Test with unittest
+        # runs unittest for filenames starting with "test_unit"
+        run: |
+          #TODO: Add the command to run all the unittest here.
+          cd api
+          python -m unittest discover -s test -p "test_unit_*.py"
