@@ -104,7 +104,7 @@ def update_a_jobrole(jobroleId):
         data = request.get_json()
         if data['JobRole_Name']:
             jobrole_check = JobRole.query.filter_by(JobRole_Name=data['JobRole_Name']).first()
-            if jobrole_check and jobrole_check.JobRole_Name == data["JobRole_Name"]:
+            if jobrole_check and jobrole_check.JobRole_ID != data["JobRole_ID"]:
                 return jsonify(
                     {
                         "code": 404,
