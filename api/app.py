@@ -12,5 +12,11 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 CORS(app)
 
+from Courses import *
+from Skills import *
+from JobRoles import *
+from Staffs import *
+from Journey import *
+
 if __name__ == "__main__":
     app.run(debug=True)
