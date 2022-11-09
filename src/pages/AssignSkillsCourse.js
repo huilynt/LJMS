@@ -1,7 +1,7 @@
 import {React,useEffect, useState} from "react";
 import axios from 'axios';
-import { useParams } from "react-router-dom";
-import {Container, Box, Button, Typography, Grid, Alert} from '@mui/material';
+import { useParams,useNavigate } from "react-router-dom";
+import {Container, Box, Button, Typography, Grid, Alert, Stack} from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -15,6 +15,7 @@ function AssignSkillsCourse(){
     const [error, setError] = useState("");
     const [saveConfirm, setSaveConfirm] = useState(false);
     const { courseID } = useParams();
+    let navigate = useNavigate();
 
     useEffect(()=>{
         axios.get('http://127.0.0.1:5000/activeskill')
@@ -36,6 +37,10 @@ function AssignSkillsCourse(){
             console.log(error)
         })
     }, [])
+
+    function cancelChanges(){
+        navigate("/hr/Courses")
+    }
 
     const handleChange = (event) => {
         let checked = event.target.checked;
@@ -109,7 +114,10 @@ function AssignSkillsCourse(){
                     </FormGroup>
                 </Box>
             </Box>
-            <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
+            <Stack direction="row" spacing={2} justifyContent="center" sx={{mt:2}}>
+                <Button variant="outlined" color="error" onClick={cancelChanges}>Cancel</Button>
+                <Button variant="contained" color="success" onClick={saveChanges}>Save</Button>
+            </Stack>
             {saveConfirm === true ? <div data-testid="editMsgCourse"><EditConfirm name="Courses"/></div> : <></>}
         </Container>
     )

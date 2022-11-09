@@ -180,12 +180,12 @@ def get_assigned_skills_to_role(jobroleId):
             if skill in assigned_skills_list:
                 selected_skills.append(skill.Skill_ID)
 
-            return jsonify(
-                {
-                    "code": 200,
-                    "data": selected_skills
-                }
-            ), 200
+        return jsonify(
+            {
+                "code": 200,
+                "data": selected_skills
+            }
+        ), 200
 
     return jsonify(
         { 
