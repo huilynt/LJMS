@@ -6,8 +6,8 @@ class JobRoles(unittest.TestCase):
     def test_jobrole_json(self):
         jobRole = JobRole(
             "DA001",
-            "Data Analyst", 
-            "The role requires you to make recommendations about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems.", 
+            "Data Analyst",
+            "The role requires you to make recommendations about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems.",
             "")
         self.assertEqual(
             jobRole.json(),

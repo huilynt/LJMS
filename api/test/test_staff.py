@@ -11,8 +11,8 @@ class Staffs(unittest.TestCase):
                 "Staff_ID": "130001",
                 "Staff_FName":  "John",
                 "Staff_LName":  "Sim",
-                "Dept": "Chairman", 
-                "Email":"jack.sim@allinone.com.sg",
+                "Dept": "Chairman",
+                "Email": "jack.sim@allinone.com.sg",
                 "Role": "1"
             }
         )

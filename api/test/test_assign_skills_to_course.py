@@ -160,7 +160,7 @@ class TestUpdateAssignedSkillsToCourses(TestApp):
         db.session.add(skill2)
         db.session.add(course1)
         db.session.commit()
-        course_skill = Skill_course.insert().values(Skill_ID="BM01", 
+        course_skill = Skill_course.insert().values(Skill_ID="BM01",
                                                     Course_ID="COR001")
         course_skill2 = Skill_course.insert().values(
             Skill_ID="CM01", Course_ID="COR001"
