@@ -7,7 +7,9 @@ from models import Course, Skill, Skill_course
 @app.route("/course")
 def view_course():
     courselist = Course.query.all()
-    return jsonify({"code": 200, "data": [course.json() for course in courselist]})
+    return jsonify({
+        "code": 200,
+        "data": [course.json() for course in courselist]})
 
 
 # retrieve one course information
@@ -51,66 +53,82 @@ def get_assgined_skills_to_course(courseId):
             if course in courseList:
                 selected_skills.append(skill.Skill_ID)
 
-    if selected_skills:
-        return (
-            jsonify({"code": 200, "data": selected_skills, "name": course.Course_Name}),
-            201,
-        )
+        return jsonify(
+            {
+                "code": 200,
+                "data": selected_skills,
+                "name": course.Course_Name
+            }
+        ), 201
 
-    return (
-        jsonify(
-            {"code": 404, "message": "skills not found", "name": course.Course_Name}
-        ),
-        404,
-    )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Course not found",
+        }
+    ), 404
 
 
 # Add skills to existing course
 @app.route("/hr/courses/edit/<string:courseId>", methods=["POST"])
 def update_skills_to_course(courseId):
-    skillid_list = (
-        request.get_json()
-    )  # get from the part when the specific skill is added
-    deleted_list = []
+    course = Course.query.filter_by(Course_ID=courseId).first()
+    if course:
+        courseId = course.Course_ID
+        skills_list = request.get_json()
+        deleted_list = []
+        added_list = []
 
-    if (
-        db.session.query(Skill_course).filter_by(Course_ID=courseId).all()
-    ):  # find all skills of courses and delete
-        existing_course_skills_list = (
-            db.session.query(Skill_course).filter_by(Course_ID=courseId).all()
-        )
-        for existing_course_skills in existing_course_skills_list:
-            deleted_list.append(existing_course_skills.Skill_ID)
-            db.session.query(Skill_course).filter_by(
-                Course_ID=courseId, Skill_ID=existing_course_skills.Skill_ID
-            ).delete()
-            db.session.commit()
+        # check if there is at least one skill selected
+        if (skills_list == []):
+            return jsonify(
+                {
+                    "code": 400,
+                    "message": "There must at least be one skill selected"
+                }
+            ), 400
 
-    if skillid_list == []:  # check if there is at least one skill selected
-        return (
-            jsonify(
-                {"code": 400, "message": "There must at least be one skill selected"}
-            ),
-            400,
-        )
+        # delete all unassignment of skills to the course
+        all_skillcourse = db.session.query(Skill_course).filter_by(Course_ID=courseId).all()
+        for skill in all_skillcourse:
+            if skill.Skill_ID not in skills_list:
+                try:
+                    db.session.query(Skill_course).filter_by(Course_ID=courseId, Skill_ID=skill.Skill_ID).delete()
+                    db.session.commit()
+                    deleted_list.append(skill.Skill_ID)
+                except Exception:
+                    return {
+                        "message": "Unable to commit to database."
+                    }, 404
 
-    for skillid in skillid_list:  # add skills to courses
-        course_skill = Skill_course.insert().values(
-            Course_ID=courseId, Skill_ID=skillid
-        )
-        db.engine.execute(course_skill)
+        # add the new assigned skills to courses
+        for skillId in skills_list:
+            check = db.session.query(Skill_course).filter_by(Course_ID=courseId, Skill_ID=skillId).first()
+            if check is None:
+                try:
+                    course_skill = Skill_course.insert().values(Course_ID=courseId, Skill_ID=skillId)
+                    db.engine.execute(course_skill)
+                    added_list.append(skillId)
+                except Exception:
+                    return {
+                        "message": "Unable to commit to database."
+                    }, 404
 
-    return (
-        jsonify(
+        return jsonify(
             {
                 "code": 200,
                 "data": {
                     "Course": courseId,
-                    "added list": skillid_list,
-                    "deleted list": deleted_list,
+                    "added list": added_list,
+                    "deleted list": deleted_list
                 },
-                "message": "Course skills updated successfully.",
+                "message": "Course skills updated successfully."
             }
-        ),
-        200,
-    )
+        ), 200
+
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Course not found",
+        }
+    ), 404
