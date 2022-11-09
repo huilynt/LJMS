@@ -65,8 +65,8 @@ class RemoveExistingCourse(TestApp):
 
     def test_at_least_one_course(self):
         role = Role(1, "Admin")
-        staff = Staff(130001, 'John', 'Sim','Chariman', 'jack.sim@allinone.com.sg', 1)
-        jobrole = JobRole('EN001', 'DevOps Engineer','It is an IT generalist who should have a wide-ranging knowledge of both development and operations, including coding and infrastructure management.')
+        staff = Staff(130001, 'John', 'Sim', 'Chariman', 'jack.sim@allinone.com.sg', 1)
+        jobrole = JobRole('EN001', 'DevOps Engineer', 'It is an IT generalist who should have a wide-ranging knowledge of both development and operations, including coding and infrastructure management.')
         lj_obj = LearningJourney("EN001-130001", "EN001", 130001, 'Progress')
         course = Course('COR001',
                             'Systems Thinking and Design',
