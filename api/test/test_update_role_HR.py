@@ -23,21 +23,71 @@ class TestApp(flask_testing.TestCase):
         db.session.remove()
 
 class TestUpdateRoleHr(TestApp):
+     def test_jobrole_is_repeated(self):
+        jobrole1= JobRole('DA001','Data Analyst','The role requires you to make recommendations about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems.')
+        jobrole2= JobRole('EN001','Software Engineer','The role focus on applying the principles of engineering to software development.')
+
+        db.session.add(jobrole1)
+        db.session.add(jobrole2)
+        db.session.commit()
+
+        response = self.client.put("/jobrole/DA001", 
+        json={
+            "JobRole_Name": "Data Analyst",
+            "JobRole_Desc": "The role requires you to make recommendations about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems."
+            })
+        self.assertEqual(response.json,  {
+            "code": 404,
+            "data": {
+                "jobroleId": "DA001",
+                "existing job role" : "Data Analyst",
+                "updated job role": "Software Engineer"
+            },
+            "message": "Role name is repeated."
+        })
+        self.assertEqual(response.status_code, 404)
+
+
+     def test_jobrole_is_found(self):
+        jobrole1= JobRole('DA001','Data Analyst','The role requires you to make recommendations about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems.')
+        jobrole2= JobRole('EN001','Software Engineer','The role focus on applying the principles of engineering to software development.')
+        
+        db.session.add(jobrole1)
+        db.session.add(jobrole2)
+        db.session.commit()
+
+        response = self.client.put("/jobrole/DA001", 
+        json={
+            "JobRole_Name": "Data Scientist",
+            "JobRole_Desc": "The role requires you to make implementation about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems."
+            })
+        self.assertEqual(response.json,  {
+            "code": 200,
+            "data": {
+                "jobroleId":'DA001',
+                "jobroleName":'Data Scientist',
+                "jobroleDesc":'The role requires you to make implementation about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems.'}
+        })   
+
+        
      def test_jobrole_not_found(self):
         jobrole= JobRole('DA001','Data Analyst','The role requires you to make recommendations about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems.')
         
         db.session.add(jobrole)
         db.session.commit()
 
-        response = self.client.put("/jobrole/DA001", 
-        json={"JobRole_Name": "Data Analyst"})
+        response = self.client.put("/jobrole/DA002", 
+        json={
+            "JobRole_Name": "Data Analyst",
+            "JobRole_Desc": "The role requires you to make recommendations about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems."
+            })
         self.assertEqual(response.json,  {
             "code": 404,
             "data": {
-                "jobroleId": jobroleId
+                "jobroleId": "DA001"
             },
-            "message": "Role name is repeated."
-        })
+            "message": "Role not found."
+        })   
 
 
 if __name__ == '__main__':

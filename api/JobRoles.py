@@ -111,12 +111,14 @@ def update_a_jobrole(jobroleId):
         data = request.get_json()
         if data['JobRole_Name']:
             jobrole_check = JobRole.query.filter_by(JobRole_Name=data['JobRole_Name']).first()
-            if jobrole_check and jobrole.JobRole_Name != data["JobRole_Name"]:
+            if jobrole_check and jobrole.JobRole_Name == data["JobRole_Name"]:
                 return jsonify(
                     {
                         "code": 404,
                         "data": {
-                            "jobroleId": jobroleId
+                            "jobroleId": jobroleId,
+                            "existing job role" : jobrole.JobRole_Name,
+                            "updated job role": data["JobRole_Name"]
                         },
                         "message": "Role name is repeated."
                     }
