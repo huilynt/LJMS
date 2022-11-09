@@ -30,6 +30,7 @@ class TestUpdateRoleHr(TestApp):
         db.session.commit()
 
         request_body = {
+                "JobRole_ID": "DA001",
                 "JobRole_Name": "Software Engineer",
                 "JobRole_Desc": "The role requires you to make recommendations about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems."
             }
@@ -54,6 +55,7 @@ class TestUpdateRoleHr(TestApp):
         db.session.commit()
 
         response = self.client.put("/jobrole/DA001", json={
+            "JobRole_ID": "DA001",
             "JobRole_Name": "Data Scientist",
             "JobRole_Desc": "The role requires you to make recommendations about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems."
             })
@@ -75,6 +77,7 @@ class TestUpdateRoleHr(TestApp):
         db.session.commit()
 
         response = self.client.put("/jobrole/DA002", json={
+            "JobRole_ID": "DA002",
             "JobRole_Name": "Data Analyst",
             "JobRole_Desc": "The role requires you to make recommendations about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems."
             })
