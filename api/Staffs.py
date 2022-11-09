@@ -1,81 +1,71 @@
 from flask import jsonify, request
 
-from app import app, db
+from app import app
 from models import Staff, Registration, Role
+
 
 @app.route("/staff")
 def view_staff():
     stafflist = Staff.query.all()
-    
-    return jsonify(
-        {
-            "code": 200, 
-            "data": [staff.json() for staff in stafflist]
-        }
-    )
+
+    return jsonify({"code": 200, "data": [staff.json() for staff in stafflist]})
+
 
 @app.route("/registration")
 def view_registration():
     registrationlist = Registration.query.all()
 
-    return jsonify(
-        {
-            "code": 200, 
-            "data": [regi.json() for regi in registrationlist]
-        }
-    )
+    return jsonify({"code": 200, "data": [regi.json() for regi in registrationlist]})
 
-#create a role 
-@app.route("/roles/create", methods=['POST'])
+
+# create a role
+@app.route("/roles/create", methods=["POST"])
 def create_a_role():
     data = request.get_json()
     role = Role(**data)
     roleId = role.Role_ID
     rolename = role.Role_Name
-    
-    if (Role.query.filter_by(Role_ID=roleId).first()):
-        return jsonify(
-            {
-                "code": 400,
-                "data": {
-                    "roleId": roleId
-                },
-                "message": "Role ID already exists."
-            }
-        ), 400
 
-    if (Role.query.filter_by(Role_Name=rolename).first()):
+    if Role.query.filter_by(Role_ID=roleId).first():
+        return (
+            jsonify(
+                {
+                    "code": 400,
+                    "data": {"roleId": roleId},
+                    "message": "Role ID already exists.",
+                }
+            ),
+            400,
+        )
+
+    if Role.query.filter_by(Role_Name=rolename).first():
         return jsonify(
             {
                 "code": 200,
             }
         )
-    return jsonify(
-        {
-            "code": 404,
-            "data": {
-                "roleId": roleId
-            },
-            "message": "Role not found."
-        }
-    ), 404
+    return (
+        jsonify(
+            {"code": 404, "data": {"roleId": roleId}, "message": "Role not found."}
+        ),
+        404,
+    )
+
 
 # get role for login
 @app.route("/login/<string:userId>")
 def login(userId):
     print(userId)
 
-    if(Staff.query.filter_by(Staff_ID=userId).first()):
-        return jsonify(
-            {
-                "code": 200,
-                "data": [Staff.query.filter_by(Staff_ID=userId).first().json()]
-            }
-        ), 200
+    if Staff.query.filter_by(Staff_ID=userId).first():
+        return (
+            jsonify(
+                {
+                    "code": 200,
+                    "data": [Staff.query.filter_by(Staff_ID=userId).first().json()],
+                }
+            ),
+            200,
+        )
 
-    return jsonify(
-        {
-            "code": 400,
-            "message": "User ID does not exist"
-        }
-    ), 400
+    return jsonify({"code": 400, "message": "User ID does not exist"}), 400

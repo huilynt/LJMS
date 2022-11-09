@@ -1,5 +1,6 @@
 from app import db
 
+
 class Role(db.Model):
     __tablename__ = "role"
     Role_ID = db.Column(db.Integer, primary_key=True)
@@ -12,10 +13,7 @@ class Role(db.Model):
         self.Role_Name = Role_Name
 
     def json(self):
-        return {
-            "Role_ID": self.Role_ID, 
-            "Role_Name": self.Role_Name
-        }
+        return {"Role_ID": self.Role_ID, "Role_Name": self.Role_Name}
 
 
 class Course(db.Model):
@@ -30,7 +28,15 @@ class Course(db.Model):
 
     registrations = db.relationship("Registration", backref="course", lazy=True)
 
-    def __init__(self, Course_ID, Course_Name, Course_Desc, Course_Status, Course_Type, Course_Category):
+    def __init__(
+        self,
+        Course_ID,
+        Course_Name,
+        Course_Desc,
+        Course_Status,
+        Course_Type,
+        Course_Category,
+    ):
         self.Course_ID = Course_ID
         self.Course_Name = Course_Name
         self.Course_Desc = Course_Desc
@@ -40,8 +46,8 @@ class Course(db.Model):
 
     def json(self):
         return {
-            "Course_ID": self.Course_ID, 
-            "Course_Name": self.Course_Name, 
+            "Course_ID": self.Course_ID,
+            "Course_Name": self.Course_Name,
             "Course_Desc": self.Course_Desc,
             "Course_Status": self.Course_Status,
             "Course_Type": self.Course_Type,
@@ -71,8 +77,8 @@ class Staff(db.Model):
 
     def json(self):
         return {
-            "Staff_ID": self.Staff_ID, 
-            "Staff_FName": self.Staff_FName, 
+            "Staff_ID": self.Staff_ID,
+            "Staff_FName": self.Staff_FName,
             "Staff_LName": self.Staff_LName,
             "Dept": self.Dept,
             "Email": self.Email,
@@ -84,12 +90,16 @@ class Registration(db.Model):
     __tablename__ = "registration"
 
     Reg_ID = db.Column(db.Integer, primary_key=True)
-    Course_ID = db.Column(db.String(20), db.ForeignKey(Course.Course_ID), nullable=False)
+    Course_ID = db.Column(
+        db.String(20), db.ForeignKey(Course.Course_ID), nullable=False
+    )
     Staff_ID = db.Column(db.Integer, db.ForeignKey(Staff.Staff_ID), nullable=False)
     Reg_Status = db.Column(db.String(20), nullable=False)
     Completion_Status = db.Column(db.String(20))
 
-    def __init__(self, Reg_ID, Course_ID, Staff_ID, Reg_Status, Completion_Status, Role):
+    def __init__(
+        self, Reg_ID, Course_ID, Staff_ID, Reg_Status, Completion_Status, Role
+    ):
         self.Reg_ID = Reg_ID
         self.Course_ID = Course_ID
         self.Staff_ID = Staff_ID
@@ -98,11 +108,11 @@ class Registration(db.Model):
 
     def json(self):
         return {
-            "Reg_ID": self.Reg_ID, 
-            "Course_ID": self.Course_ID, 
+            "Reg_ID": self.Reg_ID,
+            "Course_ID": self.Course_ID,
             "Staff_ID": self.Staff_ID,
             "Reg_Status": self.Reg_Status,
-            "Completion_Status": self.Completion_Status
+            "Completion_Status": self.Completion_Status,
         }
 
 Jobrole_skill = db.Table('jobrole_skill',
@@ -115,15 +125,18 @@ Skill_course = db.Table('skill_course',
                         db.Column('Course_ID', db.String(20), db.ForeignKey('course.Course_ID'))
 )
 
+
 class Skill(db.Model):
     __tablename__ = "skill"
 
     Skill_ID = db.Column(db.String(20), primary_key=True)
-    Skill_Name = db.Column(db.String(20), nullable=False)
+    Skill_Name = db.Column(db.String(50), nullable=False)
     Skill_Desc = db.Column(db.String(150))
     Skill_Status = db.Column(db.String(20))
 
-    courses = db.relationship(Course, secondary=Skill_course, backref="skill", lazy=True)
+    courses = db.relationship(
+        Course, secondary=Skill_course, backref="skill", lazy=True
+    )
 
     def __init__(self, Skill_ID, Skill_Name, Skill_Desc="", Skill_Status=""):
         self.Skill_ID = Skill_ID
@@ -136,7 +149,7 @@ class Skill(db.Model):
             "Skill_ID": self.Skill_ID,
             "Skill_Name": self.Skill_Name,
             "Skill_Desc": self.Skill_Desc,
-            "Skill_Status": self.Skill_Status
+            "Skill_Status": self.Skill_Status,
         }
 
 
@@ -144,11 +157,13 @@ class JobRole(db.Model):
     __tablename__ = "jobrole"
 
     JobRole_ID = db.Column(db.String(20), primary_key=True)
-    JobRole_Name = db.Column(db.String(20), nullable=False)
-    JobRole_Desc = db.Column(db.String(255))
+    JobRole_Name = db.Column(db.String(50), nullable=False)
+    JobRole_Desc = db.Column(db.String(150))
     JobRole_Status = db.Column(db.String(20))
 
-    skills = db.relationship(Skill, secondary=Jobrole_skill, backref="jobroles", lazy=True)
+    skills = db.relationship(
+        Skill, secondary=Jobrole_skill, backref="jobroles", lazy=True
+    )
 
     def __init__(self, JobRole_ID, JobRole_Name, JobRole_Desc="", JobRole_Status=""):
         self.JobRole_ID = JobRole_ID
@@ -161,8 +176,9 @@ class JobRole(db.Model):
             "JobRole_ID": self.JobRole_ID,
             "JobRole_Name": self.JobRole_Name,
             "JobRole_Desc": self.JobRole_Desc,
-            "JobRole_Status": self.JobRole_Status
+            "JobRole_Status": self.JobRole_Status,
         }
+
 
 # Learning Journey
 LearningJourney_SelectedCourse = db.Table("learningjourney_selectedcourse",
@@ -170,17 +186,25 @@ LearningJourney_SelectedCourse = db.Table("learningjourney_selectedcourse",
                         db.Column('Course_ID', db.String(20), db.ForeignKey(Course.Course_ID)),
 )
 
+
 class LearningJourney(db.Model):
     __tablename__ = "learningjourney"
 
     Journey_ID = db.Column(db.String(20), primary_key=True)
     JobRole_ID = db.Column(db.String(20), db.ForeignKey(JobRole.JobRole_ID), nullable=False)
-    Staff_ID = db.Column(db.String(20), db.ForeignKey(Staff.Staff_ID), nullable=False)
+    Staff_ID = db.Column(db.Integer, db.ForeignKey(Staff.Staff_ID), nullable=False)
     LearningJourney_Status = db.Column(db.String(20))
 
-    courses = db.relationship(Course, secondary=LearningJourney_SelectedCourse, backref="learningjourneys", lazy=True)
+    courses = db.relationship(
+        Course,
+        secondary=LearningJourney_SelectedCourse,
+        backref="learningjourneys",
+        lazy=True,
+    )
 
-    def __init__(self, Journey_ID, JobRole_ID, Staff_ID, LearningJourney_Status="Progress"):
+    def __init__(
+        self, Journey_ID, JobRole_ID, Staff_ID, LearningJourney_Status="Progress"
+    ):
         self.Journey_ID = Journey_ID
         self.JobRole_ID = JobRole_ID
         self.Staff_ID = Staff_ID
@@ -191,5 +215,5 @@ class LearningJourney(db.Model):
             "Journey_ID": self.Journey_ID,
             "JobRole_ID": self.JobRole_ID,
             "Staff_ID": self.Staff_ID,
-            "LearningJourney_Status": self.LearningJourney_Status
+            "LearningJourney_Status": self.LearningJourney_Status,
         }
