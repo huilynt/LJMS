@@ -115,6 +115,7 @@ class Registration(db.Model):
             "Completion_Status": self.Completion_Status,
         }
 
+
 Jobrole_skill = db.Table('jobrole_skill',
                         db.Column('JobRole_ID', db.String(20), db.ForeignKey('jobrole.JobRole_ID')),
                         db.Column('Skill_ID', db.String(20), db.ForeignKey('skill.Skill_ID'))
