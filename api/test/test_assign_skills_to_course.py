@@ -31,8 +31,7 @@ class TestGetAssignSkillsToCourses(TestApp):
         self.assertEqual(response.json, {"code": 404,
                                          "message": "Course not found"})
 
-    # test if no skills, it return 200 response but with an empty
-    # selected_skill list
+    # test if no skills, it return 200 response but with an empty selected_skill list
     def test_no_skills(self):
         course1 = Course(
             "COR001",
@@ -50,8 +49,7 @@ class TestGetAssignSkillsToCourses(TestApp):
             {"code": 200, "data": [], "name": "Systems Thinking and Design"},
         )
 
-    # test if no skill assigned to course, it return 200 response but with an
-    # empty selected_skill list too
+    # test if no skill assigned to course, it return 200 response but with an empty selected_skill list too
     def test_no_skills_assigned_to_course(self):
         skill1 = Skill(
             "BM01", "Brand Management", "Analysis on how to manage the brand"
@@ -73,8 +71,7 @@ class TestGetAssignSkillsToCourses(TestApp):
             {"code": 200, "data": [], "name": "Systems Thinking and Design"},
         )
 
-    # test if 1 skill assign to the course, it return 200 response with the 
-    # skill inside selected_skill list
+    # test if 1 skill assign to the course, it return 200 response with the skill inside selected_skill list
     def test_get_assigned_courses(self):
         skill1 = Skill(
             "BM01", "Brand Management", "Analysis on how to manage the brand"

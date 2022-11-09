@@ -62,7 +62,7 @@ class RemoveExistingCourse(TestApp):
                 "courseId": 'tch008'
             },
             "message": "Course in selected Learning Journey not found"
-        })       
+        })
 
     def test_at_least_one_course(self):
         role = Role(1, "Admin")
@@ -103,7 +103,7 @@ class RemoveExistingCourse(TestApp):
         course2 = Course('COR006',
                          'Manage Change',
                          'Identify risks associated with change and develop risk mitigation plans.',
-                          'Active', 'External', 'Core')           
+                         'Active', 'External', 'Core')
 
         db.session.add(jobrole)
         db.session.add(role)
@@ -123,7 +123,7 @@ class RemoveExistingCourse(TestApp):
         self.assertEqual(response.json, {
                                         "code": 200,
                                         "message": "Delete success"
-                                    })                     
+                                    })
 
 
 if __name__ == '__main__':
