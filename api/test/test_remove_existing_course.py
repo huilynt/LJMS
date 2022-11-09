@@ -23,7 +23,7 @@ class RemoveExistingCourse(TestApp):
 
     def test_existing_course_not_found(self):
         role = Role(1, "Admin")
-        staff = Staff(140525, 'John', 'Sim','Chariman', 'jack.sim@allinone.com.sg', 1)
+        staff = Staff(140525, 'John', 'Sim', 'Chariman', 'jack.sim@allinone.com.sg', 1)
         jobrole = JobRole('EN002', 'DevOps Engineer', 'It is an IT generalist who should have a wide-ranging knowledge of both development and operations, including coding and infrastructure management.')
         course1 = Course('FIN003',
                             'Business Continuity Planning',
@@ -102,8 +102,7 @@ class RemoveExistingCourse(TestApp):
         course2 = Course('COR006',
                             'Manage Change',
                             'Identify risks associated with change and develop risk mitigation plans.',
-                            'Active', 'External', 'Core')           
-
+                            'Active', 'External', 'Core')
         db.session.add(jobrole)
         db.session.add(role)
         db.session.add(staff)

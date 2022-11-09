@@ -48,7 +48,7 @@ class TestUpdateRoleHr(TestApp):
     def test_jobrole_is_found(self):
         jobrole1 = JobRole('DA001', 'Data Analyst', 'The role requires you to make recommendations about the methods and ways in which a company obtains and analyses data to improve quality and the efficiency of data systems.', 'Active')
         jobrole2 = JobRole('EN001', 'Software Engineer', 'The role focus on applying the principles of engineering to software development.', 'Active')
-        
+
         db.session.add(jobrole1)
         db.session.add(jobrole2)
         db.session.commit()
