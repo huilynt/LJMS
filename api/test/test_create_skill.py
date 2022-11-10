@@ -40,7 +40,7 @@ class TestCreateSkill(TestApp):
                 "Skill_ID": "LE01",
                 "Skill_Name": "Leadership Skill",
                 "Skill_Desc": "How to be a leader",
-                "Skill_Status": ""
+                "Skill_Status": None
             }
         })
 

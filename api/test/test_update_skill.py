@@ -42,7 +42,7 @@ class TestUpdateSkill(TestApp):
                 "Skill_ID": "LE01",
                 "Skill_Name": "TestingName200",
                 "Skill_Desc": "TestingDesc200",
-                "Skill_Status": ""
+                "Skill_Status": None
             }
         })
 

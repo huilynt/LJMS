@@ -137,7 +137,7 @@ class Skill(db.Model):
         Course, secondary=Skill_course, backref="skill", lazy=True
     )
 
-    def __init__(self, Skill_ID, Skill_Name, Skill_Desc="", Skill_Status=""):
+    def __init__(self, Skill_ID, Skill_Name, Skill_Desc="", Skill_Status=None):
         self.Skill_ID = Skill_ID
         self.Skill_Name = Skill_Name
         self.Skill_Desc = Skill_Desc
