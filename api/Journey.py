@@ -48,7 +48,7 @@ def view_leaningjourney():
                 url = "http://127.0.0.1:5000/journey/progress/" + journey.Journey_ID
                 x = requests.post(url, json={"userId": userId})
                 code = json.loads(x.text)["code"]
-                if code == "200":
+                if code == 200:
                     update_journey_completion(
                         journey.Journey_ID, json.loads(x.text)["data"]
                     )
