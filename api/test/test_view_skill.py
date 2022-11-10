@@ -23,7 +23,7 @@ class TestApp(flask_testing.TestCase):
 class TestViewSkill(TestApp):
     # test for able to view skill
     def test_view_all_skill(self):
-        s1 = Skill("LE01", "Leadership Skill", "How to be a leader", "")
+        s1 = Skill("LE01", "Leadership Skill", "How to be a leader")
         db.session.add(s1)
         db.session.commit()
 
@@ -35,7 +35,7 @@ class TestViewSkill(TestApp):
                 "Skill_Desc": "How to be a leader",
                 "Skill_ID": "LE01",
                 "Skill_Name": "Leadership Skill",
-                "Skill_Status": ""
+                "Skill_Status": None
             }]
         })
 
@@ -55,7 +55,7 @@ class TestViewSkill(TestApp):
                 "Skill_ID": "LE01",
                 "Skill_Name": "Leadership Skill",
                 "Skill_Desc": "How to be a leader",
-                "Skill_Status": ""
+                "Skill_Status": None
             }]
         })
 
@@ -73,7 +73,7 @@ class TestViewSkill(TestApp):
                 "Skill_ID": "LE01",
                 "Skill_Name": "Leadership Skill",
                 "Skill_Desc": "How to be a leader",
-                "Skill_Status": ""
+                "Skill_Status": None
             }
         })
 

@@ -16,7 +16,7 @@ class TestSkills(unittest.TestCase):
                 "Skill_ID": "CM01",
                 "Skill_Name": "Change Management",
                 "Skill_Desc": "For all approaches to prepare, support, and help organizations in making change.",
-                "Skill_Status": "",
+                "Skill_Status": None,
             },
         )
 
