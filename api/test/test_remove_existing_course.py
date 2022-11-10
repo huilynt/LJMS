@@ -22,22 +22,21 @@ class TestApp(flask_testing.TestCase):
 class RemoveExistingCourse(TestApp):
 
     def test_existing_course_not_found(self):
-
         role = Role(1, "Admin")
         staff = Staff(140525, 'John', 'Sim', 'Chariman', 'jack.sim@allinone.com.sg', 1)
         jobrole = JobRole('EN002', 'DevOps Engineer', 'It is an IT generalist who should have a wide-ranging knowledge of both development and operations, including coding and infrastructure management.')
         course1 = Course('FIN003',
-                         'Business Continuity Planning',
-                         'Business continuity planning is essential in any business to minimise loss when faced with potential threats and disruptions.',
-                         'Active', 'External', 'Finance')
+                            'Business Continuity Planning',
+                            'Business continuity planning is essential in any business to minimise loss when faced with potential threats and disruptions.',
+                            'Active', 'External', 'Finance')
         course2 = Course('COR006',
-                         'Manage Change',
-                         'Identify risks associated with change and develop risk mitigation plans.',
-                         'Active', 'External', 'Core')
+                            'Manage Change',
+                            'Identify risks associated with change and develop risk mitigation plans.',
+                            'Active', 'External', 'Core')
         course3 = Course('COR002',
-                         'Lean Six Sigma Green Belt Certification',
-                         'Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics',
-                         'Active', 'Internal', 'Core')
+                            'Lean Six Sigma Green Belt Certification',
+                            'Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics',
+                            'Active', 'Internal', 'Core')
         lj_obj = LearningJourney("EN002-140525", "EN002", 140525, 'Progress')
         db.session.add(role)
         db.session.add(staff)
@@ -70,9 +69,9 @@ class RemoveExistingCourse(TestApp):
         jobrole = JobRole('EN001', 'DevOps Engineer', 'It is an IT generalist who should have a wide-ranging knowledge of both development and operations, including coding and infrastructure management.')
         lj_obj = LearningJourney("EN001-130001", "EN001", 130001, 'Progress')
         course = Course('COR001',
-                        'Systems Thinking and Design',
-                        'This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking',
-                        'Active', 'Internal', 'Core')
+                            'Systems Thinking and Design',
+                            'This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking',
+                            'Active', 'Internal', 'Core')
 
         db.session.add(jobrole)
         db.session.add(role)
@@ -97,14 +96,13 @@ class RemoveExistingCourse(TestApp):
         jobrole = JobRole('EN002', 'DevOps Engineer', 'It is an IT generalist who should have a wide-ranging knowledge of both development and operations, including coding and infrastructure management.')
         lj_obj = LearningJourney("EN002-140525", "EN002", '140525', 'Progress')
         course1 = Course('COR002',
-                         'Lean Six Sigma Green Belt Certification',
-                         'Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics',
-                         'Active', 'Internal', 'Core')
+                            'Lean Six Sigma Green Belt Certification',
+                            'Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics',
+                            'Active', 'Internal', 'Core')
         course2 = Course('COR006',
-                         'Manage Change',
-                         'Identify risks associated with change and develop risk mitigation plans.',
-                         'Active', 'External', 'Core')
-
+                            'Manage Change',
+                            'Identify risks associated with change and develop risk mitigation plans.',
+                            'Active', 'External', 'Core')
         db.session.add(jobrole)
         db.session.add(role)
         db.session.add(staff)

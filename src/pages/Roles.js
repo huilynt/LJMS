@@ -126,7 +126,7 @@ function Roles() {
                                             <Link href={'/hr/edit/roles/' + jobrole.JobRole_ID} underline="none">
                                                 <EditIcon sx={{mr:2}}></EditIcon>
                                             </Link>
-                                            {jobrole.JobRole_Status === null ? 
+                                            {jobrole.JobRole_Status !== "Retired" ?
                                                 <Link underline="none" id={jobrole.JobRole_ID} onClick={deleteJobRole}>
                                                     <DeleteOutlineIcon sx={{ color: pink[200] }}></DeleteOutlineIcon>
                                                 </Link> :

@@ -117,14 +117,12 @@ class Registration(db.Model):
 
 
 Jobrole_skill = db.Table('jobrole_skill',
-                         db.Column('JobRole_ID', db.String(20), db.ForeignKey('jobrole.JobRole_ID')),
-                         db.Column('Skill_ID', db.String(20), db.ForeignKey('skill.Skill_ID'))
-                         )
+                        db.Column('JobRole_ID', db.String(20), db.ForeignKey('jobrole.JobRole_ID')),
+                        db.Column('Skill_ID', db.String(20), db.ForeignKey('skill.Skill_ID')))
 
 Skill_course = db.Table('skill_course',
                         db.Column('Skill_ID', db.String(20), db.ForeignKey('skill.Skill_ID')),
-                        db.Column('Course_ID', db.String(20), db.ForeignKey('course.Course_ID'))
-                        )
+                        db.Column('Course_ID', db.String(20), db.ForeignKey('course.Course_ID')))
 
 
 class Skill(db.Model):
@@ -183,9 +181,9 @@ class JobRole(db.Model):
 
 # Learning Journey
 LearningJourney_SelectedCourse = db.Table("learningjourney_selectedcourse",
-                                          db.Column('Journey_ID', db.String(20), db.ForeignKey("learningjourney.Journey_ID")),
-                                          db.Column('Course_ID', db.String(20), db.ForeignKey(Course.Course_ID)),
-                                          )
+                        db.Column('Journey_ID', db.String(20), db.ForeignKey("learningjourney.Journey_ID")),
+                        db.Column('Course_ID', db.String(20), db.ForeignKey(Course.Course_ID)),
+)
 
 
 class LearningJourney(db.Model):

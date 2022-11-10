@@ -8,7 +8,12 @@ from models import JobRole, Skill, LearningJourney, Jobrole_skill
 def view_jobrole():
     jobrolelist = JobRole.query.all()
 
-    return jsonify({"code": 200, "data": [role.json() for role in jobrolelist]})
+    return jsonify(
+        {
+            "code": 200,
+            "data": [role.json() for role in jobrolelist]
+        }
+    )
 
 
 @app.route("/<string:staffId>/jobrole")
@@ -29,7 +34,7 @@ def view_relevant_jobrole(staffId):
     return jsonify(
         {
             "code": 200,
-            "data": [relevantrole.json() for relevantrole in relevantrolelist],
+            "data": [relevantrole.json() for relevantrole in relevantrolelist]
         }
     )
 
@@ -39,105 +44,115 @@ def view_relevant_jobrole(staffId):
 def view_single_jobrole(jobroleId):
     jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
 
-    return jsonify({"code": 200, "data": jobrole.json()})
+    return jsonify(
+        {
+            "code": 200,
+            "data": jobrole.json()
+        }
+    )
 
 
 # create a jobrole
-@app.route("/jobrole/create", methods=["POST"])
+@app.route("/jobrole/create", methods=['POST'])
 def create_a_jobrole():
     data = request.get_json()
     jobrole = JobRole(
         JobRole_ID=data["JobRole_ID"],
         JobRole_Name=data["JobRole_Name"],
-        JobRole_Desc=data["JobRole_Desc"],
-    )
+        JobRole_Desc=data["JobRole_Desc"]
+        )
     jobroleId = jobrole.JobRole_ID
     jobrolename = jobrole.JobRole_Name
 
-    if JobRole.query.filter_by(JobRole_ID=jobroleId).first():
-        return (
-            jsonify(
-                {
-                    "code": 400,
-                    "data": {"jobroleId": jobroleId},
-                    "message": "Role ID already exists.",
-                }
-            ),
-            400,
-        )
+    if (JobRole.query.filter_by(JobRole_ID=jobroleId).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "jobroleId": jobroleId
+                },
+                "message": "Role ID already exists."
+            }
+        ), 400
 
-    if JobRole.query.filter_by(JobRole_Name=jobrolename).first():
-        return (
-            jsonify(
-                {
-                    "code": 400,
-                    "data": {"jobrolename": jobrolename},
-                    "message": "Role Name already exists.",
-                }
-            ),
-            400,
-        )
+    if (JobRole.query.filter_by(JobRole_Name=jobrolename).first()):
+        return jsonify(
+            {
+                "code": 400,
+                "data": {
+                    "jobrolename": jobrolename
+                },
+                "message": "Role Name already exists."
+            }
+        ), 400
 
     try:
         db.session.add(jobrole)
         db.session.commit()
-    except:
-        return (
-            jsonify(
-                {
-                    "code": 500,
-                    "data": {"jobroleId": jobroleId},
-                    "message": "An error occurred creating the role.",
-                }
-            ),
-            500,
-        )
+    except Exception:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "jobroleId": jobroleId
+                },
+                "message": "An error occurred creating the role."
+            }
+        ), 500
 
-    return jsonify({"code": 200, "data": jobrole.json()}), 201
+    return jsonify(
+        {
+            "code": 200,
+            "data": jobrole.json()
+        }
+    ), 200
 
 
 # update a jobrole
-@app.route("/jobrole/<string:jobroleId>", methods=["PUT"])
+@app.route("/jobrole/<string:jobroleId>", methods=['PUT'])
 def update_a_jobrole(jobroleId):
     jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
     if jobrole:
         data = request.get_json()
-        if data["JobRole_Name"]:
-            jobrole_check = JobRole.query.filter_by(
-                JobRole_Name=data["JobRole_Name"]
-            ).first()
-            if jobrole_check and jobrole.JobRole_Name != data["JobRole_Name"]:
-                return (
-                    jsonify(
-                        {
-                            "code": 404,
-                            "data": {"jobroleId": jobroleId},
-                            "message": "Role name is repeated.",
-                        }
-                    ),
-                    404,
-                )
+        if data['JobRole_Name']:
+            jobrole_check = JobRole.query.filter_by(JobRole_Name=data['JobRole_Name']).first()
+            if jobrole_check and jobrole_check.JobRole_ID != data["JobRole_ID"]:
+                return jsonify(
+                    {
+                        "code": 404,
+                        "data": {
+                            "jobroleId": jobroleId,
+                            "existing job role": jobrole.JobRole_Name,
+                            "updated job role": data["JobRole_Name"]
+                        },
+                        "message": "Role name is repeated."
+                    }
+                ), 404
             else:
-                jobrole.JobRole_Name = data["JobRole_Name"]
+                jobrole.JobRole_Name = data['JobRole_Name']
 
-        if data["JobRole_Desc"]:
-            jobrole.JobRole_Desc = data["JobRole_Desc"]
+        if data['JobRole_Desc']:
+            jobrole.JobRole_Desc = data['JobRole_Desc']
         db.session.commit()
-        return jsonify({"code": 200, "data": jobrole.json()})
-    return (
-        jsonify(
+        return jsonify(
             {
-                "code": 404,
-                "data": {"jobroleId": jobroleId},
-                "message": "Role not found.",
+                "code": 200,
+                "data": jobrole.json()
             }
-        ),
-        404,
-    )
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "data": {
+                "jobroleId": jobroleId
+            },
+            "message": "Role not found."
+        }
+    ), 404
 
 
 # delete a jobrole
-@app.route("/jobrole/<string:jobroleId>", methods=["DELETE"])
+@app.route("/jobrole/<string:jobroleId>", methods=['DELETE'])
 def delete_a_jobrole(jobroleId):
     jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
     if jobrole:
@@ -168,80 +183,87 @@ def get_assigned_skills_to_role(jobroleId):
     skillList = Skill.query.all()
     selected_skills = []
 
-    for skill in skillList:
-        assigned_skills_list = jobrole.skills
-        if skill in assigned_skills_list:
-            selected_skills.append(skill.Skill_ID)
+    if jobrole:
+        for skill in skillList:
+            assigned_skills_list = jobrole.skills
+            if skill in assigned_skills_list:
+                selected_skills.append(skill.Skill_ID)
 
-    if selected_skills:
-        return (
-            jsonify(
-                {
-                    "code": 200,
-                    "data": selected_skills,
-                }
-            ),
-            200,
-        )
-
-    return (
-        jsonify(
+        return jsonify(
             {
-                "code": 404,
-                "message": "skills not found",
+                "code": 200,
+                "data": selected_skills,
             }
-        ),
-        404,
-    )
+        ), 200
+
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Jobrole not found",
+        }
+    ), 404
 
 
 # Add skills to existing job role
 @app.route("/hr/jobrole/edit/<string:jobroleId>", methods=["POST"])
 def update_skills_to_role(jobroleId):
-    jobroleid = JobRole.query.filter_by(JobRole_ID=jobroleId).first().JobRole_ID
-    skillid_list = (
-        request.get_json()
-    )  # get from the part when the specific skill is added
-    deleted_list = []
+    jobrole = JobRole.query.filter_by(JobRole_ID=jobroleId).first()
+    if jobrole:
+        jobroleId = jobrole.JobRole_ID
+        skills_list = request.get_json()
+        deleted_list = []
+        added_list = []
 
-    if (
-        db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleid).all()
-    ):  # find all skills of job role and delete
-        existing_jobrole_skills_list = (
-            db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleid).all()
-        )
-        for existing_jobrole_skills in existing_jobrole_skills_list:
-            deleted_list.append(existing_jobrole_skills.Skill_ID)
-            db.session.query(Jobrole_skill).filter_by(
-                JobRole_ID=jobroleid, Skill_ID=existing_jobrole_skills.Skill_ID
-            ).delete()
-            db.session.commit()
+        # check if there is at least one skill selected
+        if (skills_list == []):
+            return jsonify(
+                {
+                    "code": 400,
+                    "message": "There must at least be one skill selected"
+                }
+            ), 400
 
-    if skillid_list == []:  # check if there is at least one skill selected
-        return (
-            jsonify(
-                {"code": 400, "message": "There must at least be one skill selected"}
-            ),
-            400,
-        )
+        # delete all unassignment of skills to the role
+        all_skills_role = db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleId).all()
+        for skill in all_skills_role:
+            if skill.Skill_ID not in skills_list:
+                try:
+                    db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleId, Skill_ID=skill.Skill_ID).delete()
+                    db.session.commit()
+                    deleted_list.append(skill.Skill_ID)
+                except Exception:
+                    return {
+                        "message": "Unable to commit to database."
+                    }, 404
 
-    for skillid in skillid_list:  # add skills to job role
-        jobrole_skill = Jobrole_skill.insert().values(
-            JobRole_ID=jobroleid, Skill_ID=skillid
-        )
-        db.engine.execute(jobrole_skill)
+        # add the new assigned skills to role
+        for skillId in skills_list:
+            check = db.session.query(Jobrole_skill).filter_by(JobRole_ID=jobroleId, Skill_ID=skillId).first()
+            if check is None:
+                try:
+                    role_skill = Jobrole_skill.insert().values(JobRole_ID=jobroleId, Skill_ID=skillId)
+                    db.engine.execute(role_skill)
+                    added_list.append(skillId)
+                except Exception:
+                    return {
+                        "message": "Unable to commit to database."
+                    }, 404
 
-    return (
-        jsonify(
+        return jsonify(
             {
                 "code": 200,
                 "data": {
-                    "job role": jobroleid,
-                    "added list": skillid_list,
-                    "deleted list": deleted_list,
+                    "Jobrole": jobroleId,
+                    "added list": added_list,
+                    "deleted list": deleted_list
                 },
-                "message": "Jobrole skills updated successfully.",
+                "message": "Jobrole skills updated successfully."
             }
-        ),
-        200,
-    )
+        ), 200
+
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Jobrole not found",
+        }
+    ), 404

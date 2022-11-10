@@ -71,7 +71,7 @@ export default function ViewAllAvailRoles(props) {
 
     },[])
 
-    console.log(jobroleData)
+    console.log(jobroleData, "jobroleData")
 
     return (
         <Container sx={{mt:5}}>
@@ -91,6 +91,7 @@ export default function ViewAllAvailRoles(props) {
                 </TableHead>
                 <TableBody>
                     {jobroleData.map((row,index) => (
+                        row.skills && 
                             <StyledTableRow key={index}>
                                 <StyledTableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{row.JobRole_ID}</StyledTableCell>
                                 <StyledTableCell sx={{borderRight: {xs:0, md:'0.5px solid grey'}}}>{row.JobRole_Name}</StyledTableCell>
