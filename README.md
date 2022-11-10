@@ -1,4 +1,5 @@
 # Learning Journey Planning System
+https://github.com/huilynt/LJMS
 
 By G3T3
 
