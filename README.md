@@ -44,4 +44,3 @@ pip install -r requirements.txt # For first time installation of modules
 cd api
 flask run
 ```
-

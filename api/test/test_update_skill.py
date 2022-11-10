@@ -36,6 +36,15 @@ class TestUpdateSkill(TestApp):
 
         response = self.client.put("/skill/LE01", data=json.dumps(request_body), content_type='application/json')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json, {
+            "code": 200,
+            "data": {
+                "Skill_ID": "LE01",
+                "Skill_Name": "TestingName200",
+                "Skill_Desc": "TestingDesc200",
+                "Skill_Status": ""
+            }
+        })
 
     # test if update skill with existing name will return error
     def test_update_invalid_skill_with_same_name(self):

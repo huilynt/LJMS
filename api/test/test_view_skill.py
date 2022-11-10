@@ -23,21 +23,41 @@ class TestApp(flask_testing.TestCase):
 class TestViewSkill(TestApp):
     # test for able to view skill
     def test_view_all_skill(self):
-        s1 = Skill("LE01", "Leadership Skill", "How to be a leader")
+        s1 = Skill("LE01", "Leadership Skill", "How to be a leader", "")
         db.session.add(s1)
         db.session.commit()
 
         response = self.client.get("/skill", content_type='application/json')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json, {
+            "code": 200,
+            "data": [{
+                "Skill_Desc": "How to be a leader",
+                "Skill_ID": "LE01",
+                "Skill_Name": "Leadership Skill",
+                "Skill_Status": ""
+            }]
+        })
 
     # test for able to view all active skills
     def test_view_all_active_skill(self):
         s1 = Skill("LE01", "Leadership Skill", "How to be a leader")
+        s2 = Skill("LE02", "Leadership Skills 2", "How to be a leader 2", "Retired")
         db.session.add(s1)
+        db.session.add(s2)
         db.session.commit()
 
         response = self.client.get("/activeskill", content_type='application/json')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json, {
+            "code": 200,
+            "data": [{
+                "Skill_ID": "LE01",
+                "Skill_Name": "Leadership Skill",
+                "Skill_Desc": "How to be a leader",
+                "Skill_Status": ""
+            }]
+        })
 
     # test for able to find skills by skillid
     def test_find_by_skillid(self):
@@ -47,6 +67,15 @@ class TestViewSkill(TestApp):
 
         response = self.client.get("/skill/LE01", content_type='application/json')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json, {
+            "code": 200,
+            "data": {
+                "Skill_ID": "LE01",
+                "Skill_Name": "Leadership Skill",
+                "Skill_Desc": "How to be a leader",
+                "Skill_Status": ""
+            }
+        })
 
     # test if invalid skillid will cause an error
     def test_find_by_skillid_with_invalid_id(self):
@@ -60,11 +89,6 @@ class TestViewSkill(TestApp):
             "code": 404,
             "message": "Skill not found."
         })
-
-    # test for no skill in db will cause an error
-    def test_no_skill_found(self):
-        response = self.client.get("/skill/TT200", content_type='application/json')
-        self.assertEqual(response.status_code, 404)
 
 
 if __name__ == '__main__':
