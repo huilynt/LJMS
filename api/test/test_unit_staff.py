@@ -4,7 +4,7 @@ from app import Staff
 
 class Staffs(unittest.TestCase):
     def test_staff_json(self):
-        staff = Staff("130001", "John" , "Sim", "Chairman", "jack.sim@allinone.com.sg", "1")
+        staff = Staff("130001", "John", "Sim", "Chairman", "jack.sim@allinone.com.sg", "1")
         self.assertEqual(
             staff.json(),
             {
