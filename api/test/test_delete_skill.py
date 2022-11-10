@@ -29,6 +29,13 @@ class TestDeleteSkill(TestApp):
 
         response = self.client.delete("/skill/LE01", content_type='application/json')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json, {
+            "code": 200,
+            "data": {
+                "skillId": "LE01"
+            },
+            'message': 'Skill deleted.'
+        })
 
     # test if invalid skillid in url will return an error
     def test_delete_invalid_skill_with_invalid_id(self):
