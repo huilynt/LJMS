@@ -16,6 +16,10 @@ npm start # Run the project
 
 ### Backend (Flask)
 Please start your DB first. We use WAMP with MySQL.
+
+Place LMS RawData folder in "C:/wamp64/tmp" folder
+* E.g. "C:/wamp64/tmp/RawData/courses.csv"
+
 Import these files into your DB in order:
 1. LJMS_Tables.sql
 2. LJMS_Data.sql
