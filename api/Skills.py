@@ -20,7 +20,7 @@ def view_skills():
 # retrieve all active skills
 @app.route("/activeskill")
 def view_active_skills():
-    skills = Skill.query.filter_by(Skill_Status="")
+    skills = Skill.query.filter_by(Skill_Status=None)
 
     return jsonify(
         {
