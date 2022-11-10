@@ -20,7 +20,7 @@ def view_skills():
 # retrieve all active skills
 @app.route("/activeskill")
 def view_active_skills():
-    skills = Skill.query.filter_by(Skill_Status=None)
+    skills = Skill.query.filter_by(Skill_Status="")
 
     return jsonify(
         {
@@ -224,6 +224,10 @@ def delete_a_skill(skillId):
         return jsonify(
             {
                 "code": 200,
+                "data": {
+                    "skillId": skillId
+                },
+                "message": "Skill deleted."
             }
         )
     return jsonify(
