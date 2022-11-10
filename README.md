@@ -1,4 +1,5 @@
 # Learning Journey Planning System
+https://github.com/huilynt/LJMS
 
 By G3T3
 
@@ -14,9 +15,17 @@ npm start # Run the project
 ```
 
 ### Backend (Flask)
-Please start your DB first. We use WAMP, MySQL.
+Please start your DB first. We use WAMP with MySQL.
+
+Place LMS RawData folder in "C:/wamp64/tmp" folder
+* E.g. "C:/wamp64/tmp/RawData/courses.csv"
+
+Import these files into your DB in order:
+1. LJMS_Tables.sql
+2. LJMS_Data.sql
+
 ```
+pip install -r requirements.txt # For first time installation of modules
 cd api
-venv\scripts\activate
 flask run
 ```
